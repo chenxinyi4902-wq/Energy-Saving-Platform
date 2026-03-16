@@ -7,9 +7,17 @@ def submit_energy():
 
     energy = request.form.get("energy")
 
-    print("Energy received:", energy)
+    if not energy:
+        return "No energy data provided"
 
-    return "Energy data received"
+    try:
+        energy_value = float(energy)
+    except ValueError:
+        return "Invalid energy value"
+
+    print("Energy received:", energy_value)
+
+    return "Energy data received successfully"
 
 if __name__ == "__main__":
     app.run(debug=True)

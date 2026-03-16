@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html>
   
-<head>
-  
+<head> 
 <meta charset="UTF-8">
 <title>Energy Saving Platform</title>
 </head>
@@ -13,19 +12,23 @@
 
 <h2>Login</h2>
 
-<form>
+<form action="#">
 
-<input type="text" placeholder="Username"> 
+<input id="username" type="text" placeholder="Username"> 
 
 <br><br>
   
-<input type="password" placeholder="Password">
+<input id="password" type="password" placeholder="Password">
   
 <br><br> 
   
-<button type="button">Login</button> 
+<button type="button" onclick="login()">Login</button> 
 
 </form>
+
+<p id="message"></p>
+
+<script src="script.js"></script>
 
 </body>
 

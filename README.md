@@ -1,4 +1,4 @@
-# Energy-Saving-Platform
+# Ecopulse - Energy Saving Platform
 
 ## Current Progress
 
@@ -14,6 +14,16 @@
 * Frontend-backend communication for authentication
 * Structured layout ready for future navigation (e.g., dashboard)
 
+## Features (Main Interface)
+
+* Header with platform title and user greeting placeholder
+* Sidebar navigation for:
+  - Dashboard
+  - Electricity Usage History
+  - Community Leaderboard
+  - Points Redemption
+* Total points display section
+
 ## Technologies Used
 
 * HTML5
@@ -26,6 +36,7 @@
 /frontend
 │── templates/
 │   └── login.html
+│   └── index.html
 │── static/
 │   ├── style.css
 │   └── script.js
@@ -34,6 +45,7 @@
 
 * Implement dashboard interface
 * Add redirection after successful login
+* Connect sidebar navigation to different pages/modules
 * Improve UI/UX with enhanced styling
 * Add form validation and error handling
 * Upload complete backend code in future iterations
@@ -106,12 +118,16 @@
 * Processed backend response and displayed message dynamically
 * Added error handling for server issues
 
----
-
 > Note: Backend code is not included in this repository because it is still under development.
 > Login functionality has been tested locally with a backend.
 
+---
 
+### Iteration 8: Header and Sidebar Structure
+
+Created the basic HTML structure for the header and sidebar in index.html. 
+The sidebar includes navigation items for main features, and a total points section is added at the bottom. 
+Dynamic functionality will be implemented in future iterations.
 
 
 

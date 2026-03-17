@@ -1,36 +1,57 @@
 <!DOCTYPE html>
+<html lang="en">
 <html>
   
 <head> 
 <meta charset="UTF-8">
-<title>Energy Saving Platform</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoPulse-Energy Saving Platform</title>
 
 <link rel="stylesheet" href="/static/style.css">
 
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;900&family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
+    
 </head>
 
 <body>
 
-<h1>Energy Saving Platform</h1> 
+<div class="brutal-card">
+<div class="title-container">
+<i data-lucide="zap" class="energy-bolt w-12 h-12"></i>
+<h1>Ecopulse</h1>
+</div>
 
-<h2>Login</h2>
-
-<form action="#">
-
+<form id="loginForm" onsubmit="return false">
+<div class="mb-4">
+<label class="block text-left font-black mb-1 uppercase text-sm">User ID</label>
 <input id="username" type="text" placeholder="Username"> 
+</div>
 
-<br><br>
-  
+<div class="mb-6">
+<label class="block text-left font-black mb-1 uppercase text-sm">Password</label>  
 <input id="password" type="password" placeholder="Password">
+</div>
   
-<br><br> 
-  
-<button type="button" onclick="login()">Login</button> 
-
+<button type="submit" id="btn-login" class="login-btn">
+    LOGIN
+</button>
 </form>
 
-<p id="message"></p>
+<p id="message"class="mt-6 text-center font-bold h-4"></p>       
+<div class="mt-8 pt-6 border-t-2 border-dashed border-black flex justify-between items-center opacity-60 text-xs font-black uppercase">
+<span>Energy Saving Platform</span>
+<span>2026 © BUS10</span>
+</div>
+</div>
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+lucide.createIcons();
+// ... code here ...
+});
+</script>
 <script src="/static/script.js"></script>
 
 </body>

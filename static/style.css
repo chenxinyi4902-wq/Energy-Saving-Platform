@@ -1,72 +1,111 @@
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f7f6;
+    font-family: 'Space Grotesk', sans-serif;
+    background-color: #f0f0f0;
+    background-image: radial-gradient(#ccc 1px, transparent 1px);
+    background-size: 20px 20px;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 100vh;
     margin: 0;
 }
 
+.brutal-card {
+    background: white;
+    border: 3px solid black;
+    padding: 3rem;
+    width: 420px;
+    box-shadow: 12px 12px 0px 0px #000;
+    transition: all 0.2s ease;
+}
+
+.title-container {
+    position: relative;
+    margin-bottom: 2.5rem;
+    text-align: center;
+}
+
+
+
 
 h1 {
-    color: #2c3e50;
-    margin-bottom: 10px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: 3rem!important;
+    line-height: 1.5;
+    text-transform: uppercase;
+    color: #ccff00;
+    transform: rotate(-5deg);
+    display: inline-block;
+    padding: 5px 15px;
+    -webkit-text-stroke: 2px black;
+        text-shadow: 4px 4px 0px #000;
 }
 
 h2 {
-    color: #7f8c8d;
-    font-weight: 300;
-}
-
-
-form {
-    background: white;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    width: 300px;
+    font-weight: 700;
+    color: #555;
+    margin-top: 10px;
+    font-size: 1.2rem;
 }
 
 
 input {
-    width: 90%;
-    padding: 12px;
-    margin: 8px 0;
-    border: 1px solid #ddd;
-    border-radius: 6px;
+    width: 100%;
+    padding: 1rem;
+    margin: 10px 0;
+    border: 3px solid black;
+    font-weight: 700;
+    font-size: 1rem;
     outline: none;
-    transition: border-color 0.3s;
+    transition: transform 0.1s;
+    box-sizing: border-box;
 }
 
 input:focus {
-    border-color: #27ae60; 
+    transform: translate(-2px, -2px);
+    border-color: 4px 4px 0px 0px #ccff00;
 }
 
-
-button {
+.login-btn {
     width: 100%;
-    padding: 12px;
-    background-color: #27ae60;
-    color: white;
-    border: none;
-    border-radius: 6px;
+    padding: 1.2rem;
+    background-color: #ccff00;
+    color: black;
+    border: 3px solid black;
+    font-size: 1.5rem;
+    font-weight: 900;
+    text-transform: uppercase;
     cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-    transition: background 0.3s;
+    box-shadow: 6px 6px 0px 0px #000;
+    transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    margin-top: 1rem;
 }
 
-button:hover {
-    background-color: #219150;
+@keyframes boing {
+    0% { transform: scale(1) translateY(0); }
+    30% { transform: scale(1.1) translateY(-10px); }
+    50% { transform: scale(0.9) translateY(0); }
+    100% { transform: scale(1) translateY(0); }
 }
 
+.login-btn:hover {
+    animation: boing 0.5s ease-in-out;
+    background-color: #dfff4d; /* 稍微亮一点的绿色 */
+    box-shadow: 8px 8px 0px 0px #000;
+}
 
-#message {
-    margin-top: 15px;
-    color: #e74c3c;
-    font-size: 14px;
+.login-btn:active {
+    transform: translate(4px, 4px);
+    box-shadow: 0px 0px 0px 0px #000;
+}
+
+.energy-bolt {
+    position: absolute;
+    top: -20px;
+    right: -10px;
+    color: #000;
+    fill: #ccff00;
+    transform: rotate(15deg);
 }

@@ -131,14 +131,14 @@ Dynamic functionality will be implemented in future iterations.
 
 ---
 
-###Iteration 9 - Revamp CSS for Improved Design
+### Iteration 9 - Revamp CSS for Improved Design
 * Implemented bold borders (3px), heavy shadows (12px), and a dot-grid background.
 * Enhanced Visuals: Integrated Space Grotesk and Outfit fonts with a high-contrast Neon Green (#ccff00) theme.
 * Added a custom @keyframes boing hover animation for the login button and focus effects for inputs.
 
 ---
 
-###Iteration 10 - Update HTML Structure & Assets
+### Iteration 10 - Update HTML Structure & Assets
 * Wrapped content in a .brutal-card container for a stable, centered UI.
 * Rebranded as "Ecopulse" with a tilted CSS effect and integrated Lucide Icons (zap).
 * Added Tailwind CSS for layout utilities and used DOMContentLoaded to ensure safe script execution.

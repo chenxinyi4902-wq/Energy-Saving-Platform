@@ -6,7 +6,7 @@
 * Implemented frontend using HTML, CSS, and JavaScript
 * Successfully integrated login functionality with backend locally
 * User authentication is working in a local environment
-* Frontend code has been uploaded to this repository
+* Implemented redirection to main interface (`/index`) after successful login
 
 ## Features (Login Module)
 
@@ -47,16 +47,20 @@
 
 ## Future Improvements
 
-* Implement dashboard interface
-* Add redirection after successful login
+* Implement full dashboard functionality (data integration)
 * Connect sidebar navigation to different pages/modules
 * Improve UI/UX with enhanced styling
 * Add form validation and error handling
 * Upload complete backend code in future iterations
 
+## ⚠️ Important Usage Note
+
+This application must be accessed through the Flask development server.
+
+
 ## Iteration Info
 
-### Iteration 1: Create Basic HTML Skeleton
+### Iteration 1 - Create Basic HTML Skeleton
 
 * Created initial `login.html` structure
 * Added basic HTML5 document setup (`<!DOCTYPE html>`, `<html>`, `<head>`, `<body>`)
@@ -64,7 +68,7 @@
 
 ---
 
-### Iteration 2: Add Login Form Structure
+### Iteration 2 - Add Login Form Structure
 
 * Added main heading: *Energy Saving Platform*
 * Added login section title
@@ -74,7 +78,7 @@
 
 ---
 
-### Iteration 3: Add IDs and Connect JavaScript
+### Iteration 3 - Add IDs and Connect JavaScript
 
 * Added `id` attributes to input fields (`username`, `password`)
 * Added `onclick` event to login button (`login()` function)
@@ -83,7 +87,7 @@
 
 ---
 
-### Iteration 4: Create JavaScript Login Function
+### Iteration 4 - Create JavaScript Login Function
 
 * Created `script.js` file
 * Implemented `login()` function
@@ -93,7 +97,7 @@
 
 ---
 
-### Iteration 5: Add CSS Styling
+### Iteration 5 - Add CSS Styling
 
 * Created `style.css` file
 * Applied layout using Flexbox to center content
@@ -104,7 +108,7 @@
 
 ---
 
-### Iteration 6: Add CSS Link and Fix Static File Paths
+### Iteration 6 - Add CSS Link and Fix Static File Paths
 
 * Linked CSS file using `/static/style.css`
 * Linked JavaScript file using `/static/script.js`
@@ -113,7 +117,7 @@
 
 ---
 
-### Iteration 7: Improve JavaScript and Add Backend Communication
+### Iteration 7 - Improve JavaScript and Add Backend Communication
 
 * Refactored `login()` function using variables (e.g., `message`)
 * Removed redundant DOM operations
@@ -122,12 +126,12 @@
 * Processed backend response and displayed message dynamically
 * Added error handling for server issues
 
-> Note: Backend code is not included in this repository because it is still under development.
-> Login functionality has been tested locally with a backend.
+> Note: Backend integration has been implemented locally using Flask.
+> The application requires running the Flask server to enable full functionality.
 
 ---
 
-### Iteration 8: Header and Sidebar Structure
+### Iteration 8 - Header and Sidebar Structure
 
 * Created the basic HTML structure for the header and sidebar in index.html. 
 * The sidebar includes navigation items for main features, and a total points section is added at the bottom. 
@@ -169,12 +173,25 @@ Dynamic functionality will be implemented in future iterations.
 
 ---
 
-### Iteration 13: Enhanced Navigation
+### Iteration 13 - Enhanced Navigation
 
 - Improved navigation by making key dashboard sections clickable  
 - Enabled direct access from dashboard to History, Leaderboard, and Redemption pages  
 - Strengthened the dashboard as a central control hub for user interaction  
 - Updated README to reflect the latest changes  
+
+---
+
+### Iteration 14 - Frontend-Backend Routing Fix
+
+- Fixed issue where frontend could not communicate with backend when opened via local server (port 63342)
+- Ensured all pages are rendered through Flask using `render_template`
+- Added `/index` route to support post-login redirection
+- Implemented conditional navigation after successful login
+- Clarified correct application access method via Flask server
+ 
+---
+
 
 ## Author
 

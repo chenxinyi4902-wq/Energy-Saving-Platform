@@ -22,6 +22,9 @@ password: password
 .then(response => response.json())
 .then(data => {
 message.innerText = data.message;
+ if (data.message === "login successful") {
+        window.location.href = "/index";
+    }
 })
 .catch(error => {
 message.innerText = "Server error";

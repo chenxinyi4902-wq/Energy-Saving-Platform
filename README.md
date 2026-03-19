@@ -22,6 +22,10 @@
   - Electricity Usage History
   - Community Leaderboard
   - Points Redemption
+* Clickable dashboard sections for quick access to:
+  - Electricity Usage History
+  - Community Leaderboard
+  - Points Redemption
 * Total points display section
 
 ## Technologies Used
@@ -164,6 +168,13 @@ Dynamic functionality will be implemented in future iterations.
 - Established a basic multi-page structure for the application
 
 ---
+
+### Iteration 13: Enhanced Navigation
+
+- Improved navigation by making key dashboard sections clickable  
+- Enabled direct access from dashboard to History, Leaderboard, and Redemption pages  
+- Strengthened the dashboard as a central control hub for user interaction  
+- Updated README to reflect the latest changes  
 
 ## Author
 

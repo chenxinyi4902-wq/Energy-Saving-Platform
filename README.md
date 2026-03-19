@@ -192,6 +192,16 @@ Dynamic functionality will be implemented in future iterations.
  
 ---
 
+### Iteration 15 - Frontend Structure Preparation
+
+- Added a basic input form to the dashboard as a placeholder for future user interaction  
+- Introduced placeholder sections for **weekly** and **monthly energy usage** to support upcoming dynamic updates  
+- Created a dedicated `static/js/` folder to organize JavaScript files  
+- Initialized an empty `index.js` file for dashboard logic implementation in future iterations  
+- Separated JavaScript files by functionality 
+- Ensured each HTML page is paired with its corresponding JavaScript file to improve code organization and maintainability  
+
+---
 
 ## Author
 

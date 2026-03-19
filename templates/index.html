@@ -88,29 +88,38 @@
 
         </section>
 
-        <!-- ===== Bottom Layout: 3 Columns ===== -->
+        <!-- ===== Bottom Layout: 4 Columns ===== -->
         <!-- Layout Note:
-             - This section will be a 3-column layout using CSS
-             - Column 1 & 2: tall blocks
-             - Column 3: stacked blocks (vertical) -->
+             - This section will be a 4-column layout using CSS
+             - Column 1 & 2 & 3: tall blocks
+             - Column 4: stacked blocks (vertical) -->
         <section id="bottom-layout">
 
             <!-- ===== Column 1: Daily Input (Tall Block) ===== -->
             <!-- CSS Note: This block should be visually taller -->
             <div id="daily-input">
                 <h3>Daily Input</h3>
-                <p>Input field for electricity usage will be added later</p>
+                 <form id="usage-form">
+                     <input type="number" id="usage" placeholder="Enter kWh" min="0" step="0.1" required>
+                     <button type="submit">Save</button>
+                 </form>
             </div>
 
-            <!-- ===== Column 2: Statistics (Tall Block) ===== -->
+            <!-- ===== Column 2: Weekly usage (Tall Block) ===== -->
             <!-- CSS Note: Same height as Daily Input -->
-            <div id="statistics">
-                <h3>Statistics</h3>
-                <p>Today's Usage: <span>0 kWh</span></p>
-                <p>Monthly Usage: <span>0 kWh</span></p>
+            <div id="weekly-box">
+                <h4>Weekly Usage</h4>
+                <p><span id="weekly-usage">0</span></p>
             </div>
 
-            <!-- ===== Column 3: Right Side (Stacked Blocks) ===== -->
+            <!-- ===== Column 3: Monthly usage (Tall Block) ===== -->
+            <!-- CSS Note: Same height as Daily Input -->
+            <div id="month-box">
+                <h4>Monthly Usage</h4>
+                <p><span id="monthly-usage">0</span></p>
+            </div>
+
+            <!-- ===== Column 4: Right Side (Stacked Blocks) ===== -->
             <!-- CSS Note: This column contains two vertically stacked blocks -->
             <div id="right-column">
 
@@ -137,6 +146,8 @@
     </section>
 
 </main>
+
+<script src="{{ url_for('static', filename='js/index.js') }}"></script>
 
 </body>
 </html>

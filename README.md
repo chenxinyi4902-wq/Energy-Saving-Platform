@@ -125,8 +125,8 @@
 
 ### Iteration 8: Header and Sidebar Structure
 
-Created the basic HTML structure for the header and sidebar in index.html. 
-The sidebar includes navigation items for main features, and a total points section is added at the bottom. 
+* Created the basic HTML structure for the header and sidebar in index.html. 
+* The sidebar includes navigation items for main features, and a total points section is added at the bottom. 
 Dynamic functionality will be implemented in future iterations.
 
 ---
@@ -142,6 +142,18 @@ Dynamic functionality will be implemented in future iterations.
 * Wrapped content in a .brutal-card container for a stable, centered UI.
 * Rebranded as "Ecopulse" with a tilted CSS effect and integrated Lucide Icons (zap).
 * Added Tailwind CSS for layout utilities and used DOMContentLoaded to ensure safe script execution.
+
+---
+
+### Iteration 11: Dashboard Structure Refinement
+
+* Refined dashboard layout using semantic HTML
+* Removed redundant "Dashboard" title
+* Organized content into top and bottom sections
+* Implemented 3-column structure:
+  - Daily Input and Statistics (tall blocks)
+  - Leaderboard and Points Redemption (stacked)
+* Added comments and IDs for future CSS and JavaScript
 
 
 

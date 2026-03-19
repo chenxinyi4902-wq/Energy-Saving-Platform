@@ -145,7 +145,7 @@ Dynamic functionality will be implemented in future iterations.
 
 ---
 
-### Iteration 11: Dashboard Structure Refinement
+### Iteration 11 - Dashboard Structure Refinement
 
 * Refined dashboard layout using semantic HTML
 * Removed redundant "Dashboard" title
@@ -155,8 +155,15 @@ Dynamic functionality will be implemented in future iterations.
   - Leaderboard and Points Redemption (stacked)
 * Added comments and IDs for future CSS and JavaScript
 
+---
 
+### Iteration 12 - Navigation Structure
 
+- Converted sidebar menu items into clickable navigation links using anchor tags  
+- Created empty HTML pages for each core feature module (History, Leaderboard, Redemption)  
+- Established a basic multi-page structure for the application
+
+---
 
 ## Author
 

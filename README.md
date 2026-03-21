@@ -203,6 +203,43 @@ Dynamic functionality will be implemented in future iterations.
 
 ---
 
+### Iteration 16 - Add class 'dashboard'
+
+- Added class="dashboard" to <body> in index.html to activate dashboard styles
+
+---
+
+### Iteration 17 - Add class 'login'
+
+- Add class 'login' to body element
+
+---
+
+### Iteration 18 - Refactor CSS for login and dashboard styles
+
+- Merged style.css (login) and dashboard into a single stylesheet
+- Scoped all login styles under body.login and all dashboard styles under body.dashboard to prevent conflicts
+- No visual changes — layout, colours, and typography remain identical to previous iteration
+
+---
+
+### Iteration 19 - Refactor header and sidebar sections in index
+- Restructured sidebar navigation from plain <ul><li> list to styled <div class="nav-item"> elements with Lucide icons
+- Moved <header> from top-level <body> into <main> to match sidebar + main layout
+- Expanded header to include Current Balance display and user avatar
+- Replaced nested <section> layout with flat stats-grid, mid-grid, action-grid divs
+- Added CSS classes to all cards to connect with style.css; all original id values preserved
+
+---
+
+### Iteration 20 - Limit the webpage width and font display
+- Set width: 1440px and margin: 0 auto on body.dashboard to cap page width and centre content
+- Added max-width: 100% to prevent horizontal overflow on smaller screens
+- Linked Google Fonts (Outfit + Space Grotesk) in <head> to ensure correct font rendering
+- Fixed sidebar link colour and underline by adding text-decoration: none; color: inherit to body.dashboard aside nav a
+
+---
+
 ## Author
 
 Xinyi Chen, Yiqun Liu

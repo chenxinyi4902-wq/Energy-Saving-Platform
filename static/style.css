@@ -124,12 +124,17 @@ body.dashboard {
     background-image: radial-gradient(#ccc 1px, transparent 1px);
     background-size: 30px 30px;
     color: #000;
-    width: 1440px;
+    width: 1440px
+    max-width: 100%; 
     margin: 0 auto;
     display: flex;
     min-height: 100vh;
 }
- 
+body.dashboard aside nav a {
+    text-decoration: none;
+    color: inherit;
+}
+
 body.dashboard .brutal-border { border: 4px solid #000; }
 body.dashboard .brutal-shadow { box-shadow: 10px 10px 0px 0px #000; }
 body.dashboard .brutal-shadow-sm { box-shadow: 6px 6px 0px 0px #000; }

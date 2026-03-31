@@ -8,7 +8,7 @@
 
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;900&family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body class="dashboard">
@@ -154,27 +154,24 @@
 
     </main>
 
+    <!-- ================= MONTHLY TARGET MODAL ================= -->
+    <div id="target-modal" style="display: none;">
+        <div id="target-modal-box">
+            <h2>Set Your Monthly Electricity Target</h2>
+            <p>Please set your target before using the dashboard.</p>
+            <input
+                type="number"
+                id="monthly-target-input"
+                placeholder="Enter target in kWh"
+                min="0"
+                step="0.1"
+                required
+            >
+            <button id="submit-target-btn">Save Target</button>
+        </div>
+    </div>
+
 <script src="{{ url_for('static', filename='js/index.js') }}"></script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            lucide.createIcons();
-
-            const cards = document.querySelectorAll('.points-card, .quick-stats-card, .chart-card, .leaderboard-card, .input-card, .redemption-card');
-            cards.forEach(card => {
-                card.addEventListener('mousedown', function () {
-                    this.style.transform = 'translate(4px, 4px)';
-                    this.style.boxShadow = '2px 2px 0px 0px #000';
-                });
-                card.addEventListener('mouseup', function () {
-                    this.style.transform = '';
-                    this.style.boxShadow = '6px 6px 0px 0px #000';
-                });
-            });
-        });
-    </script>
-
-
 
 
 </body>

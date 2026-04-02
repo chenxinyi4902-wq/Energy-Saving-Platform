@@ -1,6 +1,19 @@
-Add a very simple route.
+Create a user data structure and add 
+users = {}
+to store user information in the future. 
+The server can still function normally.
 
-Now test if Flask can respond to HTTP requests correctly.
+Add more test users.
 
-Page returns:
-Backend running
+This is because the leaderboard and statistics will require multiple users later.
+users = {
+    "alex": {
+        "password": "123456"
+    },
+    "lisa": {
+        "password": "abcdef"
+    },
+    "tom": {
+        "password": "111111"
+    }
+}

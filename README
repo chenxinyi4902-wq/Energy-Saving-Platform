@@ -1,20 +1,17 @@
-Because later on there will be:
+Objective
 
-Monthly goals
+Create a login route, but do not process data yet.
 
-Electricity usage records
+Modify app.py
 
-So let's prepare the structure in advance.
+First, import request and jsonify.
 
-data structure:
-password (user password)
-monthly_target (monthly energy target)
-energy_records (daily energy records)
+Test
 
-users = {
-    username:{
-        password,
-        monthly_target,
-        energy_records
-    }
+Send using Postman or a front-end:
+POST /login
+
+return:
+{
+ "message": "login endpoint ready"
 }

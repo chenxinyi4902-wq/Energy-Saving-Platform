@@ -1,6 +1,6 @@
-Import Flask and create a Flask application object.
+Add a very simple route.
 
-At this point, the server is not started yet; this is just a test to see if Flask can be imported.
+Now test if Flask can respond to HTTP requests correctly.
 
-Terminal output:
-Flask imported successfully
+Page returns:
+Backend running

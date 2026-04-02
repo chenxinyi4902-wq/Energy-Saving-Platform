@@ -1,0 +1,6 @@
+Import Flask and create a Flask application object.
+
+At this point, the server is not started yet; this is just a test to see if Flask can be imported.
+
+Terminal output:
+Flask imported successfully

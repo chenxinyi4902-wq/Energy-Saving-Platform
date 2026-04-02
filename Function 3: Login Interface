@@ -1,8 +1,7 @@
-from flask import Flask
+from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-# user database
 users = {
     "alex": {
         "password": "123456",
@@ -25,5 +24,11 @@ users = {
 def home():
     return "Backend running"
 
+
+@app.route("/login", methods=["POST"])
+def login():
+    return jsonify({"message": "login endpoint ready"})
+
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=5001)

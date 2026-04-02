@@ -5,13 +5,19 @@ app = Flask(__name__)
 # user database
 users = {
     "alex": {
-        "password": "123456"
+        "password": "123456",
+        "monthly_target": None,
+        "energy_records": []
     },
     "lisa": {
-        "password": "abcdef"
+        "password": "abcdef",
+        "monthly_target": None,
+        "energy_records": []
     },
     "tom": {
-        "password": "111111"
+        "password": "111111",
+        "monthly_target": None,
+        "energy_records": []
     }
 }
 

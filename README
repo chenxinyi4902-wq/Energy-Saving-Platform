@@ -1,19 +1,20 @@
-Create a user data structure and add 
-users = {}
-to store user information in the future. 
-The server can still function normally.
+Because later on there will be:
 
-Add more test users.
+Monthly goals
 
-This is because the leaderboard and statistics will require multiple users later.
+Electricity usage records
+
+So let's prepare the structure in advance.
+
+data structure:
+password (user password)
+monthly_target (monthly energy target)
+energy_records (daily energy records)
+
 users = {
-    "alex": {
-        "password": "123456"
-    },
-    "lisa": {
-        "password": "abcdef"
-    },
-    "tom": {
-        "password": "111111"
+    username:{
+        password,
+        monthly_target,
+        energy_records
     }
 }

@@ -1,17 +1,17 @@
-Objective
+Function 3 Completed;
 
-Create a login route, but do not process data yet.
+Current Login Flow:
 
-Modify app.py
-
-First, import request and jsonify.
-
-Test
-
-Send using Postman or a front-end:
 POST /login
 
-return:
-{
- "message": "login endpoint ready"
-}
+↓ Receive username/password
+
+↓ Check if user exists
+
+↓ Verify password
+
+↓ Return login result
+
+The next step will be:
+
+Function 4: Setting Monthly Goals

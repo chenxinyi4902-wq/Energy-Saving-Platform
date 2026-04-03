@@ -27,8 +27,19 @@ def home():
 
 @app.route("/login", methods=["POST"])
 def login():
-    return jsonify({"message": "login endpoint ready"})
 
+    data = request.get_json()
+
+    username = data.get("username")
+    password = data.get("password")
+
+    if username not in users:
+        return jsonify({"message": "user not found"}), 404
+
+    if users[username]["password"] != password:
+        return jsonify({"message": "incorrect password"}), 401
+
+    return jsonify({"message": "login successful"})
 
 if __name__ == "__main__":
     app.run(debug=True, port=5001)

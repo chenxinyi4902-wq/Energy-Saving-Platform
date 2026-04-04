@@ -27,19 +27,19 @@
             <!-- Note: These items will link to different functional modules in future iterations -->
             <div class="nav-item active-nav">
                 <i data-lucide="layout-dashboard"></i>
-                <a href="index.html">Dashboard</a>
+                <a href="{{ url_for('index') }}">Dashboard</a>
             </div>
             <div class="nav-item interactive-element">
                 <i data-lucide="activity"></i>
-                <a href="history.html">Electricity Usage History</a>
+                <a href="#">Electricity Usage History</a>
             </div>
             <div class="nav-item interactive-element">
                 <i data-lucide="trophy"></i>
-                <a href="leaderboard.html">Community Leaderboard</a>
+                <a href="#">Community Leaderboard</a>
             </div>
             <div class="nav-item interactive-element">
                 <i data-lucide="gift"></i>
-                <a href="redeem.html">Points Redemption</a>
+                <a href="#">Points Redemption</a>
             </div>
 
         </nav>
@@ -90,38 +90,40 @@
                 </div>
             </div>
 
+            <div id="monthly-progress" class="progress-card">
+                <h3 class="card-title">Monthly Progress</h3>
+                <p>Saved Energy: 0 kWh</p>
+                <p>Saving Rate: 0%</p>
+                <p>Current Target: 0 kWh</p>
+            </div>
+
         </div>
 
         <!-- MID GRID：Chart + Leaderboard -->
         <div class="mid-grid">
+            <div id="usage-trend" class="chart-card">
+                <h3 class="card-title"><i data-lucide="line-chart"></i> Electricity Usage Trend</h3>
+                <div class="chart-placeholder">
+                    <p>Chart will be implemented in future iterations</p>
+                </div>
+            </div>
 
-            <a href="history.html" style="text-decoration:none; color:inherit;">
-                <div id="usage-trend" class="chart-card">
-                    <h3 class="card-title"><i data-lucide="line-chart"></i> Electricity Usage Trend</h3>
-                    <div class="chart-placeholder">
-                        <p>Chart will be implemented in future iterations</p>
+            <div id="leaderboard" class="leaderboard-card">
+                <h3 class="card-title"><i data-lucide="users"></i> Community Leaderboard</h3>
+                <div class="leaderboard-list">
+                    <div class="lb-row top">
+                        <span>01. GREEN_WIZARD</span>
+                        <span>8,900 PTS</span>
+                    </div>
+                    <div class="lb-row">
+                        <span>02. SOLAR_PUNK</span>
+                        <span>7,420 PTS</span>
+                    </div>
+                    <div class="lb-row pending">
+                        <span>Ranking system will be implemented later</span>
                     </div>
                 </div>
-            </a>
-
-            <a href="leaderboard.html" style="text-decoration:none; color:inherit;">
-                <div id="leaderboard" class="leaderboard-card">
-                    <h3 class="card-title"><i data-lucide="users"></i> Community Leaderboard</h3>
-                    <div class="leaderboard-list">
-                        <div class="lb-row top">
-                            <span>01. GREEN_WIZARD</span>
-                            <span>8,900 PTS</span>
-                        </div>
-                        <div class="lb-row">
-                            <span>02. SOLAR_PUNK</span>
-                            <span>7,420 PTS</span>
-                        </div>
-                        <div class="lb-row pending">
-                            <span>Ranking system will be implemented later</span>
-                        </div>
-                    </div>
-                </div>
-            </a>
+            </div>
 
         </div>
 
@@ -138,17 +140,15 @@
                 </form>
             </div>
 
-            <a href="redeem.html" style="text-decoration:none; color:inherit;">
-                <div id="points-redeem" class="redemption-card">
-                    <div>
-                        <h3 class="card-title">Points Redemption</h3>
-                        <p>Reward exchange system will be implemented later</p>
-                    </div>
-                    <button class="redeem-btn interactive-element">
-                        <i data-lucide="shopping-bag"></i>
-                    </button>
+            <div id="points-redeem" class="redemption-card">
+                <div>
+                    <h3 class="card-title">Points Redemption</h3>
+                    <p>Reward exchange system will be implemented later</p>
                 </div>
-            </a>
+                <button class="redeem-btn interactive-element">
+                    <i data-lucide="shopping-bag"></i>
+                </button>
+            </div>
 
         </div>
 

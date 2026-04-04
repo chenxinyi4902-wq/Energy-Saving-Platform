@@ -1,8 +1,13 @@
 // ================= USER SESSION =================
-const currentUser = localStorage.getItem("username") || "Username";
+const currentUser = localStorage.getItem("username");
+
+if (!currentUser) {
+    window.location.href = "/";
+}
 
 // ================= PAGE INITIALIZATION =================
 document.addEventListener("DOMContentLoaded", () => {
+    lucide.createIcons();
     initializePage();
 });
 
@@ -104,20 +109,22 @@ function handleSetTarget() {
         return;
     }
 
-    fetch("/set-monthly-target", {
+    fetch("/set-target", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
             username: currentUser,
-            monthly_target: numericTarget
+            target: numericTarget
         })
     })
         .then(response => response.json())
         .then(data => {
-            if (data.success) {
+            if (data.target !== undefined) {
                 hideTargetModal();
+
+                loadDashboardData();
                 console.log("Monthly target set successfully.");
             } else {
                 alert(data.message || "Failed to save monthly target.");
@@ -156,54 +163,112 @@ function handleUsageSubmit(event) {
         return;
     }
 
-    console.log("Daily usage submitted:", {
-        username: currentUser,
-        usage: numericUsage
-    });
+    fetch("/add-energy", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            username: currentUser,
+            energy: numericUsage
+        })
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (
+                data.message === "energy added" ||
+                data.message === "today's record updated"
+            ) {
+                alert("Daily usage saved successfully.");
 
-    alert("Daily usage saved successfully.");
+                if (usageInput) {
+                    usageInput.value = "";
+                }
 
-    if (usageInput) {
-        usageInput.value = "";
-    }
+                loadDashboardData();
+            } else {
+                alert(data.message || "Failed to save daily usage.");
+            }
+        })
+        .catch(error => {
+            console.error("Error saving daily usage:", error);
+            alert("Something went wrong while saving daily usage.");
+        });
 }
+
 
 // ================= DASHBOARD DATA =================
 function loadDashboardData() {
-    loadPoints();
-    loadWeeklyUsage();
-    loadMonthlyUsage();
+    loadEnergySummary();
+    loadWeeklySummary();
 }
 
-function loadPoints() {
+function loadEnergySummary() {
+    fetch(`/energy-summary?username=${encodeURIComponent(currentUser)}`)
+        .then(response => response.json())
+        .then(data => {
+            updateMonthlyUsage(data.total_energy_this_month);
+            updatePoints(data.points_earned);
+            updateMonthlyProgress(data.save_percentage, data.saved_energy, data.prorated_target);
+        })
+        .catch(error => {
+            console.error("Error loading energy summary:", error);
+        });
+}
+
+function loadWeeklySummary() {
+    fetch(`/weekly-summary?username=${encodeURIComponent(currentUser)}`)
+        .then(response => response.json())
+        .then(data => {
+            updateWeeklyUsage(data.total_energy_this_week);
+        })
+        .catch(error => {
+            console.error("Error loading weekly summary:", error);
+        });
+}
+
+// ================= UI UPDATE FUNCTIONS =================
+
+function updatePoints(points) {
     const pointsDisplay = document.getElementById("points-display");
     const totalPoints = document.getElementById("total-points");
 
-    const points = 0;
+    const safePoints = points ?? 0;
 
     if (pointsDisplay) {
-        pointsDisplay.textContent = points;
+        pointsDisplay.textContent = safePoints;
     }
 
     if (totalPoints) {
-        totalPoints.textContent = points;
+        totalPoints.textContent = safePoints;
     }
 }
 
-function loadWeeklyUsage() {
+function updateWeeklyUsage(weeklyValue) {
     const weeklyUsage = document.getElementById("weekly-usage");
-    const weeklyValue = 0;
 
     if (weeklyUsage) {
-        weeklyUsage.textContent = weeklyValue;
+        weeklyUsage.textContent = weeklyValue ?? 0;
     }
 }
 
-function loadMonthlyUsage() {
+function updateMonthlyUsage(monthlyValue) {
     const monthlyUsage = document.getElementById("monthly-usage");
-    const monthlyValue = 0;
 
     if (monthlyUsage) {
-        monthlyUsage.textContent = monthlyValue;
+        monthlyUsage.textContent = monthlyValue ?? 0;
     }
+}
+
+function updateMonthlyProgress(savePercentage, savedEnergy, proratedTarget) {
+    const monthlyProgress = document.getElementById("monthly-progress");
+
+    if (!monthlyProgress) return;
+
+    monthlyProgress.innerHTML = `
+        <h3 class="card-title">Monthly Progress</h3>
+        <p>Saved Energy: ${savedEnergy ?? 0} kWh</p>
+        <p>Saving Rate: ${savePercentage ?? 0}%</p>
+        <p>Current Target: ${proratedTarget ?? 0} kWh</p>
+    `;
 }

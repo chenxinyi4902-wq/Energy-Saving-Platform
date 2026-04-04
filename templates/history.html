@@ -2,9 +2,72 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>History</title>
-</head>
-<body>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electricity Usage History - Ecopulse</title>
 
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;900&family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="dashboard">
+
+    <aside>
+        <div class="sidebar-logo">
+            <h1 class="title-pop">ECOPULSE</h1>
+        </div>
+
+        <nav>
+            <div class="nav-item interactive-element">
+                <i data-lucide="layout-dashboard"></i>
+                <a href="{{ url_for('index') }}">Dashboard</a>
+            </div>
+            <div class="nav-item active-nav">
+                <i data-lucide="activity"></i>
+                <a href="#">Electricity Usage History</a>
+            </div>
+            <div class="nav-item interactive-element">
+                <i data-lucide="trophy"></i>
+                <a href="#">Community Leaderboard</a>
+            </div>
+            <div class="nav-item interactive-element">
+                <i data-lucide="gift"></i>
+                <a href="#">Points Redemption</a>
+            </div>
+        </nav>
+
+        <div class="sidebar-footer">SYSTEM_v2.0.4</div>
+    </aside>
+
+    <main>
+        <header>
+            <div>
+                <h2>Electricity Usage History</h2>
+                <p>Track and review your past electricity usage records.</p>
+            </div>
+        </header>
+
+        <section class="history-table-card">
+            <h3 class="card-title">Usage Records</h3>
+
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Electricity Usage (kWh)</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="history-table-body">
+                    <tr class="empty-row">
+                        <td colspan="3">History records will be displayed here in future iterations.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script>
+        lucide.createIcons();
+    </script>
 </body>
 </html>

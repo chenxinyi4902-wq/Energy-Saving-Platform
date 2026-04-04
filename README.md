@@ -252,6 +252,16 @@ Dynamic functionality will be implemented in future iterations.
 * Added placeholder loading logic for points, weekly usage, and monthly usage
 
 ---
+### Iteration 22 – Refine dashboard interaction and improve history page framework
+
+* Added a frontend session check to prevent unauthorized access to the dashboard
+* Updated the dashboard navigation link to better match the Flask route structure
+* Enabled Lucide icon rendering correctly on the dashboard page
+* Added the monthly progress section to improve saving data visibility
+* Improved the Electricity Usage History page framework
+* Updated the history table to use an empty placeholder state for future backend integration
+* Enhanced overall frontend consistency across dashboard and history modules
+---
 
 ## Author
 

@@ -263,6 +263,15 @@ Dynamic functionality will be implemented in future iterations.
 * Enhanced overall frontend consistency across dashboard and history modules
 ---
 
+### Iteration 23 - Update history page and implement dashboard usage trend chart
+* Improved `history.html` to support real record display
+* Created `history.js` to render history data for the current user
+* Updated `index.html` to include a real chart container
+* Updated `index.js` to render the electricity usage trend chart from backend data
+* Added curved line and gradient area effect for the dashboard chart
+
+---
+
 ## Author
 
 Xinyi Chen, Yiqun Liu

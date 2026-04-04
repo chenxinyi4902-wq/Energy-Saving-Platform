@@ -54,12 +54,11 @@
                     <tr>
                         <th>Date</th>
                         <th>Electricity Usage (kWh)</th>
-                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody id="history-table-body">
                     <tr class="empty-row">
-                        <td colspan="3">History records will be displayed here in future iterations.</td>
+                        <td colspan="2">History records will be displayed here in future iterations.</td>
                     </tr>
                 </tbody>
             </table>
@@ -69,5 +68,6 @@
     <script>
         lucide.createIcons();
     </script>
+    <script src="{{ url_for('static', filename='js/history.js') }}"></script>
 </body>
 </html>

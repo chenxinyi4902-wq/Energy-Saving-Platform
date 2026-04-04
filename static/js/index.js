@@ -1,9 +1,11 @@
 // ================= USER SESSION =================
-const currentUser = localStorage.getItem("username");
+const currentUser = localStorage.getItem("currentUser");
 
 if (!currentUser) {
     window.location.href = "/";
 }
+
+let energyChart = null;
 
 // ================= PAGE INITIALIZATION =================
 document.addEventListener("DOMContentLoaded", () => {
@@ -201,6 +203,7 @@ function handleUsageSubmit(event) {
 function loadDashboardData() {
     loadEnergySummary();
     loadWeeklySummary();
+    loadUsageTrend();
 }
 
 function loadEnergySummary() {
@@ -227,6 +230,92 @@ function loadWeeklySummary() {
         });
 }
 
+function loadUsageTrend() {
+    fetch(`/user-data?username=${encodeURIComponent(currentUser)}`)
+        .then(response => response.json())
+        .then(data => {
+            if (!data.energy_records || data.energy_records.length === 0) {
+                console.error("No energy records found.");
+                return;
+            }
+
+            const records = data.energy_records.sort(
+                (a, b) => new Date(a.date) - new Date(b.date)
+            );
+
+            renderEnergyChart(records);
+        })
+        .catch(error => {
+            console.error("Error loading usage trend data:", error);
+        });
+}
+// Temporary chart styling for the current iteration; colors and gradient effects can be refined in later iterations.
+function renderEnergyChart(records) {
+    const canvas = document.getElementById("energyChart");
+
+    if (!canvas) {
+        console.error("energyChart canvas not found.");
+        return;
+    }
+
+    const ctx = canvas.getContext("2d");
+
+    const labels = records.map(record => record.date);
+    const values = records.map(record => record.energy);
+
+    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    gradient.addColorStop(0, "rgba(34, 197, 94, 0.35)");
+    gradient.addColorStop(0.5, "rgba(34, 197, 94, 0.16)");
+    gradient.addColorStop(1, "rgba(34, 197, 94, 0.03)");
+
+    if (energyChart) {
+        energyChart.destroy();
+    }
+
+    energyChart = new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: "Daily Energy Usage (kWh)",
+                    data: values,
+                    borderColor: "rgba(34, 197, 94, 1)",
+                    backgroundColor: gradient,
+                    fill: true,
+                    tension: 0.45,
+                    borderWidth: 3,
+                    pointRadius: 3,
+                    pointHoverRadius: 5,
+                    pointBackgroundColor: "rgba(34, 197, 94, 1)",
+                    pointBorderWidth: 0
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        display: false
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: "rgba(0, 0, 0, 0.06)"
+                    }
+                }
+            }
+        }
+    });
+}
 // ================= UI UPDATE FUNCTIONS =================
 
 function updatePoints(points) {

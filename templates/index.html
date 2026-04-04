@@ -103,8 +103,8 @@
         <div class="mid-grid">
             <div id="usage-trend" class="chart-card">
                 <h3 class="card-title"><i data-lucide="line-chart"></i> Electricity Usage Trend</h3>
-                <div class="chart-placeholder">
-                    <p>Chart will be implemented in future iterations</p>
+                <div class="chart-container">
+                    <canvas id="energyChart"></canvas>
                 </div>
             </div>
 
@@ -171,7 +171,9 @@
         </div>
     </div>
 
-<script src="{{ url_for('static', filename='js/index.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
 
 
 </body>

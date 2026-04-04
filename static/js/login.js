@@ -23,6 +23,7 @@ password: password
 .then(data => {
 message.innerText = data.message;
  if (data.message === "login successful") {
+        localStorage.setItem("currentUser", username);
         window.location.href = "/index";
     }
 })

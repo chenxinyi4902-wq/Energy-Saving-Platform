@@ -272,6 +272,13 @@ Dynamic functionality will be implemented in future iterations.
 
 ---
 
+### Iteration 24 - add leaderboard page framework
+* Improved `leaderboard.html` as the Community Leaderboard page
+* Created `leaderboard.js` for leaderboard page logic
+* Added a centered leaderboard title and table structure
+* Added Rank, User, and Points columns
+* Reserved the leaderboard table body and JavaScript functions for future backend integration
+* Updated frontend navigation links to support leaderboard page access
 ## Author
 
 Xinyi Chen, Yiqun Liu

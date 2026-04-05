@@ -310,6 +310,10 @@ Dynamic functionality will be implemented in future iterations.
 
 ---
 
+### Iteration 28 - Fix naming inconsistencies in scripts and routes
+* Fixed JavaScript file reference and unified frontend-backend route naming, resolving page navigation and template rendering issues.
+
+---
 
 ## Author
 

@@ -50,6 +50,8 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function initializeRedemptionPage() {
+    renderRewardCards();
+    bindRedeemGrid();
     loadPointsEarned();
 }
 
@@ -63,7 +65,7 @@ function loadPointsEarned() {
     fetch(`/energy-summary?username=${encodeURIComponent(currentUser)}`)
         .then(response => response.json())
         .then(data => {
-            currentPointsEarned = data.points_earned ?? 0;
+            currentPointsEarned = Number(data.points_earned) || 0;
             pointsEarned.textContent = currentPointsEarned;
 
             renderRewardCards();
@@ -88,21 +90,32 @@ function renderRewardCards() {
 
     redemptionGrid.innerHTML = "";
 
+    if (!Array.isArray(rewardData) || rewardData.length === 0) {
+        redemptionGrid.innerHTML = `
+            <p>No rewards are available right now.</p>
+        `;
+        return;
+    }
+
     rewardData.forEach(reward => {
-        const canRedeem = currentPointsEarned >= reward.points_required;
+        const rewardName = reward.name ?? "Unnamed Reward";
+        const rewardId = reward.reward_id ?? "";
+        const requiredPoints = Number(reward.points_required) || 0;
+        const rewardDescription = reward.description ?? "No description available.";
+        const canRedeem = currentPointsEarned >= requiredPoints;
 
         const rewardCard = document.createElement("div");
         rewardCard.className = "reward-card";
 
         rewardCard.innerHTML = `
             <h4>${reward.name}</h4>
-            <p><strong>Required Points:</strong> ${reward.points_required}</p>
-            <p>${reward.description}</p>
+            <p><strong>Required Points:</strong> ${requiredPoints}</p>
+            <p>${rewardDescription}</p>
             <button
                 class="redeem-action-btn"
-                data-reward-id="${reward.reward_id}"
-                data-reward-name="${reward.name}"
-                data-points-required="${reward.points_required}"
+                data-reward-id="${rewardId}"
+                data-reward-name="${rewardName}"
+                data-points-required="${requiredPoints}"
                 ${canRedeem ? "" : "disabled"}
             >
                 ${canRedeem ? "Redeem" : "Not Enough Points"}
@@ -111,27 +124,33 @@ function renderRewardCards() {
 
         redemptionGrid.appendChild(rewardCard);
     });
-
-    bindRedeemButtons();
 }
 
-function bindRedeemButtons() {
-    const redeemButtons = document.querySelectorAll(".redeem-action-btn");
+function bindRedeemGrid() {
+    const redemptionGrid = document.getElementById("redemption-grid");
 
-    redeemButtons.forEach(button => {
-        button.addEventListener("click", () => {
-            const rewardName = button.dataset.rewardName;
-            const pointsRequired = Number(button.dataset.pointsRequired);
+    if (!redemptionGrid) {
+        return;
+    }
 
-            if (currentPointsEarned < pointsRequired) {
-                updateRedemptionMessage(`You do not have enough points to redeem ${rewardName}.`);
-                return;
-            }
+    redemptionGrid.addEventListener("click", event => {
+        const button = event.target.closest(".redeem-action-btn");
 
-            updateRedemptionMessage(
-                `${rewardName} is ready for redemption. Backend redemption logic will be connected in a later iteration.`
-            );
-        });
+        if (!button) {
+            return;
+        }
+
+        const rewardName = button.dataset.rewardName || "this reward";
+        const pointsRequired = Number(button.dataset.pointsRequired) || 0;
+
+        if (currentPointsEarned < pointsRequired) {
+            updateRedemptionMessage(`You do not have enough points to redeem ${rewardName}.`);
+            return;
+        }
+
+        updateRedemptionMessage(
+            `${rewardName} is ready for redemption. Backend redemption logic will be connected in a later iteration.`
+        );
     });
 }
 

@@ -302,6 +302,15 @@ Dynamic functionality will be implemented in future iterations.
 * Preserved unsupported backend-dependent features as placeholders instead of introducing inconsistent API names
 
 ---
+
+### Iteration 27 - Improve leaderboard and redemption page logic
+* Improved leaderboard page stability and empty-state handling
+* Improved redemption page stability and reward interaction logic
+* Kept both pages ready for future backend integration
+
+---
+
+
 ## Author
 
 Xinyi Chen, Yiqun Liu

@@ -279,6 +279,20 @@ Dynamic functionality will be implemented in future iterations.
 * Added Rank, User, and Points columns
 * Reserved the leaderboard table body and JavaScript functions for future backend integration
 * Updated frontend navigation links to support leaderboard page access
+
+---
+
+### Iteration 25 - add points redemption page framework
+* Improved `redemption.html` as the Points Redemption page
+* Created `redemption.js` for redemption page logic
+* Added a current points display area as a placeholder for future backend integration
+* Added six sample reward items with required points and descriptions
+* Rendered reward cards dynamically using JavaScript
+* Added placeholder button states and inline feedback for future redemption functionality
+* Updated frontend navigation links to support redemption page access
+
+---
+
 ## Author
 
 Xinyi Chen, Yiqun Liu

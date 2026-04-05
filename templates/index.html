@@ -52,13 +52,13 @@
         <!-- HEADER -->
         <header>
             <div>
-                <h2>Good Afternoon, <span>Username</span></h2>
-                <p>Grid Connectivity: 98.4% Efficiency</p>
+                <h2 id="greeting-title"></h2>
+                <p id="header-subtitle">Energy Saving Progress: --</p>
             </div>
             <div class="header-right">
                 <div style="text-align:right;">
                     <p class="balance-label">Current Balance</p>
-                    <p class="balance-value"><span id="total-points">0</span> PTS</p>
+                    <p class="balance-value"><span id="total-points">--</span> PTS</p>
                 </div>
                 <div class="avatar">
                     <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop" alt="avatar">
@@ -66,14 +66,16 @@
             </div>
         </header>
 
+        <div id="page-message" class="page-message hidden" role="alert" aria-live="polite"></div>
+        <!-- # CSS NEEDED: .page-message .page-message.hidden .page-message.success .page-message.error .page-message.info -->
+
         <!-- STATS GRID：Total Points + Weekly/Monthly Usage -->
         <div class="stats-grid">
 
             <div class="points-card brutal-shadow-sm">
                 <i data-lucide="star" class="bg-icon"></i>
                 <h3 class="card-title">Total Points</h3>
-                <p class="big-number"><span id="points-display">0</span></p>
-                <div class="points-badge">+120 THIS WEEK ↑</div>
+                <p class="big-number"><span id="points-display">--</span></p>
             </div>
 
             <div class="quick-stats-card">
@@ -81,20 +83,20 @@
                 <div class="quick-stats-inner">
                     <div class="stat-box">
                         <p class="stat-label">Weekly Usage</p>
-                        <p class="stat-value"><span id="weekly-usage">0</span> <span>kWh</span></p>
+                        <p class="stat-value"><span id="weekly-usage">--</span> <span>kWh</span></p>
                     </div>
                     <div class="stat-box">
                         <p class="stat-label">Monthly Usage</p>
-                        <p class="stat-value"><span id="monthly-usage">0</span> <span>kWh</span></p>
+                        <p class="stat-value"><span id="monthly-usage">--</span> <span>kWh</span></p>
                     </div>
                 </div>
             </div>
 
             <div id="monthly-progress" class="progress-card">
                 <h3 class="card-title">Monthly Progress</h3>
-                <p>Saved Energy: 0 kWh</p>
-                <p>Saving Rate: 0%</p>
-                <p>Current Target: 0 kWh</p>
+                <p>Saved Energy: -- kWh</p>
+                <p>Saving Rate: --%</p>
+                <p>Current Target: -- kWh</p>
             </div>
 
         </div>
@@ -106,19 +108,16 @@
                 <div class="chart-container">
                     <canvas id="energyChart"></canvas>
                 </div>
+
+                <p id="chart-empty-message" class="chart-empty-message hidden">
+                    Trend data is not available yet.
+                </p>
+                <!-- # CSS NEEDED: .chart-empty-message .chart-empty-message.hidden -->
             </div>
 
             <div id="leaderboard" class="leaderboard-card">
                 <h3 class="card-title"><i data-lucide="users"></i> Community Leaderboard</h3>
                 <div class="leaderboard-list">
-                    <div class="lb-row top">
-                        <span>01. GREEN_WIZARD</span>
-                        <span>8,900 PTS</span>
-                    </div>
-                    <div class="lb-row">
-                        <span>02. SOLAR_PUNK</span>
-                        <span>7,420 PTS</span>
-                    </div>
                     <div class="lb-row pending">
                         <span>Ranking system will be implemented later</span>
                     </div>
@@ -135,7 +134,7 @@
                 <form id="usage-form">
                     <div class="input-row">
                         <input type="number" id="usage" placeholder="Enter kWh" min="0" step="0.1" required>
-                        <button type="submit">Save</button>
+                        <button type="submit" id="save-usage-btn">Save</button>
                     </div>
                 </form>
             </div>
@@ -168,11 +167,12 @@
                 required
             >
             <button id="submit-target-btn">Save Target</button>
+
+            <div id="target-modal-message" class="page-message hidden" role="alert" aria-live="polite"></div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <script src="{{ url_for('static', filename='js/index.js') }}"></script>
 
 

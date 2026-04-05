@@ -272,7 +272,7 @@ Dynamic functionality will be implemented in future iterations.
 
 ---
 
-### Iteration 24 - add leaderboard page framework
+### Iteration 24 - Add leaderboard page framework
 * Improved `leaderboard.html` as the Community Leaderboard page
 * Created `leaderboard.js` for leaderboard page logic
 * Added a centered leaderboard title and table structure
@@ -282,7 +282,7 @@ Dynamic functionality will be implemented in future iterations.
 
 ---
 
-### Iteration 25 - add points redemption page framework
+### Iteration 25 - Add points redemption page framework
 * Improved `redemption.html` as the Points Redemption page
 * Created `redemption.js` for redemption page logic
 * Added a current points display area as a placeholder for future backend integration
@@ -293,6 +293,15 @@ Dynamic functionality will be implemented in future iterations.
 
 ---
 
+### Iteration 26 – Improve frontend-backend alignment and update index/history pages
+
+* Reviewed frontend naming against the default Flask backend version
+* Improved the dashboard structure and frontend logic to better match current backend requirements
+* Expanded the history page into a more complete frontend framework
+* Added greeting, username display, usage table structure, and empty-state handling to the history page
+* Preserved unsupported backend-dependent features as placeholders instead of introducing inconsistent API names
+
+---
 ## Author
 
 Xinyi Chen, Yiqun Liu

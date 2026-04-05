@@ -21,9 +21,44 @@ function initializePage() {
     loadDashboardData();
 }
 
+// ================= MESSAGE HELPERS =================
+function showPageMessage(message, type = "info") {
+    const box = document.getElementById("page-message");
+    if (!box) return;
+
+    box.textContent = message;
+    box.className = `page-message ${type}`;
+    box.classList.remove("hidden");
+}
+
+function hidePageMessage() {
+    const box = document.getElementById("page-message");
+    if (!box) return;
+
+    box.textContent = "";
+    box.className = "page-message hidden";
+}
+
+function showTargetModalMessage(message, type = "error") {
+    const box = document.getElementById("target-modal-message");
+    if (!box) return;
+
+    box.textContent = message;
+    box.className = `page-message ${type}`;
+    box.classList.remove("hidden");
+}
+
+function hideTargetModalMessage() {
+    const box = document.getElementById("target-modal-message");
+    if (!box) return;
+
+    box.textContent = "";
+    box.className = "page-message hidden";
+}
+
 // ================= HEADER =================
 function updateGreeting() {
-    const greetingTitle = document.querySelector("header h2");
+    const greetingTitle = document.getElementById("greeting-title");
     if (!greetingTitle) return;
 
     const hour = new Date().getHours();
@@ -44,6 +79,18 @@ function updateGreeting() {
     greetingTitle.innerHTML = `${greetingText}, <span>${currentUser}</span>`;
 }
 
+function updateHeaderProgress(savePercentage) {
+    const headerSubtitle = document.getElementById("header-subtitle");
+
+    if (!headerSubtitle) return;
+
+    if (savePercentage === undefined || savePercentage === null) {
+        headerSubtitle.textContent = "Energy Saving Progress: --";
+        return;
+    }
+
+    headerSubtitle.textContent = `Energy Saving Progress: ${savePercentage}%`;
+}
 // ================= MONTHLY TARGET MODAL =================
 function bindTargetButton() {
     const submitBtn = document.getElementById("submit-target-btn");
@@ -91,24 +138,32 @@ function hideTargetModal() {
     if (modal) {
         modal.style.display = "none";
     }
-
+    hideTargetModalMessage();
     document.body.classList.remove("is-locked");
 }
 
 function handleSetTarget() {
     const targetInput = document.getElementById("monthly-target-input");
+    const submitBtn = document.getElementById("submit-target-btn");
     const targetValue = targetInput ? targetInput.value.trim() : "";
 
+    hideTargetModalMessage();
+
     if (targetValue === "") {
-        alert("Please enter your monthly electricity target.");
+        showTargetModalMessage("Please enter your monthly electricity target.", "error");
         return;
     }
 
     const numericTarget = parseFloat(targetValue);
 
     if (isNaN(numericTarget) || numericTarget <= 0) {
-        alert("Please enter a valid target greater than 0.");
+        showTargetModalMessage("Please enter a valid target greater than 0.", "error");
         return;
+    }
+
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Saving...";
     }
 
     fetch("/set-target", {
@@ -125,16 +180,22 @@ function handleSetTarget() {
         .then(data => {
             if (data.target !== undefined) {
                 hideTargetModal();
-
                 loadDashboardData();
+                showPageMessage("Monthly target saved successfully.", "success");
                 console.log("Monthly target set successfully.");
             } else {
-                alert(data.message || "Failed to save monthly target.");
+                showTargetModalMessage(data.message || "Failed to save monthly target.","error");
             }
         })
         .catch(error => {
             console.error("Error setting monthly target:", error);
-            alert("Something went wrong while saving the target.");
+            showTargetModalMessage("Something went wrong while saving the target.","error");
+        })
+        .finally(() => {
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = "Save Target";
+            }
         });
 }
 
@@ -150,19 +211,27 @@ function bindUsageForm() {
 function handleUsageSubmit(event) {
     event.preventDefault();
 
+    hidePageMessage();
+
     const usageInput = document.getElementById("usage");
+    const saveBtn = document.getElementById("save-usage-btn");
     const usageValue = usageInput ? usageInput.value.trim() : "";
 
     if (usageValue === "") {
-        alert("Please enter today's electricity usage.");
+        showPageMessage("Please enter today's electricity usage.","error");
         return;
     }
 
     const numericUsage = parseFloat(usageValue);
 
     if (isNaN(numericUsage) || numericUsage < 0) {
-        alert("Please enter a valid electricity usage value.");
+        showPageMessage("Please enter a valid electricity usage value.","error");
         return;
+    }
+
+    if (saveBtn) {
+        saveBtn.disabled = true;
+        saveBtn.textContent = "Saving...";
     }
 
     fetch("/add-energy", {
@@ -181,7 +250,7 @@ function handleUsageSubmit(event) {
                 data.message === "energy added" ||
                 data.message === "today's record updated"
             ) {
-                alert("Daily usage saved successfully.");
+                showPageMessage("Daily usage saved successfully.","success");
 
                 if (usageInput) {
                     usageInput.value = "";
@@ -189,12 +258,18 @@ function handleUsageSubmit(event) {
 
                 loadDashboardData();
             } else {
-                alert(data.message || "Failed to save daily usage.");
+                showPageMessage(data.message || "Failed to save daily usage.","error");
             }
         })
         .catch(error => {
             console.error("Error saving daily usage:", error);
-            alert("Something went wrong while saving daily usage.");
+            showPageMessage("Something went wrong while saving daily usage.","error");
+        })
+        .finally(() => {
+            if (saveBtn) {
+                saveBtn.disabled = false;
+                saveBtn.textContent = "Save";
+            }
         });
 }
 
@@ -213,9 +288,12 @@ function loadEnergySummary() {
             updateMonthlyUsage(data.total_energy_this_month);
             updatePoints(data.points_earned);
             updateMonthlyProgress(data.save_percentage, data.saved_energy, data.prorated_target);
+            updateHeaderProgress(data.save_percentage);
         })
         .catch(error => {
             console.error("Error loading energy summary:", error);
+            showPageMessage("Unable to load monthly summary right now.", "error");
+            updateHeaderProgress(null);
         });
 }
 
@@ -227,15 +305,22 @@ function loadWeeklySummary() {
         })
         .catch(error => {
             console.error("Error loading weekly summary:", error);
+            showPageMessage("Unable to load weekly summary right now.", "error");
         });
 }
 
 function loadUsageTrend() {
     fetch(`/user-data?username=${encodeURIComponent(currentUser)}`)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Trend request failed with status ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
             if (!data.energy_records || data.energy_records.length === 0) {
-                console.error("No energy records found.");
+                showChartEmptyState("Trend data is not available yet.");
+                destroyChartIfExists();
                 return;
             }
 
@@ -243,12 +328,39 @@ function loadUsageTrend() {
                 (a, b) => new Date(a.date) - new Date(b.date)
             );
 
+            hideChartEmptyState();
             renderEnergyChart(records);
         })
         .catch(error => {
             console.error("Error loading usage trend data:", error);
+            showChartEmptyState("Trend chart will appear after the usage trend API is connected.");
+            destroyChartIfExists();
         });
 }
+
+// ================= CHART HELPERS =================
+function showChartEmptyState(message) {
+    const emptyText = document.getElementById("chart-empty-message");
+    if (!emptyText) return;
+
+    emptyText.textContent = message;
+    emptyText.classList.remove("hidden");
+}
+
+function hideChartEmptyState() {
+    const emptyText = document.getElementById("chart-empty-message");
+    if (!emptyText) return;
+
+    emptyText.classList.add("hidden");
+}
+
+function destroyChartIfExists() {
+    if (energyChart) {
+        energyChart.destroy();
+        energyChart = null;
+    }
+}
+
 // Temporary chart styling for the current iteration; colors and gradient effects can be refined in later iterations.
 function renderEnergyChart(records) {
     const canvas = document.getElementById("energyChart");
@@ -317,12 +429,11 @@ function renderEnergyChart(records) {
     });
 }
 // ================= UI UPDATE FUNCTIONS =================
-
 function updatePoints(points) {
     const pointsDisplay = document.getElementById("points-display");
     const totalPoints = document.getElementById("total-points");
 
-    const safePoints = points ?? 0;
+    const safePoints = points ?? "--";
 
     if (pointsDisplay) {
         pointsDisplay.textContent = safePoints;
@@ -337,7 +448,7 @@ function updateWeeklyUsage(weeklyValue) {
     const weeklyUsage = document.getElementById("weekly-usage");
 
     if (weeklyUsage) {
-        weeklyUsage.textContent = weeklyValue ?? 0;
+        weeklyUsage.textContent = weeklyValue ?? "--";
     }
 }
 
@@ -345,7 +456,7 @@ function updateMonthlyUsage(monthlyValue) {
     const monthlyUsage = document.getElementById("monthly-usage");
 
     if (monthlyUsage) {
-        monthlyUsage.textContent = monthlyValue ?? 0;
+        monthlyUsage.textContent = monthlyValue ?? "--";
     }
 }
 
@@ -356,8 +467,8 @@ function updateMonthlyProgress(savePercentage, savedEnergy, proratedTarget) {
 
     monthlyProgress.innerHTML = `
         <h3 class="card-title">Monthly Progress</h3>
-        <p>Saved Energy: ${savedEnergy ?? 0} kWh</p>
-        <p>Saving Rate: ${savePercentage ?? 0}%</p>
-        <p>Current Target: ${proratedTarget ?? 0} kWh</p>
+        <p>Saved Energy: ${savedEnergy ?? "--"} kWh</p>
+        <p>Saving Rate: ${savePercentage ?? "--"}%</p>
+        <p>Current Target: ${proratedTarget ?? "--"} kWh</p>
     `;
 }

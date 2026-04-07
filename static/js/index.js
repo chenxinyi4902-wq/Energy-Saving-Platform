@@ -18,7 +18,6 @@ function initializePage() {
     bindUsageForm();
     bindTargetButton();
     checkMonthlyTarget();
-    loadDashboardData();
 }
 
 // ================= MESSAGE HELPERS =================
@@ -106,34 +105,50 @@ function checkMonthlyTarget() {
         .then(data => {
             if (data.success) {
                 const monthlyTarget = data.monthly_target;
+                const totalPoints = data.total_points;
+                updateBalanceOnly(totalPoints);
 
                 if (monthlyTarget === null || monthlyTarget === "" || monthlyTarget === undefined) {
+                    renderDashboardPlaceholder();
                     showTargetModal();
                 } else {
                     hideTargetModal();
+                    loadDashboardData();
                 }
             } else {
+                renderDashboardPlaceholder();
                 showTargetModal();
             }
         })
         .catch(error => {
             console.error("Error checking monthly target:", error);
+            renderDashboardPlaceholder();
             showTargetModal();
         });
 }
 
 function showTargetModal() {
+    const overlay = document.getElementById("target-overlay");
     const modal = document.getElementById("target-modal");
 
+    if (overlay) {
+        overlay.style.display = "block";
+    }
+
     if (modal) {
-        modal.style.display = "flex";
+        modal.style.display = "block";
     }
 
     document.body.classList.add("is-locked");
 }
 
 function hideTargetModal() {
+    const overlay = document.getElementById("target-overlay");
     const modal = document.getElementById("target-modal");
+
+    if (overlay) {
+        overlay.style.display = "none";
+    }
 
     if (modal) {
         modal.style.display = "none";
@@ -180,7 +195,9 @@ function handleSetTarget() {
         .then(data => {
             if (data.target !== undefined) {
                 hideTargetModal();
+
                 loadDashboardData();
+
                 showPageMessage("Monthly target saved successfully.", "success");
                 console.log("Monthly target set successfully.");
             } else {
@@ -286,8 +303,12 @@ function loadEnergySummary() {
         .then(response => response.json())
         .then(data => {
             updateMonthlyUsage(data.total_energy_this_month);
-            updatePoints(data.points_earned);
-            updateMonthlyProgress(data.save_percentage, data.saved_energy, data.prorated_target);
+            updatePoints(data.points_earned, data.total_points);
+            updateMonthlyProgress(
+                data.save_percentage,
+                data.saved_energy,
+                data.prorated_target
+            );
             updateHeaderProgress(data.save_percentage);
         })
         .catch(error => {
@@ -428,19 +449,41 @@ function renderEnergyChart(records) {
         }
     });
 }
+
+// ================= PLACEHOLDER STATE =================
+function renderDashboardPlaceholder() {
+    updateHeaderProgress(null);
+    updateMonthlyUsage("--");
+    updateWeeklyUsage("--");
+    updatePoints("--", "--");
+    updateMonthlyProgress("--", "--", "--");
+
+    showChartEmptyState("Set your monthly target to unlock dashboard data.");
+    destroyChartIfExists();
+}
+
 // ================= UI UPDATE FUNCTIONS =================
-function updatePoints(points) {
+function updatePoints(pointsEarned, totalPointsValue) {
     const pointsDisplay = document.getElementById("points-display");
     const totalPoints = document.getElementById("total-points");
 
-    const safePoints = points ?? "--";
+    const safeEarnedPoints = pointsEarned ?? "--";
+    const safeTotalPoints = totalPointsValue ?? "--";
 
     if (pointsDisplay) {
-        pointsDisplay.textContent = safePoints;
+        pointsDisplay.textContent = safeEarnedPoints;
     }
 
     if (totalPoints) {
-        totalPoints.textContent = safePoints;
+        totalPoints.textContent = safeTotalPoints;
+    }
+}
+
+function updateBalanceOnly(totalPointsValue) {
+    const totalPoints = document.getElementById("total-points");
+
+    if (totalPoints) {
+        totalPoints.textContent = totalPointsValue ?? "--";
     }
 }
 

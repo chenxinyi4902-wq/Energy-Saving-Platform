@@ -47,7 +47,7 @@
     </aside>
 
 <!-- ================= MAIN CONTENT ================= -->
-<main>
+<main id="dashboard-content">
 
         <!-- HEADER -->
         <header>
@@ -153,22 +153,88 @@
 
     </main>
 
-    <!-- ================= MONTHLY TARGET MODAL ================= -->
-    <div id="target-modal" style="display: none;">
-        <div id="target-modal-box">
-            <h2>Set Your Monthly Electricity Target</h2>
-            <p>Please set your target before using the dashboard.</p>
-            <input
-                type="number"
-                id="monthly-target-input"
-                placeholder="Enter target in kWh"
-                min="0"
-                step="0.1"
-                required
-            >
-            <button id="submit-target-btn">Save Target</button>
+    <!-- ================= MONTHLY TARGET OVERLAY ================= -->
+    <!-- 目前先用 inline style 实现，后面你可以把这些样式挪到 style.css -->
+    <div
+        id="target-overlay"
+        style="
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 9998;
+        "
+    ></div>
 
-            <div id="target-modal-message" class="page-message hidden" role="alert" aria-live="polite"></div>
+    <!-- ================= MONTHLY TARGET MODAL ================= -->
+    <div
+            id="target-modal"
+            style="
+                display: none;
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 9999;
+                width: 90%;
+                max-width: 460px;
+                background: #ffffff;
+                border-radius: 16px;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+                padding: 32px 28px;
+        "
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="target-modal-title"
+    >
+        <div id="target-modal-box">
+            <h2 id="target-modal-title" style="margin-top: 0;">
+                Set Your Monthly Electricity Target
+            </h2>
+            <p>Please set your target before using the dashboard.</p>
+            <div style="margin-top: 20px;">
+                <input
+                        type="number"
+                        id="monthly-target-input"
+                        placeholder="Enter target in kWh"
+                        min="0"
+                        step="0.1"
+                        required
+                        style="
+                        width: 100%;
+                        box-sizing: border-box;
+                        padding: 12px 14px;
+                        border: 1px solid #d9d9d9;
+                        border-radius: 10px;
+                        font-size: 16px;
+                        margin-bottom: 14px;
+                    "
+            >
+            </div>
+            <button
+                    id="submit-target-btn"
+                    style="
+                    width: 100%;
+                    padding: 12px 16px;
+                    border: none;
+                    border-radius: 10px;
+                    background: #111827;
+                    color: #ffffff;
+                    font-size: 15px;
+                    font-weight: 600;
+                    cursor: pointer;
+                "
+            >
+                Save Target
+            </button>
+
+            <div
+                    id="target-modal-message"
+                    class="page-message hidden"
+                    role="alert"
+                    aria-live="polite"
+                    style="margin-top: 14px;"
+            ></div>
         </div>
     </div>
 

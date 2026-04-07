@@ -310,8 +310,16 @@ Dynamic functionality will be implemented in future iterations.
 
 ---
 
-### Iteration 28 - Fix naming inconsistencies in scripts and routes
+### Iteration 28 - Fix naming inconsistencies across frontend templates
 * Fixed JavaScript file reference and unified frontend-backend route naming, resolving page navigation and template rendering issues.
+
+---
+
+### Iteration 29 - Improve dashboard target modal flow and frontend data handling
+* Updated `index.html` to support a dedicated monthly target overlay and modal structure on the dashboard.
+* Refined `index.js` so the page checks the user target status before loading dashboard data.
+* Added frontend placeholder handling for dashboard sections when the monthly target has not been set yet.
+* Improved target modal show/hide logic and aligned points display logic with the current backend field structure.
 
 ---
 

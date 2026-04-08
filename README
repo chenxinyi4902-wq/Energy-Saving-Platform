@@ -1,17 +1,7 @@
-Function 3 Completed;
+This step involves three tasks:
 
-Current Login Flow:
+First, create a new API route `/set-target`
 
-POST /login
+Then, have `/set-target` receive data sent from the frontend（add username validation for set-target API）
 
-↓ Receive username/password
-
-↓ Check if user exists
-
-↓ Verify password
-
-↓ Return login result
-
-The next step will be:
-
-Function 4: Setting Monthly Goals
+Since the user might enter a non-existent username, it's necessary to verify if the user exists.

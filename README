@@ -1,7 +1,1 @@
-This step involves three tasks:
-
-First, create a new API route `/set-target`
-
-Then, have `/set-target` receive data sent from the frontend（add username validation for set-target API）
-
-Since the user might enter a non-existent username, it's necessary to verify if the user exists.
+store monthly target in user database

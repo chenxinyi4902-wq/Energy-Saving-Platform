@@ -53,7 +53,12 @@ def set_target():
     if username not in users:
         return jsonify({"message": "user not found"}), 404
 
-    return jsonify({"message": "user verified"})
+    users[username]["monthly_target"] = target
+
+    return jsonify({
+        "message": "monthly target updated",
+        "monthly_target": target
+    })
 
 
 if __name__ == "__main__":

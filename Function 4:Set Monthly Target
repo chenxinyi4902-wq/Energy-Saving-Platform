@@ -41,5 +41,20 @@ def login():
 
     return jsonify({"message": "login successful"})
 
+
+@app.route("/set-target", methods=["POST"])
+def set_target():
+
+    data = request.get_json()
+
+    username = data.get("username")
+    target = data.get("target")
+
+    if username not in users:
+        return jsonify({"message": "user not found"}), 404
+
+    return jsonify({"message": "user verified"})
+
+
 if __name__ == "__main__":
-    app.run(debug=True, port=5001)
+    app.run(debug=True)

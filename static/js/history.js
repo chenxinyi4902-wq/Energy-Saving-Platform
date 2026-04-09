@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function initializeHistoryPage() {
     updateGreeting();
     updateUsername();
+    loadUserInfo();
     loadHistoryData();
 }
 
@@ -51,9 +52,27 @@ function renderEmptyState(message) {
         `;
     }
 
+async function loadUserInfo() {
+    const sidebarPoints = document.getElementById("sidebar-points");
+    if (!sidebarPoints) return;
+
+    try {
+        const response = await fetch(`/get-user-info?username=${encodeURIComponent(currentUser)}`);
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch user info.");
+        }
+
+        const data = await response.json();
+        sidebarPoints.textContent = data.total_points !== undefined ? data.total_points : 0;
+    } catch (error) {
+        console.error("Failed to load user info:", error);
+        sidebarPoints.textContent = "--";
+    }
+}
+
 async function loadHistoryData() {
     const historyTableBody = document.getElementById("history-table-body");
-    const sidebarPoints = document.getElementById("sidebar-points");
 
     if (!historyTableBody) {
         console.error("history-table-body not found.");
@@ -61,22 +80,19 @@ async function loadHistoryData() {
     }
 
     try {
-        const response = await fetch(`/user-data?username=${currentUser}`);
+        const response = await fetch(`/user-data?username=${encodeURIComponent(currentUser)}`);
         if (!response.ok) {
         throw new Error("Failed to fetch user data.");
         }
 
         const data = await response.json();
-        if (sidebarPoints) {
-            sidebarPoints.textContent = data.points !== undefined ? data.points : 0;
-        }
 
-        if (!data.energy_records || data.energy_records.length === 0) {
+        if (!data.records || data.records.length === 0) {
             renderEmptyState("No history records available.");
             return;
         }
 
-        const records = data.energy_records.sort(
+        const records = [...data.records].sort(
             (a, b) => new Date(b.date) - new Date(a.date)
         );
 

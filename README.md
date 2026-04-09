@@ -323,6 +323,12 @@ Dynamic functionality will be implemented in future iterations.
 
 ---
 
+### Iteration 30 – Connect history and leaderboard pages
+* Connected the history page to the backend so electricity usage records can be displayed dynamically.
+* Connected the leaderboard page to the backend so ranking data can be loaded and shown with real user points.
+
+---
+
 ## Author
 
 Xinyi Chen, Yiqun Liu

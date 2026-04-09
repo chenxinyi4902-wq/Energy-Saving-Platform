@@ -1,9 +1,39 @@
+const currentUser = localStorage.getItem("currentUser");
+
+if (!currentUser) {
+    window.location.href = "/";
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     initializeLeaderboardPage();
 });
 
 function initializeLeaderboardPage() {
+    loadUserPoints();
     loadLeaderboardData();
+}
+
+function loadUserPoints() {
+    const sidebarPoints = document.getElementById("sidebar-points");
+
+    if (!sidebarPoints) {
+        return;
+    }
+
+    fetch(`/get-user-info?username=${encodeURIComponent(currentUser)}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Failed to fetch user points.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            sidebarPoints.textContent = data.total_points ?? "--";
+        })
+        .catch(error => {
+            console.error("Failed to load user points:", error);
+            sidebarPoints.textContent = "--";
+        });
 }
 
 async function loadLeaderboardData() {

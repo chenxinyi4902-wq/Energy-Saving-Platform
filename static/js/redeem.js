@@ -4,7 +4,7 @@ if (!currentUser) {
     window.location.href = "/";
 }
 
-let currentPointsEarned = 0;
+let currentTotalPoints = 0;
 
 const rewardData = [
     {
@@ -52,11 +52,12 @@ document.addEventListener("DOMContentLoaded", () => {
 function initializeRedemptionPage() {
     renderRewardCards();
     bindRedeemGrid();
-    loadPointsEarned();
+    loadUserPoints();
 }
 
-function loadPointsEarned() {
+function loadUserPoints() {
     const pointsEarned = document.getElementById("points-earned");
+    const sidebarPoints = document.getElementById("sidebar-points");
 
     if (!pointsEarned) {
         return;
@@ -65,16 +66,24 @@ function loadPointsEarned() {
     fetch(`/energy-summary?username=${encodeURIComponent(currentUser)}`)
         .then(response => response.json())
         .then(data => {
-            currentPointsEarned = Number(data.points_earned) || 0;
-            pointsEarned.textContent = currentPointsEarned;
+            currentTotalPoints = Number(data.total_points) || 0;
+            pointsEarned.textContent = currentTotalPoints;
+
+            if (sidebarPoints) {
+                sidebarPoints.textContent = currentTotalPoints;
+            }
 
             renderRewardCards();
             updateRedemptionMessage("Rewards are displayed below. Locked items require more points.");
         })
         .catch(error => {
             console.error("Error loading points earned:", error);
-            currentPointsEarned = 0;
+            currentTotalPoints = 0;
             pointsEarned.textContent = "0";
+
+            if (sidebarPoints) {
+                sidebarPoints.textContent = "0";
+            }
 
             renderRewardCards();
             updateRedemptionMessage("Unable to load points. Rewards are shown in preview mode.");
@@ -102,7 +111,7 @@ function renderRewardCards() {
         const rewardId = reward.reward_id ?? "";
         const requiredPoints = Number(reward.points_required) || 0;
         const rewardDescription = reward.description ?? "No description available.";
-        const canRedeem = currentPointsEarned >= requiredPoints;
+        const canRedeem = currentTotalPoints >= requiredPoints;
 
         const rewardCard = document.createElement("div");
         rewardCard.className = "reward-card";
@@ -143,15 +152,63 @@ function bindRedeemGrid() {
         const rewardName = button.dataset.rewardName || "this reward";
         const pointsRequired = Number(button.dataset.pointsRequired) || 0;
 
-        if (currentPointsEarned < pointsRequired) {
+        if (currentTotalPoints < pointsRequired) {
             updateRedemptionMessage(`You do not have enough points to redeem ${rewardName}.`);
             return;
         }
 
-        updateRedemptionMessage(
-            `${rewardName} is ready for redemption. Backend redemption logic will be connected in a later iteration.`
-        );
+        handleRewardRedemption(button, rewardName, pointsRequired);
     });
+}
+
+function handleRewardRedemption(button, rewardName, pointsRequired) {
+    if (!button) return;
+
+    button.disabled = true;
+    const originalText = button.textContent;
+    button.textContent = "Redeeming...";
+
+    fetch("/redeem-reward", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            username: currentUser,
+            reward_name: rewardName,
+            points_required: pointsRequired
+        })
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                currentTotalPoints = Number(data.remaining_points) || 0;
+
+                const pointsEarned = document.getElementById("points-earned");
+                const sidebarPoints = document.getElementById("sidebar-points");
+
+                if (pointsEarned) {
+                    pointsEarned.textContent = currentTotalPoints;
+                }
+
+                if (sidebarPoints) {
+                    sidebarPoints.textContent = currentTotalPoints;
+                }
+
+                updateRedemptionMessage(data.message || `Successfully redeemed ${rewardName}.`);
+                renderRewardCards();
+            } else {
+                updateRedemptionMessage(data.message || `Failed to redeem ${rewardName}.`);
+                button.disabled = false;
+                button.textContent = originalText;
+            }
+        })
+        .catch(error => {
+            console.error("Error redeeming reward:", error);
+            updateRedemptionMessage("Something went wrong while redeeming this reward.");
+            button.disabled = false;
+            button.textContent = originalText;
+        });
 }
 
 function updateRedemptionMessage(message) {

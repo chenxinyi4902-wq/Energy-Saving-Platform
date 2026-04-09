@@ -38,7 +38,10 @@
             </div>
         </nav>
 
-        <div class="sidebar-footer">SYSTEM_v2.0.4</div>
+        <div class="sidebar-footer">
+            <p>Total Points</p>
+            <h3 id="sidebar-points">--</h3>
+        </div>
     </aside>
 
     <main>
@@ -53,11 +56,11 @@
             <h3 class="card-title" style="text-align: center;">Available Rewards</h3>
 
             <p style="text-align: center; margin-bottom: 16px;">
-                Current Points: <span id="points-earned">0</span>
+                Current Points: <span id="points-earned">--</span>
             </p>
 
             <p id="redemption-message" style="text-align: center; margin-bottom: 24px;">
-                Select a reward to check availability.
+                Loading rewards...
             </p>
 
             <div id="redemption-grid" class="redemption-grid">
@@ -69,6 +72,6 @@
     <script>
         lucide.createIcons();
     </script>
-    <script src="{{ url_for('static', filename='js/redemption.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/redeem.js') }}"></script>
 </body>
 </html>

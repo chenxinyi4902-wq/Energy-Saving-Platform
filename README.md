@@ -329,6 +329,13 @@ Dynamic functionality will be implemented in future iterations.
 
 ---
 
+### Iteration 31 – Connect redeem page and fix frontend integration bugs
+* Connected the points redemption page to the backend so current points can be loaded and rewards can be redeemed dynamically.
+* Updated the dashboard, leaderboard, and redemption pages to display real user points in the sidebar.
+* Fixed frontend data-binding and file consistency issues affecting leaderboard display, redemption logic, and sidebar point updates.
+
+---
+
 ## Author
 
 Xinyi Chen, Yiqun Liu

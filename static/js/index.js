@@ -18,6 +18,7 @@ function initializePage() {
     bindUsageForm();
     bindTargetButton();
     checkMonthlyTarget();
+    loadLeaderboardPreview();
 }
 
 // ================= MESSAGE HELPERS =================
@@ -274,6 +275,7 @@ function handleUsageSubmit(event) {
                 }
 
                 loadDashboardData();
+                loadLeaderboardPreview();
             } else {
                 showPageMessage(data.message || "Failed to save daily usage.","error");
             }
@@ -339,13 +341,13 @@ function loadUsageTrend() {
             return response.json();
         })
         .then(data => {
-            if (!data.energy_records || data.energy_records.length === 0) {
+            if (!data.records || data.records.length === 0) {
                 showChartEmptyState("Trend data is not available yet.");
                 destroyChartIfExists();
                 return;
             }
 
-            const records = data.energy_records.sort(
+            const records = [...data.records].sort(
                 (a, b) => new Date(a.date) - new Date(b.date)
             );
 
@@ -357,6 +359,68 @@ function loadUsageTrend() {
             showChartEmptyState("Trend chart will appear after the usage trend API is connected.");
             destroyChartIfExists();
         });
+}
+
+function loadLeaderboardPreview() {
+    const leaderboardList = document.getElementById("leaderboard-list");
+
+    if (!leaderboardList) {
+        console.error("leaderboard-list not found.");
+        return;
+    }
+
+    fetch("/leaderboard-data")
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Leaderboard request failed with status ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (!data.leaderboard || data.leaderboard.length === 0) {
+                renderLeaderboardPreviewEmpty("No leaderboard data available.");
+                return;
+            }
+
+            renderLeaderboardPreview(data.leaderboard);
+        })
+        .catch(error => {
+            console.error("Error loading leaderboard preview:", error);
+            renderLeaderboardPreviewEmpty("Failed to load leaderboard data.");
+        });
+}
+
+function renderLeaderboardPreview(leaderboardData) {
+    const leaderboardList = document.getElementById("leaderboard-list");
+
+    if (!leaderboardList) return;
+
+    leaderboardList.innerHTML = "";
+
+    leaderboardData.slice(0, 5).forEach(user => {
+        const row = document.createElement("div");
+        row.className = "lb-row";
+
+        row.innerHTML = `
+            <span>#${user.rank ?? "--"}</span>
+            <span>${user.username ?? "--"}</span>
+            <span>${user.total_points ?? 0} pts</span>
+        `;
+
+        leaderboardList.appendChild(row);
+    });
+}
+
+function renderLeaderboardPreviewEmpty(message) {
+    const leaderboardList = document.getElementById("leaderboard-list");
+
+    if (!leaderboardList) return;
+
+    leaderboardList.innerHTML = `
+        <div class="lb-row pending">
+            <span>${message}</span>
+        </div>
+    `;
 }
 
 // ================= CHART HELPERS =================
@@ -393,7 +457,7 @@ function renderEnergyChart(records) {
 
     const ctx = canvas.getContext("2d");
 
-    const labels = records.map(record => record.date);
+    const labels = records.map(record => record.date.slice(5));
     const values = records.map(record => record.energy);
 
     const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
@@ -466,6 +530,7 @@ function renderDashboardPlaceholder() {
 function updatePoints(pointsEarned, totalPointsValue) {
     const pointsDisplay = document.getElementById("points-display");
     const totalPoints = document.getElementById("total-points");
+    const sidebarPoints = document.getElementById("sidebar-points");
 
     const safeEarnedPoints = pointsEarned ?? "--";
     const safeTotalPoints = totalPointsValue ?? "--";
@@ -477,13 +542,22 @@ function updatePoints(pointsEarned, totalPointsValue) {
     if (totalPoints) {
         totalPoints.textContent = safeTotalPoints;
     }
+
+    if (sidebarPoints) {
+        sidebarPoints.textContent = safeTotalPoints;
+    }
 }
 
 function updateBalanceOnly(totalPointsValue) {
     const totalPoints = document.getElementById("total-points");
+    const sidebarPoints = document.getElementById("sidebar-points");
 
     if (totalPoints) {
         totalPoints.textContent = totalPointsValue ?? "--";
+    }
+
+    if (sidebarPoints) {
+        sidebarPoints.textContent = totalPointsValue ?? "--";
     }
 }
 

@@ -136,7 +136,7 @@
                 <h3 class="card-title"><i data-lucide="edit-3"></i> Daily Input</h3>
                 <form id="usage-form">
                     <div class="input-row">
-                        <input type="number" id="usage" placeholder="Enter kWh" min="0" step="0.1" required>
+                        <input type="text" id="usage" placeholder="Enter kWh" inputmode="decimal" required>
                         <button type="submit" id="save-usage-btn">Save</button>
                     </div>
                 </form>
@@ -147,9 +147,9 @@
                     <h3 class="card-title">Points Redemption</h3>
                     <p>Reward exchange system will be implemented later</p>
                 </div>
-                <button class="redeem-btn interactive-element">
+                <a href="{{ url_for('redeem') }}" class="redeem-btn interactive-element">
                     <i data-lucide="shopping-bag"></i>
-                </button>
+                </a>
             </div>
 
         </div>
@@ -157,7 +157,7 @@
     </main>
 
     <!-- ================= MONTHLY TARGET OVERLAY ================= -->
-    <!-- 目前先用 inline style 实现，后面你可以把这些样式挪到 style.css -->
+    <!-- For now these styles are implemented inline and can be moved to style.css later -->
     <div
         id="target-overlay"
         style="

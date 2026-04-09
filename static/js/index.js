@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function initializePage() {
     updateGreeting();
     bindUsageForm();
+    bindUsageInputFilter();
     bindTargetButton();
     checkMonthlyTarget();
     loadLeaderboardPreview();
@@ -226,6 +227,28 @@ function bindUsageForm() {
     }
 }
 
+function bindUsageInputFilter() {
+    const usageInput = document.getElementById("usage");
+
+    if (!usageInput) {
+        return;
+    }
+
+    usageInput.addEventListener("input", () => {
+        let value = usageInput.value;
+        value = value.replace(/。/g, ".");
+        value = value.replace(/，/g, ".");
+        value = value.replace(/,/g, ".");
+        value = value.replace(/[^0-9.]/g, "");
+        const parts = value.split(".");
+        if (parts.length > 2) {
+            value = parts[0] + "." + parts.slice(1).join("");
+        }
+
+        usageInput.value = value;
+    });
+}
+
 function handleUsageSubmit(event) {
     event.preventDefault();
 
@@ -233,7 +256,7 @@ function handleUsageSubmit(event) {
 
     const usageInput = document.getElementById("usage");
     const saveBtn = document.getElementById("save-usage-btn");
-    const usageValue = usageInput ? usageInput.value.trim() : "";
+    const usageValue = usageInput ? usageInput.value.trim().replace(",", ".") : "";
 
     if (usageValue === "") {
         showPageMessage("Please enter today's electricity usage.","error");

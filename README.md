@@ -336,6 +336,13 @@ Dynamic functionality will be implemented in future iterations.
 
 ---
 
+### Iteration 32 – Improve dashboard interactions and input handling
+* Added dashboard navigation to the redemption page from the homepage action card.
+* Improved the daily usage input so decimal values can be entered and validated more smoothly.
+* Fixed several small frontend interaction issues on the dashboard.
+
+---
+
 ## Author
 
 Xinyi Chen, Yiqun Liu

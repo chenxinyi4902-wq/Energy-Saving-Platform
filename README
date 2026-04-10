@@ -1,10 +1,19 @@
-The user might enter a non-existent username, so verify the user's existence first.
+Now save the data to:
+energy_records
+The record structure is designed as follows:
+{
+ "date": "2026-03-16",
+ "energy": 6
+}
+Append to the list each time you type.
 
-Add automatic date retrieval by the system.
+The next step is Feature 6: Calculate cumulative electricity consumption:
 
-Already implemented:
+Because the front end needs to display:
 
-Create add-energy API
-Receive energy
-Verify user
-Automatic date retrieval by the system
+Electricity consumed this month
+Difference from target
+Energy saving points
+
+Therefore, a new feature will be added.
+GET /energy-summary

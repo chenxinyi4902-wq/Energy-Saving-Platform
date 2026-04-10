@@ -75,10 +75,16 @@ def add_energy():
 
     today = datetime.now().strftime("%Y-%m-%d")
 
+    record = {
+        "date": today,
+        "energy": energy
+    }
+
+    users[username]["energy_records"].append(record)
+
     return jsonify({
-        "username": username,
-        "energy": energy,
-        "date": today
+        "message": "energy record added",
+        "record": record
     })
 
 

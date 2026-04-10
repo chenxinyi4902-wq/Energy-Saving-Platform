@@ -1,13 +1,10 @@
-Function 5: Input Daily Electricity Consumption
+The user might enter a non-existent username, so verify the user's existence first.
 
-The ultimate goal is:
+Add automatic date retrieval by the system.
 
-User inputs energy
+Already implemented:
 
-↓ System automatically retrieves the date
-
-↓ Generates a record
-
-↓ Saves to energy_records
-
-The goal of this step is to parse the username and energy from the request body.
+Create add-energy API
+Receive energy
+Verify user
+Automatic date retrieval by the system

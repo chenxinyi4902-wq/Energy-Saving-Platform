@@ -88,5 +88,16 @@ def add_energy():
     })
 
 
+@app.route("/energy-summary", methods=["GET"])
+def energy_summary():
+
+    username = request.args.get("username")
+
+    if username not in users:
+        return jsonify({"message": "user not found"}), 404
+
+    return jsonify({"message": "user verified"})
+
+
 if __name__ == "__main__":
     app.run(debug=True)

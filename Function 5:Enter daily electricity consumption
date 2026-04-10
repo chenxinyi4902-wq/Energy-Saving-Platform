@@ -61,5 +61,19 @@ def set_target():
     })
 
 
+@app.route("/add-energy", methods=["POST"])
+def add_energy():
+
+    data = request.get_json()
+
+    username = data.get("username")
+    energy = data.get("energy")
+
+    return jsonify({
+        "received_username": username,
+        "received_energy": energy
+    })
+
+
 if __name__ == "__main__":
     app.run(debug=True)

@@ -1,19 +1,32 @@
-Now save the data to:
-energy_records
-The record structure is designed as follows:
-{
- "date": "2026-03-16",
- "energy": 6
-}
-Append to the list each time you type.
+The front-end now needs to display:
 
-The next step is Feature 6: Calculate cumulative electricity consumption:
+Total Electricity Consumption This Month
+Target
+Completion Progress
 
-Because the front end needs to display:
-
-Electricity consumed this month
-Difference from target
-Energy saving points
-
-Therefore, a new feature will be added.
+Therefore, a new API is needed:
 GET /energy-summary
+
+
+
+The first step is to create an API route and confirm that the interface exists.
+
+Let /energy-summary receive the username.
+
+GET requests generally use a query parameter:
+
+/energy-summary?username=alex
+
+
+
+The next step is to:
+
+Verify that the user exists.
+
+
+
+If the user does not exist:
+
+return 404
+
+and,Basic API security checks

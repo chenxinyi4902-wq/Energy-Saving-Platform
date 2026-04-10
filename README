@@ -1,1 +1,13 @@
-store monthly target in user database
+Function 5: Input Daily Electricity Consumption
+
+The ultimate goal is:
+
+User inputs energy
+
+↓ System automatically retrieves the date
+
+↓ Generates a record
+
+↓ Saves to energy_records
+
+The goal of this step is to parse the username and energy from the request body.

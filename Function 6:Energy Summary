@@ -34,6 +34,11 @@ def login():
     username = data.get("username")
     password = data.get("password")
 
+    # ===== Added: Input check =====
+    if not username or not password:
+        return jsonify({"message": "username and password are required"}), 400
+    # =========================
+
     if username not in users:
         return jsonify({"message": "user not found"}), 404
 
@@ -50,6 +55,17 @@ def set_target():
 
     username = data.get("username")
     target = data.get("target")
+
+    # ===== Added: Input check =====
+    if not username:
+        return jsonify({"message": "username is required"}), 400
+
+    if target is None:
+        return jsonify({"message": "target value is required"}), 400
+
+    if target < 0:
+        return jsonify({"message": "target must be a positive number"}), 400
+    # =========================
 
     if username not in users:
         return jsonify({"message": "user not found"}), 404
@@ -70,11 +86,35 @@ def add_energy():
     username = data.get("username")
     energy = data.get("energy")
 
+    # =====  Added: Input check =====
+    if not username:
+        return jsonify({"message": "username is required"}), 400
+
+    if energy is None:
+        return jsonify({"message": "energy value is required"}), 400
+
+    if energy < 0:
+        return jsonify({"message": "energy must be a positive number"}), 400
+    # =========================
+
     if username not in users:
         return jsonify({"message": "user not found"}), 404
 
     today = datetime.now().strftime("%Y-%m-%d")
 
+    # ===== New Feature 1: Check if today's entries have been recorded  =====
+    records = users[username]["energy_records"]
+
+    for record in records:
+        if record["date"] == today:
+            record["energy"] = energy
+            return jsonify({
+                "message": "energy record updated for today",
+                "record": record
+            })
+    # =======================================
+
+    # ===== Existing logic: Add a new record =====
     record = {
         "date": today,
         "energy": energy
@@ -93,10 +133,27 @@ def energy_summary():
 
     username = request.args.get("username")
 
+    # ===== Added: Input check =====
+    if not username:
+        return jsonify({"message": "username is required"}), 400
+    # =========================
+
     if username not in users:
         return jsonify({"message": "user not found"}), 404
 
-    return jsonify({"message": "user verified"})
+    records = users[username]["energy_records"]
+
+    total_energy = 0
+
+    for record in records:
+        total_energy += record["energy"]
+
+    target = users[username]["monthly_target"]
+
+    return jsonify({
+        "total_energy": total_energy,
+        "monthly_target": target
+    })
 
 
 if __name__ == "__main__":

@@ -1,32 +1,48 @@
-The front-end now needs to display:
+Now, calculate `total_energy`.
 
-Total Electricity Consumption This Month
-Target
-Completion Progress
+Method:
 
-Therefore, a new API is needed:
-GET /energy-summary
+For loop to accumulate
 
+Return `monthly_target` together with `total_energy`
 
+Complete User Flow
 
-The first step is to create an API route and confirm that the interface exists.
+Complete Usage Flow:
 
-Let /energy-summary receive the username.
+User Login
+↓ Set Monthly Goal
+↓ Enter Daily Electricity Consumption
+↓ System Records
+↓ Calculate Monthly Electricity Consumption
 
-GET requests generally use a query parameter:
+New Features
 
-/energy-summary?username=alex
+1️⃣ Prevent Duplicate Records on the Same Day (Feature 1)
 
+If there is already a record today → Update energy
 
+If not → Add record
 
-The next step is to:
+2️⃣ Input Validation + Error Messages (Feature 2)
 
-Verify that the user exists.
+Username is empty
+energy is empty
+energy is negative
+target is empty
+target is negative
 
+Clear message will be returned for all errors.
 
+Explanation of New Feature Logic
 
-If the user does not exist:
+Feature 1: Prevent Duplicate Dates
 
-return 404
+New Logic:
+for record in records:
+    if record["date"] == today:
+        record["energy"] = energy
 
-and,Basic API security checks
+Feature 2: Input Error Prompt
+
+Input checking is now available for all APIs.

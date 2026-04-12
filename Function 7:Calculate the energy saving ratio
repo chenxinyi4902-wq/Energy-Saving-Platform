@@ -1,0 +1,125 @@
+from flask import Flask, request, jsonify, render_template
+from datetime import datetime
+import calendar
+
+app = Flask(__name__)
+
+# User data (5 test accounts)
+users = {
+    "alex":  {"password": "123456",  "monthly_target": None, "energy_records": []},
+    "lisa":  {"password": "abcdef",  "monthly_target": None, "energy_records": []},
+    "tom":   {"password": "111111",  "monthly_target": None, "energy_records": []},
+    "sarah": {"password": "sarah123","monthly_target": None, "energy_records": []},
+    "mike":  {"password": "mike456", "monthly_target": None, "energy_records": []},
+}
+
+@app.route("/")
+def login_page():
+    return render_template("login.html")
+
+@app.route("/login", methods=["POST"])
+def login():
+    data = request.get_json()
+    username = data.get("username")
+    password = data.get("password")
+
+    if not username or not password:
+        return jsonify({"message": "username and password are required"}), 400
+    if username not in users:
+        return jsonify({"message": "user not found"}), 404
+    if users[username]["password"] != password:
+        return jsonify({"message": "incorrect password"}), 401
+
+    return jsonify({"message": "login successful"})
+
+@app.route("/set-target", methods=["POST"])
+def set_target():
+    data = request.get_json()
+    username = data.get("username")
+    target = data.get("target")
+
+    if not username or target is None:
+        return jsonify({"message": "username and target are required"}), 400
+
+    try:
+        target = float(target)
+    except:
+        return jsonify({"message": "target must be a number"}), 400
+
+    if target < 0:
+        return jsonify({"message": "target cannot be negative"}), 400
+    if username not in users:
+        return jsonify({"message": "user not found"}), 404
+
+    users[username]["monthly_target"] = target
+    return jsonify({"message": "target set", "target": target})
+
+@app.route("/add-energy", methods=["POST"])
+def add_energy():
+    data = request.get_json()
+    username = data.get("username")
+    energy = data.get("energy")
+
+    if not username or energy is None:
+        return jsonify({"message": "username and energy are required"}), 400
+
+    try:
+        energy = float(energy)
+    except:
+        return jsonify({"message": "energy must be a number"}), 400
+
+    if energy < 0:
+        return jsonify({"message": "energy cannot be negative"}), 400
+    if username not in users:
+        return jsonify({"message": "user not found"}), 404
+
+    today = datetime.now().strftime("%Y-%m-%d")
+    records = users[username]["energy_records"]
+
+    # Updated on the same day
+    for r in records:
+        if r["date"] == today:
+            r["energy"] = energy
+            return jsonify({"message": "today's record updated", "energy": energy})
+
+    # new
+    records.append({"date": today, "energy": energy})
+    return jsonify({"message": "energy added", "energy": energy})
+
+@app.route("/energy-summary", methods=["GET"])
+def energy_summary():
+    username = request.args.get("username")
+    if not username or username not in users:
+        return jsonify({"message": "username required or not found"}), 400
+
+    now = datetime.now()
+    year, month = now.year, now.month
+    month_str = f"{year}-{month:02d}"
+
+    _, days_in_month = calendar.monthrange(year, month)
+    days_passed = now.day
+
+    target = users[username]["monthly_target"] or 0.0
+    prorated_target = target * (days_passed / days_in_month) if days_in_month > 0 else 0.0
+
+    records = users[username]["energy_records"]
+    this_month = [r for r in records if r["date"].startswith(month_str)]
+    total_energy = sum(r["energy"] for r in this_month)
+
+    saved = prorated_target - total_energy
+    save_percentage = (saved / prorated_target * 100) if prorated_target > 0 else 0.0
+
+    return jsonify({
+        "month": month_str,
+        "days_in_month": days_in_month,
+        "days_passed": days_passed,
+        "original_target": round(target, 2),
+        "prorated_target": round(prorated_target, 2),
+        "total_energy_this_month": round(total_energy, 2),
+        "saved_energy": round(saved, 2),
+        "save_percentage": round(save_percentage, 1),
+        "daily_records_count": len(this_month),
+    })
+
+if __name__ == "__main__":
+    app.run(debug=True)

@@ -1,48 +1,14 @@
-Now, calculate `total_energy`.
+Phase 1: Achieve "Calculate Energy Saving Ratio"
 
-Method:
+Goals:
 
-For loop to accumulate
+Set monthly targets
+Record daily electricity consumption (covering the same day)
 
-Return `monthly_target` together with `total_energy`
-
-Complete User Flow
-
-Complete Usage Flow:
-
-User Login
-↓ Set Monthly Goal
-↓ Enter Daily Electricity Consumption
-↓ System Records
-↓ Calculate Monthly Electricity Consumption
-
-New Features
-
-1️⃣ Prevent Duplicate Records on the Same Day (Feature 1)
-
-If there is already a record today → Update energy
-
-If not → Add record
-
-2️⃣ Input Validation + Error Messages (Feature 2)
-
-Username is empty
-energy is empty
-energy is negative
-target is empty
-target is negative
-
-Clear message will be returned for all errors.
-
-Explanation of New Feature Logic
-
-Feature 1: Prevent Duplicate Dates
-
-New Logic:
-for record in records:
-    if record["date"] == today:
-        record["energy"] = energy
-
-Feature 2: Input Error Prompt
-
-Input checking is now available for all APIs.
+/energy-summary returns:
+Current month
+Total days in the month, days elapsed
+Original target, converted target
+Cumulative electricity consumption this month
+Electricity saved
+Energy saving ratio (%)

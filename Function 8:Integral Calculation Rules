@@ -13,6 +13,8 @@ users = {
     "mike":  {"password": "mike456", "monthly_target": None, "energy_records": []},
 }
 
+# All routes below are identical to Stage 1, until energy-summary changes
+
 @app.route("/")
 def login_page():
     return render_template("login.html")
@@ -76,13 +78,13 @@ def add_energy():
     today = datetime.now().strftime("%Y-%m-%d")
     records = users[username]["energy_records"]
 
-    # Updated on the same day
+    # Update if record for the same day exists
     for r in records:
         if r["date"] == today:
             r["energy"] = energy
             return jsonify({"message": "today's record updated", "energy": energy})
 
-    # new
+    # Add new record
     records.append({"date": today, "energy": energy})
     return jsonify({"message": "energy added", "energy": energy})
 
@@ -109,6 +111,21 @@ def energy_summary():
     saved = prorated_target - total_energy
     save_percentage = (saved / prorated_target * 100) if prorated_target > 0 else 0.0
 
+    # ── New: Points Calculation ───────────────────────────
+    if prorated_target <= 0:
+        points = 0
+    elif total_energy > prorated_target:
+        points = 0                          # Exceeded target
+    elif save_percentage >= 30:
+        points = 120
+    elif save_percentage >= 20:
+        points = 90
+    elif save_percentage >= 10:
+        points = 60
+    else:
+        points = 30                         # <10% and not exceeded
+    # ─────────────────────────────────────────────────────
+
     return jsonify({
         "month": month_str,
         "days_in_month": days_in_month,
@@ -118,6 +135,7 @@ def energy_summary():
         "total_energy_this_month": round(total_energy, 2),
         "saved_energy": round(saved, 2),
         "save_percentage": round(save_percentage, 1),
+        "points_earned": points,
         "daily_records_count": len(this_month),
     })
 

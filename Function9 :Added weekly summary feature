@@ -1,5 +1,6 @@
+# Update: Added weekly summary feature (natural week Mon~Sun + progress + note for incomplete weeks)
 from flask import Flask, request, jsonify, render_template
-from datetime import datetime
+from datetime import datetime, timedelta
 import calendar
 
 app = Flask(__name__)
@@ -13,11 +14,15 @@ users = {
     "mike":  {"password": "mike456", "monthly_target": None, "energy_records": []},
 }
 
-# All routes below are identical to Stage 1, until energy-summary changes
-
 @app.route("/")
 def login_page():
     return render_template("login.html")
+
+
+@app.route("/index")
+def index():
+    return render_template("index.html")
+
 
 @app.route("/login", methods=["POST"])
 def login():
@@ -33,6 +38,7 @@ def login():
         return jsonify({"message": "incorrect password"}), 401
 
     return jsonify({"message": "login successful"})
+
 
 @app.route("/set-target", methods=["POST"])
 def set_target():
@@ -55,6 +61,7 @@ def set_target():
 
     users[username]["monthly_target"] = target
     return jsonify({"message": "target set", "target": target})
+
 
 @app.route("/add-energy", methods=["POST"])
 def add_energy():
@@ -88,6 +95,7 @@ def add_energy():
     records.append({"date": today, "energy": energy})
     return jsonify({"message": "energy added", "energy": energy})
 
+
 @app.route("/energy-summary", methods=["GET"])
 def energy_summary():
     username = request.args.get("username")
@@ -111,7 +119,7 @@ def energy_summary():
     saved = prorated_target - total_energy
     save_percentage = (saved / prorated_target * 100) if prorated_target > 0 else 0.0
 
-    # ── New: Points Calculation ───────────────────────────
+    # Points Calculation
     if prorated_target <= 0:
         points = 0
     elif total_energy > prorated_target:
@@ -124,7 +132,6 @@ def energy_summary():
         points = 60
     else:
         points = 30                         # <10% and not exceeded
-    # ─────────────────────────────────────────────────────
 
     return jsonify({
         "month": month_str,
@@ -138,6 +145,66 @@ def energy_summary():
         "points_earned": points,
         "daily_records_count": len(this_month),
     })
+
+
+@app.route("/weekly-summary", methods=["GET"])
+def weekly_summary():
+    """
+    Weekly energy summary (Monday to Sunday).
+    Handles incomplete weeks (new users or week not finished).
+    """
+    username = request.args.get("username")
+    if not username or username not in users:
+        return jsonify({"message": "username required or not found"}), 400
+
+    now = datetime.now()
+
+    # Calculate Monday and Sunday of current week
+    weekday = now.weekday()  # 0 = Mon, 6 = Sun
+    monday = now - timedelta(days=weekday)
+    sunday = monday + timedelta(days=6)
+
+    week_start_str = monday.strftime("%Y-%m-%d")
+    week_end_str   = sunday.strftime("%Y-%m-%d")
+
+    # Days passed in this week (including today)
+    days_passed = weekday + 1
+    progress_percentage = round((days_passed / 7.0) * 100, 1)
+
+    # Filter records in this week
+    records = users[username]["energy_records"]
+    this_week_records = [
+        r for r in records
+        if week_start_str <= r["date"] <= week_end_str
+    ]
+
+    # Sort by date (oldest to newest)
+    this_week_records.sort(key=lambda x: x["date"])
+
+    total_energy = sum(r["energy"] for r in this_week_records)
+
+    # Explanatory note for incomplete weeks / new users
+    note = ""
+    if this_week_records:
+        first_recorded = min(r["date"] for r in this_week_records)
+        if first_recorded > week_start_str:
+            note = f"You started recording on {first_recorded}. This week only includes days with data."
+    if days_passed < 7 and not note:
+        note = f"This week is not complete yet ({days_passed} days passed so far)."
+
+    if not note:
+        note = "Complete week data."
+
+    return jsonify({
+        "week_range": f"{week_start_str} to {week_end_str}",
+        "days_in_week": 7,
+        "days_passed": days_passed,
+        "progress_percentage": progress_percentage,
+        "total_energy_this_week": round(total_energy, 2),
+        "daily_records": this_week_records,
+        "note": note
+    })
+
 
 if __name__ == "__main__":
     app.run(debug=True)

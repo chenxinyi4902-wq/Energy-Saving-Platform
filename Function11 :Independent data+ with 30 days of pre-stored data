@@ -1,18 +1,63 @@
-# Final Version - Strictly Matching Frontend API Requirements
+# Iteration Version 1 - Use separate data.json + Pre-fill 30 days data + Debug endpoint
+# Changes:
+# 1. Data is stored in external data.json file
+# 2. Pre-filled 30 days of realistic energy records for June 2026 (different start dates)
+# 3. Added /debug-data GET endpoint to read the entire data.json content
+
+import json
+import os
 from flask import Flask, request, jsonify, render_template
 from datetime import datetime, timedelta
 import calendar
 
 app = Flask(__name__)
 
-# User data (5 test accounts)
-users = {
-    "alex":  {"password": "123456",  "monthly_target": None, "energy_records": []},
-    "lisa":  {"password": "abcdef",  "monthly_target": None, "energy_records": []},
-    "tom":   {"password": "111111",  "monthly_target": None, "energy_records": []},
-    "sarah": {"password": "sarah123","monthly_target": None, "energy_records": []},
-    "mike":  {"password": "mike456", "monthly_target": None, "energy_records": []},
-}
+DATA_FILE = 'data.json'
+
+def load_data():
+    """Load user data from data.json, create with sample data if file doesn't exist"""
+    if os.path.exists(DATA_FILE):
+        try:
+            with open(DATA_FILE, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except:
+            pass
+    
+    # Create realistic sample data for June 2026
+    default_data = {
+        "alex":  {"password": "123456",  "monthly_target": 280.0, "energy_records": []},
+        "lisa":  {"password": "abcdef",  "monthly_target": 320.0, "energy_records": []},
+        "tom":   {"password": "111111",  "monthly_target": 250.0, "energy_records": []},
+        "sarah": {"password": "sarah123","monthly_target": 300.0, "energy_records": []},
+        "mike":  {"password": "mike456", "monthly_target": 270.0, "energy_records": []},
+    }
+
+    # Pre-fill 30 days of data in June 2026 with different start dates
+    base_date = datetime(2026, 6, 1)
+    for username, user in default_data.items():
+        records = user["energy_records"]
+        # Different join dates for realism
+        start_day = 1 if username in ["alex", "tom"] else 6 if username == "lisa" else 10
+        for i in range(30):
+            current_date = base_date + timedelta(days=i)
+            date_str = current_date.strftime("%Y-%m-%d")
+            if int(date_str[-2:]) >= start_day:
+                # Generate realistic daily energy (between 6.0 ~ 12.0)
+                energy = round(7.0 + (i % 7) * 0.7 + (hash(username) % 5) * 0.3, 1)
+                records.append({"date": date_str, "energy": energy})
+
+    save_data(default_data)
+    return default_data
+
+
+def save_data(data):
+    """Save user data to data.json"""
+    with open(DATA_FILE, 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=4)
+
+
+# Load data at startup
+users = load_data()
 
 
 @app.route("/")
@@ -61,6 +106,8 @@ def set_target():
         return jsonify({"message": "user not found"}), 404
 
     users[username]["monthly_target"] = target
+    save_data(users)
+
     return jsonify({"message": "target set successfully", "target": target})
 
 
@@ -89,15 +136,16 @@ def add_energy():
     for r in records:
         if r["date"] == today:
             r["energy"] = energy
+            save_data(users)
             return jsonify({"message": "today's record updated", "energy": energy})
 
     records.append({"date": today, "energy": energy})
+    save_data(users)
     return jsonify({"message": "energy added", "energy": energy})
 
 
 @app.route("/energy-summary", methods=["GET"])
 def energy_summary():
-    """GET /energy-summary?username=xxx - Strictly matching frontend expected fields"""
     username = request.args.get("username")
     if not username or username not in users:
         return jsonify({"message": "username required or not found"}), 400
@@ -119,7 +167,6 @@ def energy_summary():
     saved = prorated_target - total_energy
     save_percentage = (saved / prorated_target * 100) if prorated_target > 0 else 0.0
 
-    # Points Calculation
     if prorated_target <= 0:
         points = 0
     elif total_energy > prorated_target:
@@ -144,13 +191,11 @@ def energy_summary():
 
 @app.route("/weekly-summary", methods=["GET"])
 def weekly_summary():
-    """GET /weekly-summary?username=xxx - Strictly matching frontend expected fields"""
     username = request.args.get("username")
     if not username or username not in users:
         return jsonify({"message": "username required or not found"}), 400
 
     now = datetime.now()
-
     weekday = now.weekday()
     monday = now - timedelta(days=weekday)
     sunday = monday + timedelta(days=6)
@@ -162,10 +207,7 @@ def weekly_summary():
     progress_percentage = round((days_passed / 7.0) * 100, 1)
 
     records = users[username]["energy_records"]
-    this_week_records = [
-        r for r in records
-        if week_start_str <= r["date"] <= week_end_str
-    ]
+    this_week_records = [r for r in records if week_start_str <= r["date"] <= week_end_str]
     this_week_records.sort(key=lambda x: x["date"])
 
     total_energy = sum(r["energy"] for r in this_week_records)
@@ -190,7 +232,6 @@ def weekly_summary():
 
 @app.route("/get-user-info", methods=["GET"])
 def get_user_info():
-    """GET /get-user-info?username=xxx - Required for frontend modal"""
     username = request.args.get("username")
     if not username or username not in users:
         return jsonify({"success": False, "message": "user not found"}), 404
@@ -201,6 +242,17 @@ def get_user_info():
         "success": True,
         "username": username,
         "monthly_target": monthly_target
+    })
+
+
+# NEW in Iteration 1: Debug endpoint to view entire data.json content
+@app.route("/debug-data", methods=["GET"])
+def debug_data():
+    """Return the full content of data.json for debugging"""
+    return jsonify({
+        "status": "success",
+        "data_file": DATA_FILE,
+        "users": users
     })
 
 

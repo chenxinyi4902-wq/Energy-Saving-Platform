@@ -1,4 +1,4 @@
-# Update: Added weekly summary feature (natural week Mon~Sun + progress + note for incomplete weeks)
+# Final Version - Strictly Matching Frontend API Requirements
 from flask import Flask, request, jsonify, render_template
 from datetime import datetime, timedelta
 import calendar
@@ -13,6 +13,7 @@ users = {
     "sarah": {"password": "sarah123","monthly_target": None, "energy_records": []},
     "mike":  {"password": "mike456", "monthly_target": None, "energy_records": []},
 }
+
 
 @app.route("/")
 def login_page():
@@ -60,7 +61,7 @@ def set_target():
         return jsonify({"message": "user not found"}), 404
 
     users[username]["monthly_target"] = target
-    return jsonify({"message": "target set", "target": target})
+    return jsonify({"message": "target set successfully", "target": target})
 
 
 @app.route("/add-energy", methods=["POST"])
@@ -85,19 +86,18 @@ def add_energy():
     today = datetime.now().strftime("%Y-%m-%d")
     records = users[username]["energy_records"]
 
-    # Update if record for the same day exists
     for r in records:
         if r["date"] == today:
             r["energy"] = energy
             return jsonify({"message": "today's record updated", "energy": energy})
 
-    # Add new record
     records.append({"date": today, "energy": energy})
     return jsonify({"message": "energy added", "energy": energy})
 
 
 @app.route("/energy-summary", methods=["GET"])
 def energy_summary():
+    """GET /energy-summary?username=xxx - Strictly matching frontend expected fields"""
     username = request.args.get("username")
     if not username or username not in users:
         return jsonify({"message": "username required or not found"}), 400
@@ -123,7 +123,7 @@ def energy_summary():
     if prorated_target <= 0:
         points = 0
     elif total_energy > prorated_target:
-        points = 0                          # Exceeded target
+        points = 0
     elif save_percentage >= 30:
         points = 120
     elif save_percentage >= 20:
@@ -131,59 +131,45 @@ def energy_summary():
     elif save_percentage >= 10:
         points = 60
     else:
-        points = 30                         # <10% and not exceeded
+        points = 30
 
     return jsonify({
-        "month": month_str,
-        "days_in_month": days_in_month,
-        "days_passed": days_passed,
-        "original_target": round(target, 2),
-        "prorated_target": round(prorated_target, 2),
         "total_energy_this_month": round(total_energy, 2),
-        "saved_energy": round(saved, 2),
-        "save_percentage": round(save_percentage, 1),
         "points_earned": points,
-        "daily_records_count": len(this_month),
+        "save_percentage": round(save_percentage, 1),
+        "saved_energy": round(saved, 2),
+        "prorated_target": round(prorated_target, 2)
     })
 
 
 @app.route("/weekly-summary", methods=["GET"])
 def weekly_summary():
-    """
-    Weekly energy summary (Monday to Sunday).
-    Handles incomplete weeks (new users or week not finished).
-    """
+    """GET /weekly-summary?username=xxx - Strictly matching frontend expected fields"""
     username = request.args.get("username")
     if not username or username not in users:
         return jsonify({"message": "username required or not found"}), 400
 
     now = datetime.now()
 
-    # Calculate Monday and Sunday of current week
-    weekday = now.weekday()  # 0 = Mon, 6 = Sun
+    weekday = now.weekday()
     monday = now - timedelta(days=weekday)
     sunday = monday + timedelta(days=6)
 
     week_start_str = monday.strftime("%Y-%m-%d")
-    week_end_str   = sunday.strftime("%Y-%m-%d")
+    week_end_str = sunday.strftime("%Y-%m-%d")
 
-    # Days passed in this week (including today)
     days_passed = weekday + 1
     progress_percentage = round((days_passed / 7.0) * 100, 1)
 
-    # Filter records in this week
     records = users[username]["energy_records"]
     this_week_records = [
         r for r in records
         if week_start_str <= r["date"] <= week_end_str
     ]
-
-    # Sort by date (oldest to newest)
     this_week_records.sort(key=lambda x: x["date"])
 
     total_energy = sum(r["energy"] for r in this_week_records)
 
-    # Explanatory note for incomplete weeks / new users
     note = ""
     if this_week_records:
         first_recorded = min(r["date"] for r in this_week_records)
@@ -196,15 +182,27 @@ def weekly_summary():
         note = "Complete week data."
 
     return jsonify({
-        "week_range": f"{week_start_str} to {week_end_str}",
-        "days_in_week": 7,
-        "days_passed": days_passed,
-        "progress_percentage": progress_percentage,
         "total_energy_this_week": round(total_energy, 2),
-        "daily_records": this_week_records,
+        "progress_percentage": progress_percentage,
         "note": note
     })
 
 
+@app.route("/get-user-info", methods=["GET"])
+def get_user_info():
+    """GET /get-user-info?username=xxx - Required for frontend modal"""
+    username = request.args.get("username")
+    if not username or username not in users:
+        return jsonify({"success": False, "message": "user not found"}), 404
+
+    monthly_target = users[username]["monthly_target"]
+
+    return jsonify({
+        "success": True,
+        "username": username,
+        "monthly_target": monthly_target
+    })
+
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=5001)

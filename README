@@ -1,25 +1,17 @@
-Phase 2: Add "Points Calculation Rules" based on Phase 1
+This version addresses the following issues:
 
-Changes:
+1. Users may not join on Monday (e.g., joining on Wednesday, leaving only 5 days in the week).
 
-Add points calculation logic to `/energy-summary`
+2. The last few days of a month may not constitute a full week.
 
-According to the rules:
-Exceeding the target → 0 points
-Energy saving percentage ≥ 30% → 120 points
-≥ 20% → 90 points
-≥ 10% → 60 points
-< 10% (and not exceeding the budget) → 30 points
+3. If only "complete 7 days" are displayed, user data will be missing, especially for new users or users crossing month lines.
 
-Add the `points_earned` field to the returned results
+The current monthly statistics use the approach of "Calculated Target = Monthly Target × (Days Elapsed / Total Days in Month)".
 
-Standard startup logs for the Flask development server：
-* Serving Flask app '1'             
-* Debug mode: on                     
-WARNING: This is a development server. Do not use it in a production environment.
-                                     
-* Running on http://127.0.0.1:5000    
-Press CTRL+C to quit                 
-* Restarting with stat                
-* Debugger is active!                
-* Debugger PIN: 943-241-566           
+The same logic is reused weekly: Weekly Battery Consumption = Actual Cumulative + Progress = Days Elapsed / 7
+
+Current work:
+
+First: Adding the basic framework for weekly statistics (Date Range + Days Elapsed + Weekly Cumulative Battery Consumption)
+
+Second: Adding progress percentage, note prompts, and sorting daily_records.

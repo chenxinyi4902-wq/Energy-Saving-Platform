@@ -1,36 +1,11 @@
-Prerequisite APIs:
+Core needs:
+Differentiate the current points_earned (calculated monthly) from the total points balance that is truly spendable.
+A total_points field needs to be added to the user data as the available points balance.
 
-1. `POST /set-target`
+Summary of major changes:
 
-2. `POST /add-energy`
+Added a new total_points field in user data as the truly redeemable points balance
+/energy-summary still returns points_earned (points calculated monthly)
+/get-user-info now returns total_points
 
-3. `GET /energy-summary`
-
-
-Expected fields used by the front-end:
-
-* `Total energy this week`
-
-* `Percentage of progress`
-
-* `Note`
-
-
-A user information endpoint is also required for pattern checking.
-Key confirmation points are as follows:
-
-POST /set-target → Supports { "username": "alex", "target": 120 }
-
-POST /add-energy → Supports { "username": "alex", "energy": 5.6 }
-
-GET /energy-summary?username=alex → Includes total_energy_this_month, points_earned, save_percentage, saved_energy, and proposed_target
-
-GET /weekly-summary?username=alex → Includes total_energy_this_week, progress_percentage, and note
-
-
-
-Add GET /get-user-info?username=alex → The system returns success and the monthly_target.
-
-First, based on frontend requirements, the core monthly statistics interface, target setting, and electricity usage record addition were implemented. A new `/get-user-info` interface was also added for the frontend to determine if a user has set a target.
-
-Then, a weekly electricity usage statistics interface, `/weekly-summary`, was added to handle incomplete periods such as users joining mid-week or ending at the end of the week. It returns the required `total_energy_this_week`, `progress_percentage`, and `note` fields.
+All save operations will save total_points together with data.json

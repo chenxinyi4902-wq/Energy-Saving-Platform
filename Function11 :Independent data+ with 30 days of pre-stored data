@@ -1,8 +1,10 @@
-# Iteration Version 1 - Use separate data.json + Pre-fill 30 days data + Debug endpoint
-# Changes:
-# 1. Data is stored in external data.json file
-# 2. Pre-filled 30 days of realistic energy records for June 2026 (different start dates)
-# 3. Added /debug-data GET endpoint to read the entire data.json content
+# Final Improved Version - Added total_points as real redeemable balance
+# Changes from previous version:
+# 1. Added "total_points" field to each user (real available points for redemption)
+# 2. Modified load_data() to include total_points with initial values
+# 3. Updated save_data() calls to persist total_points
+# 4. Kept points_earned in /energy-summary as monthly calculated points
+# 5. total_points will be used for future redemption system (available balance)
 
 import json
 import os
@@ -14,6 +16,7 @@ app = Flask(__name__)
 
 DATA_FILE = 'data.json'
 
+
 def load_data():
     """Load user data from data.json, create with sample data if file doesn't exist"""
     if os.path.exists(DATA_FILE):
@@ -22,27 +25,50 @@ def load_data():
                 return json.load(f)
         except:
             pass
-    
-    # Create realistic sample data for June 2026
+
+    # Create realistic sample data for June 2026 with total_points
     default_data = {
-        "alex":  {"password": "123456",  "monthly_target": 280.0, "energy_records": []},
-        "lisa":  {"password": "abcdef",  "monthly_target": 320.0, "energy_records": []},
-        "tom":   {"password": "111111",  "monthly_target": 250.0, "energy_records": []},
-        "sarah": {"password": "sarah123","monthly_target": 300.0, "energy_records": []},
-        "mike":  {"password": "mike456", "monthly_target": 270.0, "energy_records": []},
+        "alex": {
+            "password": "123456",
+            "monthly_target": 280.0,
+            "total_points": 1250,          # NEW: Real redeemable points balance
+            "energy_records": []
+        },
+        "lisa": {
+            "password": "abcdef",
+            "monthly_target": 320.0,
+            "total_points": 980,
+            "energy_records": []
+        },
+        "tom": {
+            "password": "111111",
+            "monthly_target": 250.0,
+            "total_points": 640,
+            "energy_records": []
+        },
+        "sarah": {
+            "password": "sarah123",
+            "monthly_target": 300.0,
+            "total_points": 1150,
+            "energy_records": []
+        },
+        "mike": {
+            "password": "mike456",
+            "monthly_target": 270.0,
+            "total_points": 870,
+            "energy_records": []
+        },
     }
 
     # Pre-fill 30 days of data in June 2026 with different start dates
     base_date = datetime(2026, 6, 1)
     for username, user in default_data.items():
         records = user["energy_records"]
-        # Different join dates for realism
         start_day = 1 if username in ["alex", "tom"] else 6 if username == "lisa" else 10
         for i in range(30):
             current_date = base_date + timedelta(days=i)
             date_str = current_date.strftime("%Y-%m-%d")
             if int(date_str[-2:]) >= start_day:
-                # Generate realistic daily energy (between 6.0 ~ 12.0)
                 energy = round(7.0 + (i % 7) * 0.7 + (hash(username) % 5) * 0.3, 1)
                 records.append({"date": date_str, "energy": energy})
 
@@ -146,6 +172,7 @@ def add_energy():
 
 @app.route("/energy-summary", methods=["GET"])
 def energy_summary():
+    """GET /energy-summary - Returns both monthly points_earned and total_points"""
     username = request.args.get("username")
     if not username or username not in users:
         return jsonify({"message": "username required or not found"}), 400
@@ -167,22 +194,24 @@ def energy_summary():
     saved = prorated_target - total_energy
     save_percentage = (saved / prorated_target * 100) if prorated_target > 0 else 0.0
 
+    # Monthly calculated points
     if prorated_target <= 0:
-        points = 0
+        points_earned = 0
     elif total_energy > prorated_target:
-        points = 0
+        points_earned = 0
     elif save_percentage >= 30:
-        points = 120
+        points_earned = 120
     elif save_percentage >= 20:
-        points = 90
+        points_earned = 90
     elif save_percentage >= 10:
-        points = 60
+        points_earned = 60
     else:
-        points = 30
+        points_earned = 30
 
     return jsonify({
         "total_energy_this_month": round(total_energy, 2),
-        "points_earned": points,
+        "points_earned": points_earned,           # Monthly calculation (for dashboard)
+        "total_points": users[username].get("total_points", 0),   # NEW: Real redeemable balance
         "save_percentage": round(save_percentage, 1),
         "saved_energy": round(saved, 2),
         "prorated_target": round(prorated_target, 2)
@@ -237,18 +266,19 @@ def get_user_info():
         return jsonify({"success": False, "message": "user not found"}), 404
 
     monthly_target = users[username]["monthly_target"]
+    total_points = users[username].get("total_points", 0)   # NEW
 
     return jsonify({
         "success": True,
         "username": username,
-        "monthly_target": monthly_target
+        "monthly_target": monthly_target,
+        "total_points": total_points                      # NEW: Return available points
     })
 
 
-# NEW in Iteration 1: Debug endpoint to view entire data.json content
+# Debug endpoint
 @app.route("/debug-data", methods=["GET"])
 def debug_data():
-    """Return the full content of data.json for debugging"""
     return jsonify({
         "status": "success",
         "data_file": DATA_FILE,
@@ -257,4 +287,4 @@ def debug_data():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5001)
+    app.run(debug=True, port=5002)

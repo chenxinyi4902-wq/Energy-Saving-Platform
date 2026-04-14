@@ -59,14 +59,16 @@ def load_data():
     }
 
     # Pre-fill 30 days of data in June 2026 with different start dates
-    base_date = datetime(2026, 6, 1)
+    now = datetime.now()
+    base_date = datetime(now.year, now.month, 1)
+    _, days_in_month = calendar.monthrange(now.year, now.month)
     for username, user in default_data.items():
         records = user["energy_records"]
         start_day = 1 if username in ["alex", "tom"] else 6 if username == "lisa" else 10
-        for i in range(30):
+        for i in range(days_in_month):
             current_date = base_date + timedelta(days=i)
             date_str = current_date.strftime("%Y-%m-%d")
-            if int(date_str[-2:]) >= start_day:
+            if current_date.day >= start_day:
                 energy = round(7.0 + (i % 7) * 0.7 + (hash(username) % 5) * 0.3, 1)
                 records.append({"date": date_str, "energy": energy})
 
@@ -272,6 +274,56 @@ def weekly_summary():
         "note": note
     })
 
+@app.route("/user-data", methods=["GET"])
+def user_data():
+    username = request.args.get("username")
+
+    if not username or username not in users:
+        return jsonify({
+            "success": False,
+            "message": "user not found"
+        }), 404
+
+    records = users[username].get("energy_records", [])
+    records = sorted(records, key=lambda x: x["date"])
+
+    return jsonify({
+        "success": True,
+        "username": username,
+        "monthly_target": users[username].get("monthly_target", 0),
+        "total_points": users[username].get("total_points", 0),
+        "records": records
+    })
+
+@app.route("/leaderboard-data", methods=["GET"])
+def leaderboard_data():
+    leaderboard = []
+
+    for username, user in users.items():
+        total_points = user.get("total_points", 0)
+        records = user.get("energy_records", [])
+
+        current_month = datetime.now().strftime("%Y-%m")
+        monthly_energy = sum(
+            r["energy"] for r in records
+            if r["date"].startswith(current_month)
+        )
+
+        leaderboard.append({
+            "username": username,
+            "total_points": total_points,
+            "monthly_energy": round(monthly_energy, 2)
+        })
+
+    leaderboard.sort(key=lambda x: x["total_points"], reverse=True)
+
+    for index, item in enumerate(leaderboard, start=1):
+        item["rank"] = index
+
+    return jsonify({
+        "success": True,
+        "leaderboard": leaderboard
+    })
 
 @app.route("/get-user-info", methods=["GET"])
 def get_user_info():

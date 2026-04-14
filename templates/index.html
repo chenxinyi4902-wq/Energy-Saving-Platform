@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Basic Page Setup -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ecopulse-Energy Saving Platform</title>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;900&family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="dashboard">
+
+    <!-- ================= SIDEBAR SECTION ================= -->
+    <!-- Sidebar navigation for core system features -->
+    <aside>
+        <div class="sidebar-logo">
+            <h1 class="title-pop">ECOPULSE</h1>
+        </div>
+
+
+        <nav>
+
+            <!-- Main Navigation Menu -->
+            <!-- Note: These items will link to different functional modules in future iterations -->
+            <div class="nav-item active-nav">
+                <i data-lucide="layout-dashboard"></i>
+                <a href="{{ url_for('index') }}">Dashboard</a>
+            </div>
+            <div class="nav-item interactive-element">
+                <i data-lucide="activity"></i>
+                <a href="{{ url_for('history') }}">Electricity Usage History</a>
+            </div>
+            <div class="nav-item interactive-element">
+                <i data-lucide="trophy"></i>
+                <a href="{{ url_for('leaderboard') }}">Community Leaderboard</a>
+            </div>
+            <div class="nav-item interactive-element">
+                <i data-lucide="gift"></i>
+                <a href="{{ url_for('redeem') }}">Points Redemption</a>
+            </div>
+
+        </nav>
+        <div class="sidebar-footer">
+            <p>Total Points</p>
+            <h3 id="sidebar-points">--</h3>
+        </div>
+    </aside>
+
+<!-- ================= MAIN CONTENT ================= -->
+<main id="dashboard-content">
+
+        <!-- HEADER -->
+        <header>
+            <div>
+                <h2 id="greeting-title"></h2>
+                <p id="header-subtitle">Energy Saving Progress: --</p>
+            </div>
+            <div class="header-right">
+                <div style="text-align:right;">
+                    <p class="balance-label">Current Balance</p>
+                    <p class="balance-value"><span id="total-points">--</span> PTS</p>
+                </div>
+                <div class="avatar">
+                    <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop" alt="avatar">
+                </div>
+            </div>
+        </header>
+
+        <div id="page-message" class="page-message hidden" role="alert" aria-live="polite"></div>
+        <!-- # CSS NEEDED: .page-message .page-message.hidden .page-message.success .page-message.error .page-message.info -->
+
+        <!-- STATS GRID：Total Points + Weekly/Monthly Usage -->
+        <div class="stats-grid">
+
+            <div class="points-card brutal-shadow-sm">
+                <i data-lucide="star" class="bg-icon"></i>
+                <h3 class="card-title">Total Points</h3>
+                <p class="big-number"><span id="points-display">--</span></p>
+            </div>
+
+            <div class="quick-stats-card">
+                <h3 class="card-title">Quick Statistics</h3>
+                <div class="quick-stats-inner">
+                    <div class="stat-box">
+                        <p class="stat-label">Weekly Usage</p>
+                        <p class="stat-value"><span id="weekly-usage">--</span> <span>kWh</span></p>
+                    </div>
+                    <div class="stat-box">
+                        <p class="stat-label">Monthly Usage</p>
+                        <p class="stat-value"><span id="monthly-usage">--</span> <span>kWh</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="monthly-progress" class="progress-card">
+                <h3 class="card-title">Monthly Progress</h3>
+                <p>Saved Energy: -- kWh</p>
+                <p>Saving Rate: --%</p>
+                <p>Current Target: -- kWh</p>
+            </div>
+
+        </div>
+
+        <!-- MID GRID：Chart + Leaderboard -->
+        <div class="mid-grid">
+            <div id="usage-trend" class="chart-card">
+                <h3 class="card-title"><i data-lucide="line-chart"></i> Electricity Usage Trend</h3>
+                <div class="chart-container">
+                    <canvas id="energyChart"></canvas>
+                </div>
+
+                <p id="chart-empty-message" class="chart-empty-message hidden">
+                    Trend data is not available yet.
+                </p>
+                <!-- # CSS NEEDED: .chart-empty-message .chart-empty-message.hidden -->
+            </div>
+
+            <div id="leaderboard" class="leaderboard-card">
+                <h3 class="card-title"><i data-lucide="users"></i> Community Leaderboard</h3>
+                <div id="leaderboard-list" class="leaderboard-list">
+                    <div class="lb-row pending">
+                        <span>Loading leaderboard data...</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ACTION GRID：Daily Input + Points Redemption -->
+        <div class="action-grid">
+
+            <div id="daily-input" class="input-card">
+                <h3 class="card-title"><i data-lucide="edit-3"></i> Daily Input</h3>
+                <form id="usage-form">
+                    <div class="input-row">
+                        <input type="text" id="usage" placeholder="Enter kWh" inputmode="decimal" required>
+                        <button type="submit" id="save-usage-btn">Save</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="points-redeem" class="redemption-card">
+                <div>
+                    <h3 class="card-title">Points Redemption</h3>
+                    <p>Reward exchange system will be implemented later</p>
+                </div>
+                <a href="{{ url_for('redeem') }}" class="redeem-btn interactive-element">
+                    <i data-lucide="shopping-bag"></i>
+                </a>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- ================= MONTHLY TARGET OVERLAY ================= -->
+    <!-- For now these styles are implemented inline and can be moved to style.css later -->
+    <div
+        id="target-overlay"
+        style="
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 9998;
+        "
+    ></div>
+
+    <!-- ================= MONTHLY TARGET MODAL ================= -->
+    <div
+            id="target-modal"
+            style="
+                display: none;
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 9999;
+                width: 90%;
+                max-width: 460px;
+                background: #ffffff;
+                border-radius: 16px;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+                padding: 32px 28px;
+        "
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="target-modal-title"
+    >
+        <div id="target-modal-box">
+            <h2 id="target-modal-title" style="margin-top: 0;">
+                Set Your Monthly Electricity Target
+            </h2>
+            <p>Please set your target before using the dashboard.</p>
+            <div style="margin-top: 20px;">
+                <input
+                        type="number"
+                        id="monthly-target-input"
+                        placeholder="Enter target in kWh"
+                        min="0"
+                        step="0.1"
+                        required
+                        style="
+                        width: 100%;
+                        box-sizing: border-box;
+                        padding: 12px 14px;
+                        border: 1px solid #d9d9d9;
+                        border-radius: 10px;
+                        font-size: 16px;
+                        margin-bottom: 14px;
+                    "
+            >
+            </div>
+            <button
+                    id="submit-target-btn"
+                    style="
+                    width: 100%;
+                    padding: 12px 16px;
+                    border: none;
+                    border-radius: 10px;
+                    background: #111827;
+                    color: #ffffff;
+                    font-size: 15px;
+                    font-weight: 600;
+                    cursor: pointer;
+                "
+            >
+                Save Target
+            </button>
+
+            <div
+                    id="target-modal-message"
+                    class="page-message hidden"
+                    role="alert"
+                    aria-live="polite"
+                    style="margin-top: 14px;"
+            ></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+
+
+</body>
+</html>

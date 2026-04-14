@@ -1,32 +1,28 @@
 # Ecopulse - Energy Saving Platform
 
+---
 ## Current Progress
 
-* Completed the login page user interface
-* Implemented frontend using HTML, CSS, and JavaScript
-* Successfully integrated login functionality with backend locally
-* User authentication is working in a local environment
-* Implemented redirection to main interface (`/index`) after successful login
-
-## Features (Login Module)
-
-* User login with username and password
-* Frontend-backend communication for authentication
-* Structured layout ready for future navigation (e.g., dashboard)
-
-## Features (Main Interface)
-
-* Header with platform title and user greeting placeholder
-* Sidebar navigation for:
+* The core frontend structure has been completed
+* Main pages have been implemented, including:
+  - Login
   - Dashboard
   - Electricity Usage History
   - Community Leaderboard
   - Points Redemption
-* Clickable dashboard sections for quick access to:
-  - Electricity Usage History
-  - Community Leaderboard
-  - Points Redemption
-* Total points display section
+* Frontend-backend integration for the main functions has been completed locally
+* Core page routing, data loading, and user interaction logic are available in the current version
+* Most frontend functionality has been finished, and the remaining work is mainly further CSS refinement and visual optimisation
+
+## Features
+
+* User login with username and password
+* Dashboard with greeting, points display, monthly target modal, and daily usage input
+* Electricity usage history page with backend-connected record display
+* Community leaderboard page with backend-connected ranking data
+* Points redemption page with backend-connected points display and reward redemption
+* Sidebar navigation across all main pages
+* Frontend-backend communication for page data loading and interaction
 
 ## Technologies Used
 
@@ -41,17 +37,24 @@
 │── templates/
 │   └── login.html
 │   └── index.html
+│   └── history.html
+│   └── leaderboard.html
+│   └── redeem.html
 │── static/
 │   ├── style.css
-│   └── script.js
+│   └── js/
+│       └── login.js
+│       └── index.js
+│       └── history.js
+│       └── leaderboard.js
+│       └── redeem.js
 
 ## Future Improvements
 
-* Implement full dashboard functionality (data integration)
-* Connect sidebar navigation to different pages/modules
-* Improve UI/UX with enhanced styling
-* Add form validation and error handling
-* Upload complete backend code in future iterations
+* Further refine CSS styling and improve visual consistency across pages
+* Continue improving UI/UX details and responsive layout
+* Optimise frontend interaction feedback and error handling
+* Support further feature extension and project polishing
 
 ## ⚠️ Important Usage Note
 

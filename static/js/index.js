@@ -332,7 +332,8 @@ function loadEnergySummary() {
             updateMonthlyProgress(
                 data.save_percentage,
                 data.saved_energy,
-                data.prorated_target
+                data.prorated_target,
+                data.monthly_target
             );
             updateHeaderProgress(data.save_percentage);
         })
@@ -365,8 +366,8 @@ function loadUsageTrend() {
         })
         .then(data => {
             if (!data.records || data.records.length === 0) {
-                showChartEmptyState("Trend data is not available yet.");
-                destroyChartIfExists();
+                showChartEmptyState("No usage records yet. Your trend chart will update after your first entry.");
+                renderEmptyEnergyChart();
                 return;
             }
 
@@ -379,7 +380,7 @@ function loadUsageTrend() {
         })
         .catch(error => {
             console.error("Error loading usage trend data:", error);
-            showChartEmptyState("Trend chart will appear after the usage trend API is connected.");
+            showChartEmptyState("Trend data could not be loaded right now.");
             destroyChartIfExists();
         });
 }
@@ -470,7 +471,32 @@ function destroyChartIfExists() {
 }
 
 // Temporary chart styling for the current iteration; colors and gradient effects can be refined in later iterations.
-function renderEnergyChart(records) {
+function renderEmptyEnergyChart() {
+    const today = new Date();
+    const labels = [];
+    const zeroRecords = [];
+
+    for (let i = 6; i >= 0; i--) {
+        const date = new Date(today);
+        date.setDate(today.getDate() - i);
+
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        const label = `${month}-${day}`;
+
+        labels.push(label);
+        zeroRecords.push({
+            date: label,
+            energy: 0
+        });
+    }
+
+    hideChartEmptyState();
+    renderEnergyChart(zeroRecords, labels);
+    showChartEmptyState("No usage records yet. The chart is ready for your first entry.");
+}
+
+function renderEnergyChart(records, customLabels = null) {
     const canvas = document.getElementById("energyChart");
 
     if (!canvas) {
@@ -505,7 +531,7 @@ function renderEnergyChart(records) {
                     fill: true,
                     tension: 0.45,
                     borderWidth: 3,
-                    pointRadius: 3,
+                    pointRadius: 4,
                     pointHoverRadius: 5,
                     pointBackgroundColor: "rgba(34, 197, 94, 1)",
                     pointBorderWidth: 0
@@ -543,7 +569,7 @@ function renderDashboardPlaceholder() {
     updateMonthlyUsage("--");
     updateWeeklyUsage("--");
     updatePoints("--", "--");
-    updateMonthlyProgress("--", "--", "--");
+    updateMonthlyProgress("--", "--", "--", "--");
 
     showChartEmptyState("Set your monthly target to unlock dashboard data.");
     destroyChartIfExists();
@@ -600,15 +626,16 @@ function updateMonthlyUsage(monthlyValue) {
     }
 }
 
-function updateMonthlyProgress(savePercentage, savedEnergy, proratedTarget) {
+function updateMonthlyProgress(savePercentage, savedEnergy, proratedTarget, monthlyTarget) {
     const monthlyProgress = document.getElementById("monthly-progress");
 
     if (!monthlyProgress) return;
 
     monthlyProgress.innerHTML = `
         <h3 class="card-title">Monthly Progress</h3>
+        <p>Monthly Target: ${monthlyTarget ?? "--"} kWh</p>
+        <p>Target So Far: ${proratedTarget ?? "--"} kWh</p>
         <p>Saved Energy: ${savedEnergy ?? "--"} kWh</p>
         <p>Saving Rate: ${savePercentage ?? "--"}%</p>
-        <p>Current Target: ${proratedTarget ?? "--"} kWh</p>
     `;
 }

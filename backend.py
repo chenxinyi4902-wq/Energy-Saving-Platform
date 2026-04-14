@@ -1,9 +1,3 @@
-# Final Improved Version - Added total_points + New page routes for history, leaderboard and redeem
-# Changes from previous version:
-# 1. Added "total_points" field as real redeemable balance
-# 2. Added new routes: /history, /leaderboard, /redeem for frontend pages
-# 3. Kept points_earned (monthly) and total_points (available balance) separate
-
 import json
 import os
 from flask import Flask, request, jsonify, render_template
@@ -14,17 +8,8 @@ app = Flask(__name__)
 
 DATA_FILE = 'data.json'
 
-
-def load_data():
-    """Load user data from data.json, create with sample data if file doesn't exist"""
-    if os.path.exists(DATA_FILE):
-        try:
-            with open(DATA_FILE, 'r', encoding='utf-8') as f:
-                return json.load(f)
-        except:
-            pass
-
     # Create realistic sample data for June 2026 with total_points
+def build_demo_data():
     default_data = {
         "alex": {
             "password": "123456",
@@ -46,8 +31,8 @@ def load_data():
         },
         "sarah": {
             "password": "sarah123",
-            "monthly_target": 300.0,
-            "total_points": 1150,
+            "monthly_target": None,
+            "total_points": 0,
             "energy_records": []
         },
         "mike": {
@@ -58,19 +43,77 @@ def load_data():
         },
     }
 
-    # Pre-fill 30 days of data in June 2026 with different start dates
-    now = datetime.now()
-    base_date = datetime(now.year, now.month, 1)
-    _, days_in_month = calendar.monthrange(now.year, now.month)
-    for username, user in default_data.items():
-        records = user["energy_records"]
-        start_day = 1 if username in ["alex", "tom"] else 6 if username == "lisa" else 10
-        for i in range(days_in_month):
-            current_date = base_date + timedelta(days=i)
-            date_str = current_date.strftime("%Y-%m-%d")
-            if current_date.day >= start_day:
-                energy = round(7.0 + (i % 7) * 0.7 + (hash(username) % 5) * 0.3, 1)
-                records.append({"date": date_str, "energy": energy})
+    # Rules:
+    # - No future dates
+    # - Every applicable day has one record
+    # - Weekdays and weekends differ slightly
+    # - Small deterministic variation makes data look more realistic
+    today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+
+    def add_realistic_records(username, start_date, weekday_base, weekend_base, variation_pattern):
+        """
+        Add one energy record per day from start_date up to today.
+        variation_pattern is a short list used cyclically for small daily variation.
+        """
+        current_date = start_date.replace(hour=0, minute=0, second=0, microsecond=0)
+        i = 0
+
+        while current_date <= today:
+            weekday = current_date.weekday()  # 0=Mon, 6=Sun
+            base = weekday_base if weekday < 5 else weekend_base
+            variation = variation_pattern[i % len(variation_pattern)]
+            energy = round(base + variation, 1)
+
+            default_data[username]["energy_records"].append({
+                "date": current_date.strftime("%Y-%m-%d"),
+                "energy": energy
+            })
+
+            current_date += timedelta(days=1)
+            i += 1
+
+    # alex: more than one month of records, lower usage, likely to earn points
+    alex_start = today - timedelta(days=42)
+    add_realistic_records(
+        "alex",
+        alex_start,
+        weekday_base=7.7,
+        weekend_base=6.9,
+        variation_pattern=[0.2, -0.1, 0.3, -0.2, 0.1, -0.1, 0.2]
+    )
+
+    # lisa: more than one month of records, higher usage, likely to exceed target
+    lisa_start = today - timedelta(days=39)
+    add_realistic_records(
+        "lisa",
+        lisa_start,
+        weekday_base=11.9,
+        weekend_base=10.8,
+        variation_pattern=[0.3, -0.1, 0.4, 0.0, 0.2, -0.2, 0.1]
+    )
+
+    # tom: newer user, less than 30 days, moderate usage
+    tom_start = today - timedelta(days=12)
+    add_realistic_records(
+        "tom",
+        tom_start,
+        weekday_base=7.9,
+        weekend_base=7.1,
+        variation_pattern=[0.1, -0.2, 0.2, 0.0, -0.1, 0.1, 0.0]
+    )
+
+    # mike: medium-term user, closer to target than lisa, but not as low as alex
+    mike_start = today - timedelta(days=24)
+    add_realistic_records(
+        "mike",
+        mike_start,
+        weekday_base=8.8,
+        weekend_base=8.0,
+        variation_pattern=[0.2, -0.1, 0.1, -0.2, 0.2, 0.0, -0.1]
+    )
+
+    # sarah: keep as new user with no target and no records
+    # ===============================================================================
 
     save_data(default_data)
     return default_data
@@ -81,10 +124,24 @@ def save_data(data):
     with open(DATA_FILE, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
 
+def load_data():
+    """Load user data from data.json, create with sample data if file doesn't exist"""
+    if os.path.exists(DATA_FILE):
+        try:
+            with open(DATA_FILE, 'r', encoding='utf-8') as f:
+                return json.load(f)
+            if isinstance(data, dict):
+                return data
+        except Exception as e:
+            print(f"Failed to load data.json: {e}")
+    default_data = build_demo_data()
+    save_data(default_data)
+    return default_data
 
-# Load data at startup
-users = load_data()
-
+def reset_demo_data():
+    demo_data = build_demo_data()
+    save_data(demo_data)
+    return demo_data
 
 @app.route("/")
 def login_page():
@@ -121,6 +178,7 @@ def login():
 
     if not username or not password:
         return jsonify({"message": "username and password are required"}), 400
+    users = reset_demo_data()
     if username not in users:
         return jsonify({"message": "user not found"}), 404
     if users[username]["password"] != password:
@@ -145,6 +203,7 @@ def set_target():
 
     if target < 0:
         return jsonify({"message": "target cannot be negative"}), 400
+    users = load_data()
     if username not in users:
         return jsonify({"message": "user not found"}), 404
 
@@ -170,6 +229,7 @@ def add_energy():
 
     if energy < 0:
         return jsonify({"message": "energy cannot be negative"}), 400
+    users = load_data()
     if username not in users:
         return jsonify({"message": "user not found"}), 404
 
@@ -191,6 +251,7 @@ def add_energy():
 def energy_summary():
     """GET /energy-summary - Returns both monthly points_earned and total_points"""
     username = request.args.get("username")
+    users = load_data()
     if not username or username not in users:
         return jsonify({"message": "username required or not found"}), 400
 
@@ -208,7 +269,14 @@ def energy_summary():
     this_month = [r for r in records if r["date"].startswith(month_str)]
     total_energy = sum(r["energy"] for r in this_month)
 
-    saved = prorated_target - total_energy
+    if len(this_month) == 0 or prorated_target <= 0:
+        saved = 0.0
+        save_percentage = 0.0
+        points_earned = 0
+    else:
+        saved = prorated_target - total_energy
+    if saved < 0:
+        saved = 0.0
     save_percentage = (saved / prorated_target * 100) if prorated_target > 0 else 0.0
 
     if prorated_target <= 0:
@@ -221,8 +289,10 @@ def energy_summary():
         points_earned = 90
     elif save_percentage >= 10:
         points_earned = 60
-    else:
+    elif save_percentage >= 0:
         points_earned = 30
+    else:
+        points_earned = 0
 
     return jsonify({
         "total_energy_this_month": round(total_energy, 2),
@@ -230,13 +300,15 @@ def energy_summary():
         "total_points": users[username].get("total_points", 0),
         "save_percentage": round(save_percentage, 1),
         "saved_energy": round(saved, 2),
-        "prorated_target": round(prorated_target, 2)
+        "prorated_target": round(prorated_target, 2),
+        "monthly_target": users[username].get("monthly_target")
     })
 
 
 @app.route("/weekly-summary", methods=["GET"])
 def weekly_summary():
     username = request.args.get("username")
+    users = load_data()
     if not username or username not in users:
         return jsonify({"message": "username required or not found"}), 400
 
@@ -277,6 +349,7 @@ def weekly_summary():
 @app.route("/user-data", methods=["GET"])
 def user_data():
     username = request.args.get("username")
+    users = load_data()
 
     if not username or username not in users:
         return jsonify({
@@ -297,6 +370,7 @@ def user_data():
 
 @app.route("/leaderboard-data", methods=["GET"])
 def leaderboard_data():
+    users = load_data()
     leaderboard = []
 
     for username, user in users.items():
@@ -328,6 +402,7 @@ def leaderboard_data():
 @app.route("/get-user-info", methods=["GET"])
 def get_user_info():
     username = request.args.get("username")
+    users = load_data()
     if not username or username not in users:
         return jsonify({"success": False, "message": "user not found"}), 404
 
@@ -344,6 +419,7 @@ def get_user_info():
 
 @app.route("/debug-data", methods=["GET"])
 def debug_data():
+    users = load_data()
     return jsonify({
         "status": "success",
         "data_file": DATA_FILE,
@@ -352,4 +428,5 @@ def debug_data():
 
 
 if __name__ == "__main__":
+    users = load_data()
     app.run(debug=True, port=5002)

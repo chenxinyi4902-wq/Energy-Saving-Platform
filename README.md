@@ -13,3 +13,10 @@
 ### Iteration 1 - Added user data and leaderboard APIs
 * The `/user-data` endpoint now provides user profile data and energy records for history and usage trend display.
 * The `/leaderboard-data` endpoint returns ranked leaderboard data for the dashboard preview and leaderboard page.
+
+---
+### Iteration 2 - Updated frontend target display and fixed backend data reset
+* Updated both frontend display logic and backend data handling.
+* Improved target text/display behaviour, refreshed page data flow after login, and fixed backend demo data loading and reset logic.
+
+---

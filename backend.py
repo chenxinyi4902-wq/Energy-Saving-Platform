@@ -8,46 +8,119 @@ app = Flask(__name__)
 
 DATA_FILE = 'data.json'
 
-    # Create realistic sample data for June 2026 with total_points
+def calculate_points_by_percentage(save_percentage):
+    if save_percentage >= 30:
+        return 120
+    elif save_percentage >= 20:
+        return 90
+    elif save_percentage >= 10:
+        return 60
+    elif save_percentage > 0:
+        return 30
+    return 0
+
+def get_cycle_end_date(cycle_start):
+    year = cycle_start.year
+    month = cycle_start.month
+
+    if month == 12:
+        next_year = year + 1
+        next_month = 1
+    else:
+        next_year = year
+        next_month = month + 1
+
+    _, days_in_next_month = calendar.monthrange(next_year, next_month)
+    next_same_day = min(cycle_start.day, days_in_next_month)
+
+    next_cycle_start = cycle_start.replace(
+        year=next_year,
+        month=next_month,
+        day=next_same_day
+    )
+    cycle_end = next_cycle_start - timedelta(days=1)
+    return cycle_end
+
+def auto_settle_demo_data(users):
+    today = datetime.now().date()
+
+    for username, user in users.items():
+        target = user.get("monthly_target") or 0.0
+        cycle_start_str = user.get("cycle_start_date")
+        records = user.get("energy_records", [])
+
+        if target <= 0 or not cycle_start_str:
+            continue
+
+        cycle_start = datetime.strptime(cycle_start_str, "%Y-%m-%d")
+        cycle_end = get_cycle_end_date(cycle_start).date()
+
+        if today <= cycle_end:
+            continue
+
+        cycle_start_str_fmt = cycle_start.strftime("%Y-%m-%d")
+        cycle_end_str_fmt = cycle_end.strftime("%Y-%m-%d")
+
+        cycle_records = [
+            r for r in records
+            if cycle_start_str_fmt <= r["date"] <= cycle_end_str_fmt
+        ]
+
+        total_energy = sum(r["energy"] for r in cycle_records)
+
+        if not cycle_records:
+            settled_points = 0
+        else:
+            actual_save_percentage = ((target - total_energy) / target) * 100
+
+            if actual_save_percentage < 0:
+                actual_save_percentage = 0.0
+
+            settled_points = calculate_points_by_percentage(actual_save_percentage)
+
+        user["total_points"] = user.get("total_points", 0) + settled_points
+
+    return users
+
 def build_demo_data():
     default_data = {
         "alex": {
             "password": "123456",
             "monthly_target": 280.0,
             "total_points": 1250,
+            "cycle_start_date": "2026-03-18",
             "energy_records": []
         },
         "lisa": {
             "password": "abcdef",
             "monthly_target": 320.0,
             "total_points": 980,
+            "cycle_start_date": "2026-03-23",
             "energy_records": []
         },
         "tom": {
             "password": "111111",
             "monthly_target": 250.0,
             "total_points": 640,
+            "cycle_start_date": "2026-03-19",
             "energy_records": []
         },
         "sarah": {
             "password": "sarah123",
             "monthly_target": None,
             "total_points": 0,
+            "cycle_start_date": None,
             "energy_records": []
         },
         "mike": {
             "password": "mike456",
             "monthly_target": 270.0,
-            "total_points": 870,
+            "total_points": 0,
+            "cycle_start_date": "2026-04-05",
             "energy_records": []
         },
     }
 
-    # Rules:
-    # - No future dates
-    # - Every applicable day has one record
-    # - Weekdays and weekends differ slightly
-    # - Small deterministic variation makes data look more realistic
     today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
 
     def add_realistic_records(username, start_date, weekday_base, weekend_base, variation_pattern):
@@ -72,8 +145,8 @@ def build_demo_data():
             current_date += timedelta(days=1)
             i += 1
 
-    # alex: more than one month of records, lower usage, likely to earn points
-    alex_start = today - timedelta(days=42)
+    # alex
+    alex_start = datetime(2026, 3, 18)
     add_realistic_records(
         "alex",
         alex_start,
@@ -82,8 +155,8 @@ def build_demo_data():
         variation_pattern=[0.2, -0.1, 0.3, -0.2, 0.1, -0.1, 0.2]
     )
 
-    # lisa: more than one month of records, higher usage, likely to exceed target
-    lisa_start = today - timedelta(days=39)
+    # lisa
+    lisa_start = datetime(2026, 3, 23)
     add_realistic_records(
         "lisa",
         lisa_start,
@@ -92,8 +165,8 @@ def build_demo_data():
         variation_pattern=[0.3, -0.1, 0.4, 0.0, 0.2, -0.2, 0.1]
     )
 
-    # tom: newer user, less than 30 days, moderate usage
-    tom_start = today - timedelta(days=12)
+    # tom
+    tom_start = datetime(2026, 3, 19)
     add_realistic_records(
         "tom",
         tom_start,
@@ -102,8 +175,8 @@ def build_demo_data():
         variation_pattern=[0.1, -0.2, 0.2, 0.0, -0.1, 0.1, 0.0]
     )
 
-    # mike: medium-term user, closer to target than lisa, but not as low as alex
-    mike_start = today - timedelta(days=24)
+    # mike
+    mike_start = datetime(2026, 4, 5)
     add_realistic_records(
         "mike",
         mike_start,
@@ -129,7 +202,7 @@ def load_data():
     if os.path.exists(DATA_FILE):
         try:
             with open(DATA_FILE, 'r', encoding='utf-8') as f:
-                return json.load(f)
+                data = json.load(f)
             if isinstance(data, dict):
                 return data
         except Exception as e:
@@ -153,7 +226,6 @@ def index():
     return render_template("index.html")
 
 
-# ==================== New front-end page routing ====================
 @app.route("/history")
 def history():
     return render_template("history.html")
@@ -179,6 +251,8 @@ def login():
     if not username or not password:
         return jsonify({"message": "username and password are required"}), 400
     users = reset_demo_data()
+    users = auto_settle_demo_data(users)
+    save_data(users)
     if username not in users:
         return jsonify({"message": "user not found"}), 404
     if users[username]["password"] != password:
@@ -249,59 +323,84 @@ def add_energy():
 
 @app.route("/energy-summary", methods=["GET"])
 def energy_summary():
-    """GET /energy-summary - Returns both monthly points_earned and total_points"""
     username = request.args.get("username")
     users = load_data()
     if not username or username not in users:
         return jsonify({"message": "username required or not found"}), 400
 
     now = datetime.now()
-    year, month = now.year, now.month
-    month_str = f"{year}-{month:02d}"
+    user = users[username]
+    target = user.get("monthly_target") or 0.0
+    total_points = user.get("total_points", 0)
+    cycle_start_str = user.get("cycle_start_date")
+    records = user.get("energy_records", [])
 
-    _, days_in_month = calendar.monthrange(year, month)
-    days_passed = now.day
+    if not cycle_start_str:
+        return jsonify({
+            "total_energy_this_cycle": 0,
+            "monthly_target": user.get("monthly_target"),
+            "total_points": total_points,
+            "cycle_start_date": None,
+            "cycle_end_date": None,
+            "days_in_cycle": 0,
+            "days_recorded": 0,
+            "usage_progress": 0.0,
+            "prediction_ready": False,
+            "predicted_cycle_total": None,
+            "predicted_save_percentage": None,
+            "predicted_points": 0
+        })
 
-    target = users[username]["monthly_target"] or 0.0
-    prorated_target = target * (days_passed / days_in_month) if days_in_month > 0 else 0.0
+    cycle_start = datetime.strptime(cycle_start_str, "%Y-%m-%d")
+    cycle_end = get_cycle_end_date(cycle_start)
 
-    records = users[username]["energy_records"]
-    this_month = [r for r in records if r["date"].startswith(month_str)]
-    total_energy = sum(r["energy"] for r in this_month)
+    cycle_start_str_fmt = cycle_start.strftime("%Y-%m-%d")
+    cycle_end_str_fmt = cycle_end.strftime("%Y-%m-%d")
 
-    if len(this_month) == 0 or prorated_target <= 0:
-        saved = 0.0
-        save_percentage = 0.0
-        points_earned = 0
+    cycle_records = [
+        r for r in records
+        if cycle_start_str_fmt <= r["date"] <= cycle_end_str_fmt
+    ]
+    cycle_records.sort(key=lambda x: x["date"])
+
+    total_energy = sum(r["energy"] for r in cycle_records)
+    recorded_days = len(cycle_records)
+    days_in_cycle = (cycle_end - cycle_start).days + 1
+
+    if target > 0:
+        usage_progress = (total_energy / target) * 100
+        usage_progress = min(usage_progress, 100.0)
     else:
-        saved = prorated_target - total_energy
-    if saved < 0:
-        saved = 0.0
-    save_percentage = (saved / prorated_target * 100) if prorated_target > 0 else 0.0
+        usage_progress = 0.0
 
-    if prorated_target <= 0:
-        points_earned = 0
-    elif total_energy > prorated_target:
-        points_earned = 0
-    elif save_percentage >= 30:
-        points_earned = 120
-    elif save_percentage >= 20:
-        points_earned = 90
-    elif save_percentage >= 10:
-        points_earned = 60
-    elif save_percentage >= 0:
-        points_earned = 30
-    else:
-        points_earned = 0
+    prediction_ready = False
+    predicted_cycle_total = None
+    predicted_save_percentage = None
+    predicted_points = 0
+
+    if target > 0 and recorded_days >= 3 and now.date() <= cycle_end.date():
+        prediction_ready = True
+        avg_daily_energy = total_energy / recorded_days
+        predicted_cycle_total = avg_daily_energy * days_in_cycle
+        predicted_save_percentage = ((target - predicted_cycle_total) / target) * 100
+
+        if predicted_save_percentage < 0:
+            predicted_save_percentage = 0.0
+        predicted_points = calculate_points_by_percentage(predicted_save_percentage)
 
     return jsonify({
-        "total_energy_this_month": round(total_energy, 2),
-        "points_earned": points_earned,
-        "total_points": users[username].get("total_points", 0),
-        "save_percentage": round(save_percentage, 1),
-        "saved_energy": round(saved, 2),
-        "prorated_target": round(prorated_target, 2),
-        "monthly_target": users[username].get("monthly_target")
+        "total_energy_this_cycle": round(total_energy, 2),
+        "monthly_target": user.get("monthly_target"),
+        "total_points": total_points,
+        "cycle_start_date": cycle_start_str_fmt,
+        "cycle_end_date": cycle_end_str_fmt,
+        "days_in_cycle": days_in_cycle,
+        "days_recorded": recorded_days,
+        "usage_progress": round(usage_progress, 1),
+        "prediction_ready": prediction_ready,
+        "predicted_cycle_total": round(predicted_cycle_total, 2) if predicted_cycle_total is not None else None,
+        "predicted_save_percentage": round(predicted_save_percentage, 1) if predicted_save_percentage is not None else None,
+        "predicted_points": predicted_points
     })
 
 

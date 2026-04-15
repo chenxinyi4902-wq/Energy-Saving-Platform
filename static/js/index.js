@@ -80,17 +80,17 @@ function updateGreeting() {
     greetingTitle.innerHTML = `${greetingText}, <span>${currentUser}</span>`;
 }
 
-function updateHeaderProgress(savePercentage) {
+function updateHeaderProgress(usageProgress) {
     const headerSubtitle = document.getElementById("header-subtitle");
 
     if (!headerSubtitle) return;
 
-    if (savePercentage === undefined || savePercentage === null) {
-        headerSubtitle.textContent = "Energy Saving Progress: --";
+    if (usageProgress === undefined || usageProgress === null || usageProgress === "--") {
+        headerSubtitle.textContent = "Current Usage Progress: --";
         return;
     }
 
-    headerSubtitle.textContent = `Energy Saving Progress: ${savePercentage}%`;
+    headerSubtitle.textContent = `Current Usage Progress: ${usageProgress}%`;
 }
 // ================= MONTHLY TARGET MODAL =================
 function bindTargetButton() {
@@ -327,15 +327,14 @@ function loadEnergySummary() {
     fetch(`/energy-summary?username=${encodeURIComponent(currentUser)}`)
         .then(response => response.json())
         .then(data => {
-            updateMonthlyUsage(data.total_energy_this_month);
-            updatePoints(data.points_earned, data.total_points);
+            updateMonthlyUsage(data.total_energy_this_cycle);
+            updatePoints(data.predicted_points, data.total_points);
             updateMonthlyProgress(
-                data.save_percentage,
-                data.saved_energy,
-                data.prorated_target,
-                data.monthly_target
+                data.monthly_target,
+                data.predicted_cycle_total,
+                data.predicted_save_percentage
             );
-            updateHeaderProgress(data.save_percentage);
+            updateHeaderProgress(data.usage_progress);
         })
         .catch(error => {
             console.error("Error loading energy summary:", error);
@@ -569,7 +568,7 @@ function renderDashboardPlaceholder() {
     updateMonthlyUsage("--");
     updateWeeklyUsage("--");
     updatePoints("--", "--");
-    updateMonthlyProgress("--", "--", "--", "--");
+    updateMonthlyProgress("--", "--", "--");
 
     showChartEmptyState("Set your monthly target to unlock dashboard data.");
     destroyChartIfExists();
@@ -626,16 +625,19 @@ function updateMonthlyUsage(monthlyValue) {
     }
 }
 
-function updateMonthlyProgress(savePercentage, savedEnergy, proratedTarget, monthlyTarget) {
+function updateMonthlyProgress(monthlyTarget, predictedTotalUsage, predictedSaveRate) {
     const monthlyProgress = document.getElementById("monthly-progress");
 
     if (!monthlyProgress) return;
 
+    const safeMonthlyTarget = monthlyTarget ?? "--";
+    const safePredictedTotalUsage = predictedTotalUsage ?? "--";
+    const safePredictedSaveRate = predictedSaveRate ?? "--";
+
     monthlyProgress.innerHTML = `
         <h3 class="card-title">Monthly Progress</h3>
-        <p>Monthly Target: ${monthlyTarget ?? "--"} kWh</p>
-        <p>Target So Far: ${proratedTarget ?? "--"} kWh</p>
-        <p>Saved Energy: ${savedEnergy ?? "--"} kWh</p>
-        <p>Saving Rate: ${savePercentage ?? "--"}%</p>
+        <p>Monthly Target: <span id="monthly-target-display">${safeMonthlyTarget}</span> kWh</p>
+        <p>Predicted Total Usage: <span id="predicted-cycle-total">${safePredictedTotalUsage}</span> kWh</p>
+        <p>Predicted Saving Rate: <span id="predicted-save-rate">${safePredictedSaveRate}</span>%</p>
     `;
 }

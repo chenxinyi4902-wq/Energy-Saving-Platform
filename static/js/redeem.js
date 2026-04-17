@@ -127,7 +127,7 @@ function loadUserPoints() {
                 }
 
             if (sidebarPoints) {
-                sidebarPoints.textContent = totalPoints;
+                sidebarPoints.textContent = currentPoints;
             }
 
             renderRewardCards();
@@ -251,7 +251,7 @@ function handleRewardRedemption(button, rewardName, pointsRequired) {
                 }
                 const sidebarPoints = document.getElementById("sidebar-points");
                 if (sidebarPoints) {
-                    sidebarPoints.textContent = totalPoints;
+                    sidebarPoints.textContent = currentPoints;
                 }
 
                 updateRedemptionMessage(data.message || `Successfully redeemed ${rewardName}.`);

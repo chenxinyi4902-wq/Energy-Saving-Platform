@@ -64,7 +64,7 @@ async function loadUserInfo() {
         }
 
         const data = await response.json();
-        sidebarPoints.textContent = data.total_points !== undefined ? data.total_points : 0;
+        sidebarPoints.textContent = data.current_points !== undefined ? data.current_points : 0;
     } catch (error) {
         console.error("Failed to load user info:", error);
         sidebarPoints.textContent = "--";

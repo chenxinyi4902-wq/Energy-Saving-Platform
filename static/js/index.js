@@ -107,8 +107,8 @@ function checkMonthlyTarget() {
         .then(data => {
             if (data.success) {
                 const monthlyTarget = data.monthly_target;
-                const totalPoints = data.total_points;
-                updateBalanceOnly(totalPoints);
+                const currentPoints = data.current_points;
+                updateBalanceOnly(currentPoints);
 
                 if (monthlyTarget === null || monthlyTarget === "" || monthlyTarget === undefined) {
                     renderDashboardPlaceholder();
@@ -328,7 +328,7 @@ function loadEnergySummary() {
         .then(response => response.json())
         .then(data => {
             updateMonthlyUsage(data.total_energy_this_cycle);
-            updatePoints(data.predicted_points, data.total_points);
+            updatePoints(data.predicted_points, data.current_points);
             updateMonthlyProgress(
                 data.monthly_target,
                 data.predicted_cycle_total,
@@ -575,37 +575,37 @@ function renderDashboardPlaceholder() {
 }
 
 // ================= UI UPDATE FUNCTIONS =================
-function updatePoints(pointsEarned, totalPointsValue) {
+function updatePoints(pointsEarned, currentPointsValue) {
     const pointsDisplay = document.getElementById("points-display");
     const totalPoints = document.getElementById("total-points");
     const sidebarPoints = document.getElementById("sidebar-points");
 
     const safeEarnedPoints = pointsEarned ?? "--";
-    const safeTotalPoints = totalPointsValue ?? "--";
+    const safeCurrentPoints = currentPointsValue ?? "--";
 
     if (pointsDisplay) {
         pointsDisplay.textContent = safeEarnedPoints;
     }
 
     if (totalPoints) {
-        totalPoints.textContent = safeTotalPoints;
+        totalPoints.textContent = safeCurrentPoints;
     }
 
     if (sidebarPoints) {
-        sidebarPoints.textContent = safeTotalPoints;
+        sidebarPoints.textContent = safeCurrentPoints;
     }
 }
 
-function updateBalanceOnly(totalPointsValue) {
+function updateBalanceOnly(currentPointsValue) {
     const totalPoints = document.getElementById("total-points");
     const sidebarPoints = document.getElementById("sidebar-points");
 
     if (totalPoints) {
-        totalPoints.textContent = totalPointsValue ?? "--";
+        totalPoints.textContent = currentPointsValue ?? "--";
     }
 
     if (sidebarPoints) {
-        sidebarPoints.textContent = totalPointsValue ?? "--";
+        sidebarPoints.textContent = currentPointsValue ?? "--";
     }
 }
 

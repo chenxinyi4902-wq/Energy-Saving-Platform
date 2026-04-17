@@ -49,3 +49,9 @@
 * Updated the redemption page layout with a cleaner points section and a View History entry.
 * Improved the redemption logic for the testing version so current points and redemption records can be handled during a session.
 * Kept the reset-on-logout mechanism for demo testing consistency.
+
+---
+### Iteration 6 - Refined Redemption and Page Text Logic
+* Separated Current Points from Total Points in the redemption-related display logic.
+* Refined the redemption page structure and interaction flow for the testing version.
+* Improved text logic and display consistency on the history and leaderboard pages.

@@ -55,7 +55,7 @@ function loadUserPoints() {
             return response.json();
         })
         .then(data => {
-            sidebarPoints.textContent = data.total_points ?? "--";
+            sidebarPoints.textContent = data.current_points ?? "--";
         })
         .catch(error => {
             console.error("Failed to load user points:", error);

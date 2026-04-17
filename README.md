@@ -26,3 +26,7 @@
 * Synced `index.html` and `index.js` with the new monthly target, predicted usage, and estimated points display.
 
 ---
+### Iteration 4 - Add logout feature and improve page consistency
+* Added a logout feature to make switching between test accounts easier.
+* Unified the header display across the main pages for a more consistent user experience.
+* Improved the testing flow by allowing users to return to the login page more directly.

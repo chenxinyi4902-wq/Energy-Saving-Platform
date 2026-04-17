@@ -50,9 +50,36 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function initializeRedemptionPage() {
+    updateGreeting();
+    updateUsername();
     renderRewardCards();
     bindRedeemGrid();
     loadUserPoints();
+}
+
+function updateGreeting() {
+    const greetingText = document.getElementById("greeting-text");
+    if (!greetingText) return;
+
+    const currentHour = new Date().getHours();
+    let greeting = "Welcome";
+
+    if (currentHour < 12) {
+        greeting = "Good Morning";
+    } else if (currentHour < 18) {
+        greeting = "Good Afternoon";
+    } else {
+        greeting = "Good Evening";
+    }
+
+    greetingText.textContent = greeting;
+}
+
+function updateUsername() {
+    const usernameElement = document.getElementById("header-username");
+    if (!usernameElement) return;
+
+    usernameElement.textContent = currentUser;
 }
 
 function loadUserPoints() {

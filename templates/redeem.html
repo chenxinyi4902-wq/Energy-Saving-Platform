@@ -50,6 +50,12 @@
                 <h2>Points Redemption</h2>
                 <p>Redeem your points for rewards and vouchers.</p>
             </div>
+
+            <div class="header-user-info">
+                <h3 id="greeting-text">Welcome</h3>
+                <p id="header-username">User</p>
+                <button id="logout-btn" type="button">Logout</button>
+            </div>
         </header>
 
         <section class="history-table-card">
@@ -73,5 +79,6 @@
         lucide.createIcons();
     </script>
     <script src="{{ url_for('static', filename='js/redeem.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/logout.js') }}"></script>
 </body>
 </html>

@@ -260,6 +260,13 @@ def login():
 
     return jsonify({"message": "login successful"})
 
+@app.route("/logout", methods=["POST"])
+def logout():
+    reset_demo_data()
+    return jsonify({
+        "success": True,
+        "message": "logout successful"
+    })
 
 @app.route("/set-target", methods=["POST"])
 def set_target():

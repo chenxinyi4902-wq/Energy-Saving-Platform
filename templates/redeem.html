@@ -59,21 +59,63 @@
         </header>
 
         <section class="history-table-card">
-            <h3 class="card-title" style="text-align: center;">Available Rewards</h3>
-
-            <p style="text-align: center; margin-bottom: 16px;">
-                Current Points: <span id="points-earned">--</span>
-            </p>
+            <div
+                class="redeem-toolbar"
+                style="display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 24px; flex-wrap: wrap;"
+            >
+                <h3 class="card-title" style="margin: 0;">
+                    Current Points: <span id="current-points">--</span>
+                </h3>
+                <button id="view-history-btn" type="button" class="interactive-element">
+                    View History
+                </button>
+            </div>
 
             <p id="redemption-message" style="text-align: center; margin-bottom: 24px;">
                 Loading rewards...
             </p>
 
             <div id="redemption-grid" class="redemption-grid">
-                <!-- Reward cards will be rendered by redemption.js -->
             </div>
         </section>
     </main>
+
+    <div id="history-overlay" class="target-overlay hidden"></div>
+
+    <div id="history-modal" class="target-modal hidden">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <h3 style="margin: 0;">Redemption History</h3>
+
+            <!-- [ADDED] Top-right close button -->
+            <button
+                id="history-close-icon"
+                type="button"
+                style="
+                    border: none;
+                    background: transparent;
+                    font-size: 28px;
+                    font-weight: 700;
+                    cursor: pointer;
+                    line-height: 1;
+                    padding: 0;
+                "
+                aria-label="Close history modal"
+            >
+                ×
+            </button>
+        </div>
+
+        <p style="margin-bottom: 16px;">View your recent redeemed rewards.</p>
+
+        <div id="history-list"
+             style="max-height: 280px; overflow-y: auto; margin-bottom: 20px;"
+        >
+        </div>
+
+        <div style="display: flex; justify-content: flex-end;">
+            <button id="close-history-btn" type="button">Close</button>
+        </div>
+    </div>
 
     <script>
         lucide.createIcons();

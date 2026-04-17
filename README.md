@@ -6,7 +6,19 @@
 
 * The following iterations are testing-based updates built on this completed structure. They are mainly used to check functionality, improve integration, and prepare the project for further optimisation and extension.
 
----
+## File Structure
+
+* `backend.py`  
+  Main Flask backend file.
+
+* `templates/`  
+  Includes `login.html`, `index.html`, `history.html`, `leaderboard.html`, and `redeem.html`.
+
+* `static/style.css`
+
+* `static/js/`  
+  Includes `login.js`, `index.js`, `history.js`, `leaderboard.js`, `redeem.js`, and `logout.js`.
+
 ## Iteration Info
 
 ### Iteration 1 - Added user data and leaderboard APIs
@@ -30,3 +42,10 @@
 * Added a logout feature to make switching between test accounts easier.
 * Unified the header display across the main pages for a more consistent user experience.
 * Improved the testing flow by allowing users to return to the login page more directly.
+
+---
+### Iteration 5 - Redemption Module Refinement
+* Added a separate Current Points display on the redemption page while keeping Total Points unchanged for leaderboard ranking.
+* Updated the redemption page layout with a cleaner points section and a View History entry.
+* Improved the redemption logic for the testing version so current points and redemption records can be handled during a session.
+* Kept the reset-on-logout mechanism for demo testing consistency.

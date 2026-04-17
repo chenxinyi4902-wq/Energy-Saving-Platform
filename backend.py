@@ -79,6 +79,8 @@ def auto_settle_demo_data(users):
             settled_points = calculate_points_by_percentage(actual_save_percentage)
 
         user["total_points"] = user.get("total_points", 0) + settled_points
+        user["current_points"] = user.get("current_points",
+                                          user.get("total_points", 0) - settled_points) + settled_points
 
     return users
 
@@ -88,36 +90,46 @@ def build_demo_data():
             "password": "123456",
             "monthly_target": 280.0,
             "total_points": 1250,
+            "current_points": 1250,
             "cycle_start_date": "2026-03-18",
-            "energy_records": []
+            "energy_records": [],
+            "redemption_history": []
         },
         "lisa": {
             "password": "abcdef",
             "monthly_target": 320.0,
             "total_points": 980,
+            "current_points": 980,
             "cycle_start_date": "2026-03-23",
-            "energy_records": []
+            "energy_records": [],
+            "redemption_history": []
         },
         "tom": {
             "password": "111111",
             "monthly_target": 250.0,
             "total_points": 640,
+            "current_points": 640,
             "cycle_start_date": "2026-03-19",
-            "energy_records": []
+            "energy_records": [],
+            "redemption_history": []
         },
         "sarah": {
             "password": "sarah123",
             "monthly_target": None,
             "total_points": 0,
+            "current_points": 0,
             "cycle_start_date": None,
-            "energy_records": []
+            "energy_records": [],
+            "redemption_history": []
         },
         "mike": {
             "password": "mike456",
             "monthly_target": 270.0,
             "total_points": 0,
+            "current_points": 0,
             "cycle_start_date": "2026-04-05",
-            "energy_records": []
+            "energy_records": [],
+            "redemption_history": []
         },
     }
 
@@ -204,6 +216,14 @@ def load_data():
             with open(DATA_FILE, 'r', encoding='utf-8') as f:
                 data = json.load(f)
             if isinstance(data, dict):
+                for username, user in data.items():
+                    if "current_points" not in user:
+                        user["current_points"] = user.get("total_points", 0)
+
+                    if "redemption_history" not in user:
+                        user["redemption_history"] = []
+
+                save_data(data)
                 return data
         except Exception as e:
             print(f"Failed to load data.json: {e}")
@@ -339,6 +359,7 @@ def energy_summary():
     user = users[username]
     target = user.get("monthly_target") or 0.0
     total_points = user.get("total_points", 0)
+    current_points = user.get("current_points", total_points)
     cycle_start_str = user.get("cycle_start_date")
     records = user.get("energy_records", [])
 
@@ -347,6 +368,7 @@ def energy_summary():
             "total_energy_this_cycle": 0,
             "monthly_target": user.get("monthly_target"),
             "total_points": total_points,
+            "current_points": current_points,
             "cycle_start_date": None,
             "cycle_end_date": None,
             "days_in_cycle": 0,
@@ -399,6 +421,7 @@ def energy_summary():
         "total_energy_this_cycle": round(total_energy, 2),
         "monthly_target": user.get("monthly_target"),
         "total_points": total_points,
+        "current_points": current_points,
         "cycle_start_date": cycle_start_str_fmt,
         "cycle_end_date": cycle_end_str_fmt,
         "days_in_cycle": days_in_cycle,
@@ -514,14 +537,98 @@ def get_user_info():
 
     monthly_target = users[username]["monthly_target"]
     total_points = users[username].get("total_points", 0)
+    current_points = users[username].get("current_points", total_points)
 
     return jsonify({
         "success": True,
         "username": username,
         "monthly_target": monthly_target,
-        "total_points": total_points
+        "total_points": total_points,
+        "current_points": current_points
     })
 
+@app.route("/redeem-reward", methods=["POST"])
+def redeem_reward():
+    data = request.get_json()
+
+    username = data.get("username")
+    reward_name = data.get("reward_name")
+    points_required = data.get("points_required")
+
+    if not username or not reward_name or points_required is None:
+        return jsonify({
+            "success": False,
+            "message": "username, reward_name and points_required are required"
+        }), 400
+
+    try:
+        points_required = int(points_required)
+    except Exception:
+        return jsonify({
+            "success": False,
+            "message": "points_required must be a number"
+        }), 400
+
+    if points_required <= 0:
+        return jsonify({
+            "success": False,
+            "message": "points_required must be greater than 0"
+        }), 400
+
+    users = load_data()
+
+    if username not in users:
+        return jsonify({
+            "success": False,
+            "message": "user not found"
+        }), 404
+
+    user = users[username]
+    current_points = user.get("current_points", user.get("total_points", 0))
+
+    if current_points < points_required:
+        return jsonify({
+            "success": False,
+            "message": "Not enough current points to redeem this reward."
+        }), 400
+
+    user["current_points"] = current_points - points_required
+
+    if "redemption_history" not in user:
+        user["redemption_history"] = []
+
+    user["redemption_history"].insert(0, {
+        "reward_name": reward_name,
+        "points_spent": points_required,
+        "redeemed_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    })
+
+    save_data(users)
+
+    return jsonify({
+        "success": True,
+        "message": f"{reward_name} redeemed successfully.",
+        "remaining_points": user["current_points"],
+        "total_points": user.get("total_points", 0)
+    })
+
+@app.route("/redemption-history", methods=["GET"])
+def redemption_history():
+    username = request.args.get("username")
+    users = load_data()
+
+    if not username or username not in users:
+        return jsonify({
+            "success": False,
+            "message": "user not found"
+        }), 404
+
+    history = users[username].get("redemption_history", [])
+
+    return jsonify({
+        "success": True,
+        "history": history
+    })
 
 @app.route("/debug-data", methods=["GET"])
 def debug_data():

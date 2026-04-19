@@ -59,19 +59,15 @@
         </header>
 
         <section class="history-table-card">
-            <div
-                class="redeem-toolbar"
-                style="display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 24px; flex-wrap: wrap;"
-            >
-                <h3 class="card-title" style="margin: 0;">
-                    Current Points: <span id="current-points">--</span>
-                </h3>
-                <button id="view-history-btn" type="button" class="interactive-element">
-                    View History
-                </button>
-            </div>
+            <div class="redeem-toolbar">
+                <div>
+        <p class="current-points-label">Current Points</p>
+        <p class="current-points-value"><span id="current-points">--</span></p>
+    </div>
+    <button id="view-history-btn" class="view-history-btn">View History</button>
+</div>
 
-            <p id="redemption-message" style="text-align: center; margin-bottom: 24px;">
+            <p id="redemption-message">
                 Loading rewards...
             </p>
 
@@ -79,42 +75,22 @@
             </div>
         </section>
     </main>
-
-    <div id="history-overlay" class="target-overlay hidden"></div>
-
-    <div id="history-modal" class="target-modal hidden">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-            <h3 style="margin: 0;">Redemption History</h3>
-
-            <!-- [ADDED] Top-right close button -->
-            <button
-                id="history-close-icon"
-                type="button"
-                style="
-                    border: none;
-                    background: transparent;
-                    font-size: 28px;
-                    font-weight: 700;
-                    cursor: pointer;
-                    line-height: 1;
-                    padding: 0;
-                "
-                aria-label="Close history modal"
-            >
-                ×
-            </button>
-        </div>
-
-        <div id="history-list"
-             style="max-height: 280px; overflow-y: auto; margin-bottom: 20px;"
-        >
-        </div>
-
-        <div style="display: flex; justify-content: flex-end;">
-            <button id="close-history-btn" type="button">Close</button>
+    <div id="history-overlay" class="modal-overlay hidden">
+        <div id="history-modal" class="modal-box hidden">
+            <div class="modal-header">
+                <h3>Redemption History</h3>
+                <button id="history-close-icon" class="modal-close">&times;</button>
+            </div>
+            <div id="history-list" class="modal-body">
+                Loading...
+            </div>
+            <div style="padding: 1.5rem; border-top: 4px solid #000; text-align: right; background: #fff;">
+                <button id="close-history-btn" class="view-history-btn">Close</button>
+            </div>
         </div>
     </div>
 
+    
     <script>
         lucide.createIcons();
     </script>

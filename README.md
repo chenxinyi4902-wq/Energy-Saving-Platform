@@ -55,3 +55,21 @@
 * Separated Current Points from Total Points in the redemption-related display logic.
 * Refined the redemption page structure and interaction flow for the testing version.
 * Improved text logic and display consistency on the history and leaderboard pages.
+
+---
+### Iteration 7 - Enhance dashboard styles for redemption features
+* Added comprehensive styles for the redeem page in `style.css`, strictly scoped under `body.dashboard` to prevent contaminating the login page.
+* Implemented the responsive `redemption-grid` and applied the project's unified Neobrutalism style, including white backgrounds, black borders, `9px` offset hard shadows, and hover floating effects.
+* Added multi-dimensional state styles to the redeem button (`redeem-action-btn` — green for redeemable, gray for unredeemable, black background for loading), as well as color feedback for success/error message boxes.
+* Completed the refined layout for the full-screen semi-transparent overlay (`modal-overlay`) and the centered history modal (`modal-box`).
+
+---
+### Iteration 8 - JavaScript Dynamic Rendering Refactoring & CSS Interface Integration 
+* Removed hardcoded `style="..."` inline styles from `redeem.js` that were used for generating cards and history records.
+* Accurately aligned with CSS interfaces within the JS DOM rendering logic. Added standard class names to dynamically generated elements.
+* Added ternary operator logic so buttons automatically attach the `can-redeem` or `cannot-redeem` class upon rendering based on the user's current points.
+
+---
+### Iteration 9 - Refactor redeem toolbar and modal structure
+* Updated key anchors like `<span id="current-points">` and `view-history-btn` to ensure JS can fetch the elements correctly.
+* Moved the HTML skeleton of the history modal from inside `<main>` to the outermost layer just before `</body>`. This change avoids Z-index context pollution from parent containers and prevents potential bugs where `position: fixed` might fail.

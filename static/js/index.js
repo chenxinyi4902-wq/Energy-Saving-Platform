@@ -134,11 +134,11 @@ function showTargetModal() {
     const modal = document.getElementById("target-modal");
 
     if (overlay) {
-        overlay.style.display = "block";
+        overlay.style.display = "flex";
     }
 
     if (modal) {
-        modal.style.display = "block";
+        modal.style.display = "flex";
     }
 
     document.body.classList.add("is-locked");
@@ -449,17 +449,26 @@ function renderLeaderboardPreviewEmpty(message) {
 // ================= CHART HELPERS =================
 function showChartEmptyState(message) {
     const emptyText = document.getElementById("chart-empty-message");
+    const chartContainer = document.querySelector(".chart-container");
     if (!emptyText) return;
 
     emptyText.textContent = message;
     emptyText.classList.remove("hidden");
+
+    if (chartContainer) {
+        chartContainer.style.display = "none";
+    }
 }
 
 function hideChartEmptyState() {
     const emptyText = document.getElementById("chart-empty-message");
+    const chartContainer = document.querySelector(".chart-container");
     if (!emptyText) return;
 
     emptyText.classList.add("hidden");
+    if (chartContainer) {
+        chartContainer.style.display = "block";
+    }
 }
 
 function destroyChartIfExists() {

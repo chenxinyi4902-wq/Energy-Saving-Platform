@@ -158,86 +158,29 @@
 
     <!-- ================= MONTHLY TARGET OVERLAY ================= -->
     <!-- For now these styles are implemented inline and can be moved to style.css later -->
-    <div
-        id="target-overlay"
-        style="
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.45);
-            z-index: 9998;
-        "
-    ></div>
+<div id="target-overlay" class="modal-overlay" style="display: none;">
+        <div id="target-modal" class="modal-box">
+            <div class="modal-header">
+                <h3 id="target-modal-title">Set Monthly Target</h3>
+            </div>
 
     <!-- ================= MONTHLY TARGET MODAL ================= -->
-    <div
-            id="target-modal"
-            style="
-                display: none;
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                z-index: 9999;
-                width: 90%;
-                max-width: 460px;
-                background: #ffffff;
-                border-radius: 16px;
-                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
-                padding: 32px 28px;
-        "
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="target-modal-title"
-    >
-        <div id="target-modal-box">
-            <h2 id="target-modal-title" style="margin-top: 0;">
-                Set Your Monthly Electricity Target
-            </h2>
-            <p>Please set your target before using the dashboard.</p>
-            <div style="margin-top: 20px;">
+ <div class="modal-body" id="target-modal-box">
+                <p style="margin-bottom: 1rem; font-weight: 700;">Please set your electricity target before using the dashboard.</p>
                 <input
-                        type="number"
-                        id="monthly-target-input"
-                        placeholder="Enter target in kWh"
-                        min="0"
-                        step="0.1"
-                        required
-                        style="
-                        width: 100%;
-                        box-sizing: border-box;
-                        padding: 12px 14px;
-                        border: 1px solid #d9d9d9;
-                        border-radius: 10px;
-                        font-size: 16px;
-                        margin-bottom: 14px;
-                    "
-            >
+                    type="number"
+                    id="monthly-target-input"
+                    placeholder="Enter target in kWh"
+                    min="0"
+                    step="0.1"
+                    required
+                    style="width: 100%; padding: 1rem; border: 3px solid #000; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1rem; outline: none; margin-bottom: 1.5rem; box-sizing: border-box;"
+                >
+                <button id="submit-target-btn" class="redeem-action-btn can-redeem">
+                    Save Target
+                </button>
+                <div id="target-modal-message" class="page-message hidden" role="alert" aria-live="polite" style="margin-top: 1rem; text-align: center; font-weight: 700;"></div>
             </div>
-            <button
-                    id="submit-target-btn"
-                    style="
-                    width: 100%;
-                    padding: 12px 16px;
-                    border: none;
-                    border-radius: 10px;
-                    background: #111827;
-                    color: #ffffff;
-                    font-size: 15px;
-                    font-weight: 600;
-                    cursor: pointer;
-                "
-            >
-                Save Target
-            </button>
-
-            <div
-                    id="target-modal-message"
-                    class="page-message hidden"
-                    role="alert"
-                    aria-live="polite"
-                    style="margin-top: 14px;"
-            ></div>
         </div>
     </div>
 

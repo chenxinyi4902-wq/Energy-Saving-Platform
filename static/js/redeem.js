@@ -178,11 +178,11 @@ function renderRewardCards() {
         rewardCard.className = "reward-card";
 
         rewardCard.innerHTML = `
-            <h4>${reward.name}</h4>
-            <p><strong>Required Points:</strong> ${requiredPoints}</p>
-            <p>${rewardDescription}</p>
+            <div class="reward-name">${reward.name}</div>
+            <div class="reward-points">Required Points: <span>${requiredPoints}</span></div>
+            <div class="reward-description">${rewardDescription}</div>
             <button
-                class="redeem-action-btn"
+                class="redeem-action-btn ${canRedeem ? 'can-redeem' : 'cannot-redeem'}"
                 data-reward-id="${rewardId}"
                 data-reward-name="${rewardName}"
                 data-points-required="${requiredPoints}"
@@ -190,7 +190,7 @@ function renderRewardCards() {
             >
                 ${canRedeem ? "Redeem" : "Not Enough Points"}
             </button>
-        `;
+       `;
 
         redemptionGrid.appendChild(rewardCard);
     });
@@ -340,18 +340,20 @@ function renderHistoryList() {
 
             if (history.length === 0) {
                 historyList.innerHTML = `
-                    <p style="text-align: center; margin: 0;">
-                        No redemption history yet.
-                    </p>
+                    <div class="empty-state">
+                        <p>No redemption history yet.</p>
+                    </div>
                 `;
                 return;
             }
 
             historyList.innerHTML = history.map(record => `
-                <div style="padding: 12px 0; border-bottom: 1px solid #d9d9d9;">
-                    <p style="margin: 0 0 6px 0;"><strong>${record.reward_name}</strong></p>
-                    <p style="margin: 0 0 4px 0;">Points Spent: ${record.points_spent}</p>
-                    <p style="margin: 0; color: #666;">Redeemed At: ${record.redeemed_at}</p>
+                <div class="history-item">
+                    <div>
+                        <p class="reward-title">${record.reward_name}</p>
+                        <p class="reward-date">${record.redeemed_at}</p>
+                    </div>
+                    <span class="points-spent">-${record.points_spent || record.points || '???'} PTS</span>
                 </div>
             `).join("");
         })

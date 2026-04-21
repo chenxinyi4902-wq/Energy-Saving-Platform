@@ -73,3 +73,10 @@
 ### Iteration 9 - Refactor redeem toolbar and modal structure
 * Updated key anchors like `<span id="current-points">` and `view-history-btn` to ensure JS can fetch the elements correctly.
 * Moved the HTML skeleton of the history modal from inside `<main>` to the outermost layer just before `</body>`. This change avoids Z-index context pollution from parent containers and prevents potential bugs where `position: fixed` might fail.
+
+---
+### Iteration 13 - Dashboard Layout Refinement
+* Reworked the dashboard layout with a clearer two-column structure.
+* Moved Community Leaderboard under Daily Input and Points Redemption under Quick Statistics.
+* Adjusted dashboard card sizing, spacing, and typography for better visual balance.
+* Updated related HTML, CSS, and JavaScript to match the new dashboard layout.

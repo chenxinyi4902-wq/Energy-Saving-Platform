@@ -6,6 +6,7 @@ if (!currentUser) {
 }
 
 let energyChart = null;
+let pageMessageTimer = null;
 
 // ================= PAGE INITIALIZATION =================
 document.addEventListener("DOMContentLoaded", () => {
@@ -26,15 +27,27 @@ function initializePage() {
 function showPageMessage(message, type = "info") {
     const box = document.getElementById("page-message");
     if (!box) return;
+    if (pageMessageTimer) {
+        clearTimeout(pageMessageTimer);
+        pageMessageTimer = null;
+    }
 
     box.textContent = message;
     box.className = `page-message ${type}`;
     box.classList.remove("hidden");
+
+    pageMessageTimer = setTimeout(() => {
+        hidePageMessage();
+    }, 2600);
 }
 
 function hidePageMessage() {
     const box = document.getElementById("page-message");
     if (!box) return;
+    if (pageMessageTimer) {
+        clearTimeout(pageMessageTimer);
+        pageMessageTimer = null;
+    }
 
     box.textContent = "";
     box.className = "page-message hidden";
@@ -134,6 +147,7 @@ function showTargetModal() {
     const modal = document.getElementById("target-modal");
 
     if (overlay) {
+        overlay.classList.remove("hidden-overlay");
         overlay.style.display = "flex";
     }
 
@@ -150,6 +164,7 @@ function hideTargetModal() {
 
     if (overlay) {
         overlay.style.display = "none";
+        overlay.classList.add("hidden-overlay");
     }
 
     if (modal) {
@@ -420,9 +435,21 @@ function renderLeaderboardPreview(leaderboardData) {
 
     leaderboardList.innerHTML = "";
 
-    leaderboardData.slice(0, 5).forEach(user => {
+    leaderboardData.slice(0, 4).forEach(user => {
         const row = document.createElement("div");
-        row.className = "lb-row";
+
+        let rankClass = "rank-default";
+        if (user.rank === 1) {
+            rankClass = "rank-1";
+        } else if (user.rank === 2) {
+            rankClass = "rank-2";
+        } else if (user.rank === 3) {
+            rankClass = "rank-3";
+        } else if (user.rank === 4) {
+            rankClass = "rank-4";
+        }
+
+        row.className = `lb-row ${rankClass}`;
 
         row.innerHTML = `
             <span>#${user.rank ?? "--"}</span>
@@ -636,17 +663,38 @@ function updateMonthlyUsage(monthlyValue) {
 
 function updateMonthlyProgress(monthlyTarget, predictedTotalUsage, predictedSaveRate) {
     const monthlyProgress = document.getElementById("monthly-progress");
-
     if (!monthlyProgress) return;
 
     const safeMonthlyTarget = monthlyTarget ?? "--";
     const safePredictedTotalUsage = predictedTotalUsage ?? "--";
     const safePredictedSaveRate = predictedSaveRate ?? "--";
+    const currentEstimatedPoints =
+        document.getElementById("points-display")?.textContent ?? "--";
 
     monthlyProgress.innerHTML = `
+    <div class="progress-top">
         <h3 class="card-title">Monthly Progress</h3>
-        <p>Monthly Target: <span id="monthly-target-display">${safeMonthlyTarget}</span> kWh</p>
-        <p>Predicted Total Usage: <span id="predicted-cycle-total">${safePredictedTotalUsage}</span> kWh</p>
-        <p>Predicted Saving Rate: <span id="predicted-save-rate">${safePredictedSaveRate}</span>%</p>
+            <div class="progress-points-box">
+                <span class="progress-points-label">Estimated Points</span>
+                <span class="progress-points-value" id="points-display">${currentEstimatedPoints}</span>
+            </div>
+        </div>
+
+        <div class="progress-metrics">
+            <div class="progress-metric-item">
+                <span class="metric-label">Monthly Target</span>
+                <span class="metric-value"><span id="monthly-target-display">${safeMonthlyTarget}</span> kWh</span>
+            </div>
+
+            <div class="progress-metric-item">
+                <span class="metric-label">Predicted Total Usage</span>
+                <span class="metric-value"><span id="predicted-cycle-total">${safePredictedTotalUsage}</span> kWh</span>
+            </div>
+
+            <div class="progress-metric-item">
+                <span class="metric-label">Predicted Saving Rate</span>
+                <span class="metric-value"><span id="predicted-save-rate">${safePredictedSaveRate}</span>%</span>
+            </div>
+        </div>
     `;
 }

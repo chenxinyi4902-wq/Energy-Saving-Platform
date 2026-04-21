@@ -59,7 +59,7 @@
                 <p id="header-subtitle">Current Usage Progress: --</p>
             </div>
             <div class="header-right">
-                <div style="text-align:right;">
+                <div class="header-balance-block">
                     <p class="balance-label">Current Balance</p>
                     <p class="balance-value"><span id="total-points">--</span> PTS</p>
                 </div>
@@ -71,44 +71,11 @@
         </header>
 
         <div id="page-message" class="page-message hidden" role="alert" aria-live="polite"></div>
-        <!-- # CSS NEEDED: .page-message .page-message.hidden .page-message.success .page-message.error .page-message.info -->
 
-        <!-- STATS GRID：Total Points + Weekly/Monthly Usage -->
-        <div class="stats-grid">
-
-            <div class="points-card brutal-shadow-sm">
-                <i data-lucide="star" class="bg-icon"></i>
-                <h3 class="card-title">Estimated Points</h3>
-                <p class="big-number"><span id="points-display">--</span></p>
-            </div>
-
-            <div class="quick-stats-card">
-                <h3 class="card-title">Quick Statistics</h3>
-                <div class="quick-stats-inner">
-                    <div class="stat-box">
-                        <p class="stat-label">Weekly Usage</p>
-                        <p class="stat-value"><span id="weekly-usage">--</span> <span>kWh</span></p>
-                    </div>
-                    <div class="stat-box">
-                        <p class="stat-label">Monthly Usage</p>
-                        <p class="stat-value"><span id="monthly-usage">--</span> <span>kWh</span></p>
-                    </div>
-                </div>
-            </div>
-
-            <div id="monthly-progress" class="progress-card">
-                <h3 class="card-title">Monthly Progress</h3>
-                <p>Monthly Target: <span id="monthly-target-display">--</span> kWh</p>
-                <p>Predicted Total Usage: <span id="predicted-cycle-total">--</span> kWh</p>
-                <p>Predicted Saving Rate: <span id="predicted-save-rate">--</span>%</p>
-            </div>
-
-        </div>
-
-        <!-- MID GRID：Chart + Leaderboard -->
-        <div class="mid-grid">
+        <section class="top-grid">
             <div id="usage-trend" class="chart-card">
                 <h3 class="card-title"><i data-lucide="line-chart"></i> Electricity Usage Trend</h3>
+
                 <div class="chart-container">
                     <canvas id="energyChart"></canvas>
                 </div>
@@ -116,25 +83,42 @@
                 <p id="chart-empty-message" class="chart-empty-message hidden">
                     Trend data is not available yet.
                 </p>
-                <!-- # CSS NEEDED: .chart-empty-message .chart-empty-message.hidden -->
             </div>
 
-            <div id="leaderboard" class="leaderboard-card">
-                <h3 class="card-title"><i data-lucide="users"></i> Community Leaderboard</h3>
-                <div id="leaderboard-list" class="leaderboard-list">
-                    <div class="lb-row pending">
-                        <span>Loading leaderboard data...</span>
+            <div id="monthly-progress" class="progress-card">
+                <div class="progress-top">
+                    <h3 class="card-title">Monthly Progress</h3>
+
+                    <div class="progress-points-box">
+                        <span class="progress-points-label">Estimated Points</span>
+                        <span class="progress-points-value" id="points-display">--</span>
                     </div>
                 </div>
+
+                <div class="progress-metrics">
+                    <div class="progress-metric-item">
+                        <span class="metric-label">Monthly Target</span>
+                        <span class="metric-value"><span id="monthly-target-display">--</span> kWh</span>
+                    </div>
+
+                <div class="progress-metric-item">
+                    <span class="metric-label">Predicted Total Usage</span>
+                    <span class="metric-value"><span id="predicted-cycle-total">--</span> kWh</span>
+                </div>
+
+                <div class="progress-metric-item">
+                    <span class="metric-label">Predicted Saving Rate</span>
+                    <span class="metric-value"><span id="predicted-save-rate">--</span>%</span>
+                </div>
             </div>
-
         </div>
+        </section>
 
-        <!-- ACTION GRID：Daily Input + Points Redemption -->
-        <div class="action-grid">
-
+        <section class="mid-grid">
+            <div class="dashboard-left-stack">
             <div id="daily-input" class="input-card">
                 <h3 class="card-title"><i data-lucide="edit-3"></i> Daily Input</h3>
+
                 <form id="usage-form">
                     <div class="input-row">
                         <input type="text" id="usage" placeholder="Enter kWh" inputmode="decimal" required>
@@ -143,46 +127,73 @@
                 </form>
             </div>
 
+            <div id="leaderboard" class="leaderboard-card">
+                <h3 class="card-title"><i data-lucide="users"></i> Community Leaderboard</h3>
+
+                <div id="leaderboard-list" class="leaderboard-list">
+                    <div class="lb-row pending">
+                        <span>Loading leaderboard data...</span>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <div class="dashboard-right-stack">
+            <div class="quick-stats-card">
+                <h3 class="card-title">Quick Statistics</h3>
+
+                <div class="quick-stats-inner">
+                    <div class="stat-box">
+                        <p class="stat-label">Weekly Usage</p>
+                        <p class="stat-value"><span id="weekly-usage">--</span> <span>kWh</span></p>
+                    </div>
+
+                    <div class="stat-box">
+                        <p class="stat-label">Monthly Usage</p>
+                        <p class="stat-value"><span id="monthly-usage">--</span> <span>kWh</span></p>
+                    </div>
+                </div>
+            </div>
+
             <div id="points-redeem" class="redemption-card">
-                <div>
+                <div class="redemption-copy">
                     <h3 class="card-title">Points Redemption</h3>
                 </div>
+
                 <a href="{{ url_for('redeem') }}" class="redeem-btn interactive-element">
                     <i data-lucide="shopping-bag"></i>
                 </a>
             </div>
-
-        </div>
+            </div>
+        </section>
 
     </main>
 
     <!-- ================= MONTHLY TARGET OVERLAY ================= -->
-    <!-- For now these styles are implemented inline and can be moved to style.css later -->
-<div id="target-overlay" class="modal-overlay" style="display: none;">
-        <div id="target-modal" class="modal-box">
-            <div class="modal-header">
-                <h3 id="target-modal-title">Set Monthly Target</h3>
-            </div>
+<div id="target-overlay" class="modal-overlay hidden-overlay">
+    <div id="target-modal" class="modal-box">
+        <div class="modal-header">
+            <h3 id="target-modal-title">Set Monthly Target</h3>
+        </div>
 
     <!-- ================= MONTHLY TARGET MODAL ================= -->
  <div class="modal-body" id="target-modal-box">
-                <p style="margin-bottom: 1rem; font-weight: 700;">Please set your electricity target before using the dashboard.</p>
-                <input
-                    type="number"
-                    id="monthly-target-input"
-                    placeholder="Enter target in kWh"
-                    min="0"
-                    step="0.1"
-                    required
-                    style="width: 100%; padding: 1rem; border: 3px solid #000; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1rem; outline: none; margin-bottom: 1.5rem; box-sizing: border-box;"
-                >
-                <button id="submit-target-btn" class="redeem-action-btn can-redeem">
-                    Save Target
-                </button>
-                <div id="target-modal-message" class="page-message hidden" role="alert" aria-live="polite" style="margin-top: 1rem; text-align: center; font-weight: 700;"></div>
-            </div>
-        </div>
-    </div>
+     <p class="target-modal-desc">Please set your electricity target before using the dashboard.</p>
+     <input
+             type="number"
+             id="monthly-target-input"
+             placeholder="Enter target in kWh"
+             min="0"
+             step="0.1"
+             required
+     >
+     <button id="submit-target-btn" class="redeem-action-btn can-redeem">
+         Save Target
+     </button>
+     <div id="target-modal-message" class="page-message target-modal-message hidden" role="alert" aria-live="polite"></div>
+ </div>
+ </div>
+ </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="{{ url_for('static', filename='js/logout.js') }}"></script>

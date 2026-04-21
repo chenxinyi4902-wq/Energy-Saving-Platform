@@ -1,5 +1,6 @@
 import json
 import os
+import tempfile
 from flask import Flask, request, jsonify, render_template
 from datetime import datetime, timedelta
 import calendar
@@ -171,7 +172,7 @@ def build_demo_data():
     )
 
     # lisa
-    lisa_start = datetime(2026, 3, 23)
+    lisa_start = datetime(2026, 3, 28)
     add_realistic_records(
         "lisa",
         lisa_start,
@@ -203,30 +204,43 @@ def build_demo_data():
     # sarah: keep as new user with no target and no records
     # ===============================================================================
 
-    save_data(default_data)
     return default_data
 
 
 def save_data(data):
     """Save user data to data.json"""
-    with open(DATA_FILE, 'w', encoding='utf-8') as f:
-        json.dump(data, f, ensure_ascii=False, indent=4)
+    data_dir = os.path.dirname(os.path.abspath(DATA_FILE)) or "."
+    temp_fd, temp_path = tempfile.mkstemp(dir=data_dir, suffix=".tmp")
+
+    try:
+        with os.fdopen(temp_fd, 'w', encoding='utf-8') as f:
+            json.dump(data, f, ensure_ascii=False, indent=4)
+        os.replace(temp_path, DATA_FILE)
+    except Exception:
+        if os.path.exists(temp_path):
+            os.remove(temp_path)
+        raise
 
 def load_data():
     """Load user data from data.json, create with sample data if file doesn't exist"""
-    if os.path.exists(DATA_FILE):
+    if os.path.exists(DATA_FILE) and os.path.getsize(DATA_FILE) > 0:
         try:
             with open(DATA_FILE, 'r', encoding='utf-8') as f:
                 data = json.load(f)
             if isinstance(data, dict):
+                changed = False
+
                 for username, user in data.items():
                     if "current_points" not in user:
                         user["current_points"] = user.get("total_points", 0)
+                        changed = True
 
                     if "redemption_history" not in user:
                         user["redemption_history"] = []
+                        changed = True
 
-                save_data(data)
+                if changed:
+                    save_data(data)
                 return data
         except Exception as e:
             print(f"Failed to load data.json: {e}")

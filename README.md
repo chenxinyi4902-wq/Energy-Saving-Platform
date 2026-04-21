@@ -86,3 +86,9 @@
 * Updated the Points Redemption page layout by removing unnecessary loading/default messages and reducing extra spacing.
 * Improved the Current Points display style to make the balance area clearer.
 * Fixed backend cycle settlement logic so completed monthly cycles are automatically settled.
+
+---
+### Iteration 15 - Fix Cycle Settlement and Data Stability
+* Improved the Current Points display to make the balance area clearer.
+* Fixed monthly cycle settlement so completed cycles are settled automatically and the next cycle starts correctly.
+* Improved `data.json` saving/loading stability to prevent empty-file read errors during page switching.

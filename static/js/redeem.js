@@ -131,7 +131,6 @@ function loadUserPoints() {
             }
 
             renderRewardCards();
-            updateRedemptionMessage("Choose a reward to redeem with your current points.");
         })
         .catch(error => {
             console.error("Error loading points:", error);

@@ -80,3 +80,9 @@
 * Moved Community Leaderboard under Daily Input and Points Redemption under Quick Statistics.
 * Adjusted dashboard card sizing, spacing, and typography for better visual balance.
 * Updated related HTML, CSS, and JavaScript to match the new dashboard layout.
+
+---
+### Iteration 14 - Redemption UI and Cycle Settlement Logic
+* Updated the Points Redemption page layout by removing unnecessary loading/default messages and reducing extra spacing.
+* Improved the Current Points display style to make the balance area clearer.
+* Fixed backend cycle settlement logic so completed monthly cycles are automatically settled.

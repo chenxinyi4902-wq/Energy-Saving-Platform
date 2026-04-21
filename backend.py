@@ -52,35 +52,38 @@ def auto_settle_demo_data(users):
         if target <= 0 or not cycle_start_str:
             continue
 
-        cycle_start = datetime.strptime(cycle_start_str, "%Y-%m-%d")
-        cycle_end = get_cycle_end_date(cycle_start).date()
+        current_cycle_start = datetime.strptime(cycle_start_str, "%Y-%m-%d")
+        while True:
+            current_cycle_end = get_cycle_end_date(current_cycle_start).date()
 
-        if today <= cycle_end:
-            continue
+            if today <= current_cycle_end:
+                break
 
-        cycle_start_str_fmt = cycle_start.strftime("%Y-%m-%d")
-        cycle_end_str_fmt = cycle_end.strftime("%Y-%m-%d")
+            cycle_start_str_fmt = current_cycle_start.strftime("%Y-%m-%d")
+            cycle_end_str_fmt = current_cycle_end.strftime("%Y-%m-%d")
 
-        cycle_records = [
-            r for r in records
-            if cycle_start_str_fmt <= r["date"] <= cycle_end_str_fmt
-        ]
+            cycle_records = [
+                 r for r in records
+                 if cycle_start_str_fmt <= r["date"] <= cycle_end_str_fmt
+            ]
 
-        total_energy = sum(r["energy"] for r in cycle_records)
+            total_energy = sum(r["energy"] for r in cycle_records)
 
-        if not cycle_records:
-            settled_points = 0
-        else:
-            actual_save_percentage = ((target - total_energy) / target) * 100
+            if not cycle_records:
+                 settled_points = 0
+            else:
+                actual_save_percentage = ((target - total_energy) / target) * 100
 
-            if actual_save_percentage < 0:
-                actual_save_percentage = 0.0
+                if actual_save_percentage < 0:
+                    actual_save_percentage = 0.0
 
-            settled_points = calculate_points_by_percentage(actual_save_percentage)
+                settled_points = calculate_points_by_percentage(actual_save_percentage)
 
-        user["total_points"] = user.get("total_points", 0) + settled_points
-        user["current_points"] = user.get("current_points",
-                                          user.get("total_points", 0) - settled_points) + settled_points
+            user["total_points"] = user.get("total_points", 0) + settled_points
+            user["current_points"] = user.get("current_points",user.get("total_points", 0) - settled_points) + settled_points
+            next_cycle_start = current_cycle_end + timedelta(days=1)
+            user["cycle_start_date"] = next_cycle_start.strftime("%Y-%m-%d")
+            current_cycle_start = datetime.strptime(user["cycle_start_date"], "%Y-%m-%d")
 
     return users
 
@@ -407,7 +410,7 @@ def energy_summary():
     predicted_save_percentage = None
     predicted_points = 0
 
-    if target > 0 and recorded_days >= 3 and now.date() <= cycle_end.date():
+    if target > 0 and recorded_days >= 1 and now.date() <= cycle_end.date():
         prediction_ready = True
         avg_daily_energy = total_energy / recorded_days
         predicted_cycle_total = avg_daily_energy * days_in_cycle

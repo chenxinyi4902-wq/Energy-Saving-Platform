@@ -617,26 +617,30 @@ body.dashboard .redeem-btn {
 /* ── Toolbar：Current Points + View History ── */
 body.dashboard .redeem-toolbar {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: space-between;
-    margin-bottom: 2rem;
+    margin-bottom: 0.5rem;
 }
 
 body.dashboard .redeem-toolbar .current-points-label {
-    font-size: 0.75rem;
+    font-size: 1.05rem;
     font-weight: 900;
     text-transform: uppercase;
     color: #6b7280;
+    margin: 0 0 0.6rem 0;
+    letter-spacing: 0.04em;
 }
 
 body.dashboard .redeem-toolbar .current-points-value {
-    font-size: 2.5rem;
+    font-size: 2.65rem;
     font-weight: 900;
     color: #000;
     background: #ccff00;
-    padding: 0.25rem 1rem;
+    padding: 0.15rem 1rem;
     border: 3px solid #000;
     display: inline-block;
+     margin: 0;
+    line-height: 1.05;
 }
 
 body.dashboard .view-history-btn {
@@ -664,6 +668,7 @@ body.dashboard .redemption-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
+    margin-top: 0.7rem;
 }
 
 /* ── Reward Card ── */
@@ -756,9 +761,15 @@ body.dashboard .redeem-action-btn.redeeming {
 body.dashboard #redemption-message {
     text-align: center;
     font-weight: 700;
+    padding: 0;
+    border: 0;
+    margin-bottom: 0;
+}
+
+body.dashboard #redemption-message:not(:empty) {
     padding: 0.75rem 1rem;
     border: 3px solid transparent;
-    margin-bottom: 1.5rem;
+    margin: 0 0 0.75rem 0;
 }
 
 body.dashboard #redemption-message.success {

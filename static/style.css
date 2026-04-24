@@ -1256,3 +1256,95 @@ body.dashboard main #page-message {
         max-width: none;
     }
 }
+
+/* ============================================================
+   HISTORY PAGE (Electricity Usage History)
+   ============================================================ */
+
+/* ── Header User Info  ── */
+body.dashboard .header-user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+body.dashboard .header-user-info h3 {
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #6b7280;
+}
+
+body.dashboard .header-user-info p {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 900;
+    font-family: 'Outfit', sans-serif;
+    background: #ccff00; 
+    padding: 0.2rem 0.8rem;
+    border: 3px solid #000;
+}
+
+/* ── History Table Card ── */
+body.dashboard .history-table-card {
+    background: #fff;
+    border: 4px solid #000;
+    padding: 1.5rem;
+    box-shadow: 6px 6px 0px 0px #000;
+    overflow-x: auto; 
+}
+
+/* ── History Table ── */
+body.dashboard .history-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-family: 'Space Grotesk', sans-serif;
+    border: 4px solid #000;
+}
+
+/* ── Table Header ── */
+body.dashboard .history-table th {
+    background: #ccff00; 
+    color: #000;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: 1.15rem;
+    text-transform: uppercase;
+    padding: 1.2rem 1rem;
+    border: 3px solid #000; 
+    letter-spacing: 0.05em;
+}
+
+/* ── Table Data ── */
+body.dashboard .history-table td {
+    padding: 1rem;
+    border: 3px solid #000;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #000;
+}
+
+/* ── Table Row Hover Effect  ── */
+body.dashboard .history-table tbody tr {
+    transition: background 0.15s ease-in-out;
+}
+
+body.dashboard .history-table tbody tr:hover:not(.empty-row) {
+    background: #f4ffb3; 
+    cursor: default;
+}
+
+/* ── Empty State ── */
+body.dashboard .history-table .empty-row td {
+    text-align: center;
+    padding: 4rem 1rem;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #9ca3af;
+    background: #f9fafb;
+    border: 4px dashed #000; 
+}

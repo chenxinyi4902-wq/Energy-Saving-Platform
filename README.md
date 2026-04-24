@@ -92,3 +92,14 @@
 * Improved the Current Points display to make the balance area clearer.
 * Fixed monthly cycle settlement so completed cycles are settled automatically and the next cycle starts correctly.
 * Improved `data.json` saving/loading stability to prevent empty-file read errors during page switching.
+
+---
+### Iteration16 - Add class to monthly target input field
+* Add class to monthly target input field
+
+---
+### Iteration 17- History and leaderboard page styling
+* Applied Neobrutalist styling (thick borders, lime headers, Outfit font) to .history-table.
+* Added a lime-green hover effect for better readability.
+* Used dashed borders for .empty-row to match dashboard placeholders.
+* Aligned user info using Flexbox and added a brand-colored badge for the username.

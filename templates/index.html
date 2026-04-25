@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Basic Page Setup -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ecopulse-Energy Saving Platform</title>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;900&family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="dashboard">
+
+    <!-- ================= SIDEBAR SECTION ================= -->
+    <!-- Sidebar navigation for core system features -->
+    <aside>
+        <div class="sidebar-logo">
+            <h1 class="title-pop">ECOPULSE</h1>
+        </div>
+
+
+        <nav>
+
+            <!-- Main Navigation Menu -->
+            <!-- Note: These items will link to different functional modules in future iterations -->
+            <div class="nav-item active-nav">
+                <i data-lucide="layout-dashboard"></i>
+                <a href="{{ url_for('index') }}">Dashboard</a>
+            </div>
+            <div class="nav-item interactive-element">
+                <i data-lucide="activity"></i>
+                <a href="{{ url_for('history') }}">Electricity Usage History</a>
+            </div>
+            <div class="nav-item interactive-element">
+                <i data-lucide="trophy"></i>
+                <a href="{{ url_for('leaderboard') }}">Community Leaderboard</a>
+            </div>
+            <div class="nav-item interactive-element">
+                <i data-lucide="gift"></i>
+                <a href="{{ url_for('redeem') }}">Points Redemption</a>
+            </div>
+
+        </nav>
+        <div class="sidebar-footer">
+            <p>Total Points</p>
+            <h3 id="sidebar-points">--</h3>
+        </div>
+    </aside>
+
+<!-- ================= MAIN CONTENT ================= -->
+<main id="dashboard-content">
+
+        <!-- HEADER -->
+        <header>
+            <div>
+                <h2 id="greeting-title"></h2>
+                <p id="header-subtitle">Current Usage Progress: --</p>
+            </div>
+            <div class="header-right">
+                <div class="header-balance-block">
+                    <p class="balance-label">Current Balance</p>
+                    <p class="balance-value"><span id="total-points">--</span> PTS</p>
+                </div>
+                <div class="avatar">
+                    <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop" alt="avatar">
+                </div>
+                <button id="logout-btn" type="button">Logout</button>
+            </div>
+        </header>
+
+        <div id="page-message" class="page-message hidden" role="alert" aria-live="polite"></div>
+
+        <section class="top-grid">
+            <div id="usage-trend" class="chart-card">
+                <h3 class="card-title"><i data-lucide="line-chart"></i> Electricity Usage Trend</h3>
+
+                <div class="chart-container">
+                    <canvas id="energyChart"></canvas>
+                </div>
+
+                <p id="chart-empty-message" class="chart-empty-message hidden">
+                    Trend data is not available yet.
+                </p>
+            </div>
+
+            <div id="monthly-progress" class="progress-card">
+                <div class="progress-top">
+                    <h3 class="card-title">Monthly Progress</h3>
+
+                    <div class="progress-points-box">
+                        <span class="progress-points-label">Estimated Points</span>
+                        <span class="progress-points-value" id="points-display">--</span>
+                    </div>
+                </div>
+
+                <div class="progress-metrics">
+                    <div class="progress-metric-item">
+                        <span class="metric-label">Monthly Target</span>
+                        <span class="metric-value"><span id="monthly-target-display">--</span> kWh</span>
+                    </div>
+
+                <div class="progress-metric-item">
+                    <span class="metric-label">Predicted Total Usage</span>
+                    <span class="metric-value"><span id="predicted-cycle-total">--</span> kWh</span>
+                </div>
+
+                <div class="progress-metric-item">
+                    <span class="metric-label">Predicted Saving Rate</span>
+                    <span class="metric-value"><span id="predicted-save-rate">--</span>%</span>
+                </div>
+            </div>
+        </div>
+        </section>
+
+        <section class="mid-grid">
+            <div class="dashboard-left-stack">
+            <div id="daily-input" class="input-card">
+                <h3 class="card-title"><i data-lucide="edit-3"></i> Daily Input</h3>
+
+                <form id="usage-form">
+                    <div class="input-row">
+                        <input type="text" id="usage" placeholder="Enter kWh" inputmode="decimal" required>
+                        <button type="submit" id="save-usage-btn">Save</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="leaderboard" class="leaderboard-card">
+                <h3 class="card-title"><i data-lucide="users"></i> Community Leaderboard</h3>
+
+                <div id="leaderboard-list" class="leaderboard-list">
+                    <div class="lb-row pending">
+                        <span>Loading leaderboard data...</span>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <div class="dashboard-right-stack">
+            <div class="quick-stats-card">
+                <h3 class="card-title">Quick Statistics</h3>
+
+                <div class="quick-stats-inner">
+                    <div class="stat-box">
+                        <p class="stat-label">Weekly Usage</p>
+                        <p class="stat-value"><span id="weekly-usage">--</span> <span>kWh</span></p>
+                    </div>
+
+                    <div class="stat-box">
+                        <p class="stat-label">Monthly Usage</p>
+                        <p class="stat-value"><span id="monthly-usage">--</span> <span>kWh</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="points-redeem" class="redemption-card">
+                <div class="redemption-copy">
+                    <h3 class="card-title">Points Redemption</h3>
+                </div>
+
+                <a href="{{ url_for('redeem') }}" class="redeem-btn interactive-element">
+                    <i data-lucide="shopping-bag"></i>
+                </a>
+            </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ================= MONTHLY TARGET OVERLAY ================= -->
+<div id="target-overlay" class="modal-overlay hidden-overlay">
+    <div id="target-modal" class="modal-box">
+        <div class="modal-header">
+            <h3 id="target-modal-title">Set Monthly Target</h3>
+        </div>
+
+    <!-- ================= MONTHLY TARGET MODAL ================= -->
+ <div class="modal-body" id="target-modal-box">
+     <p class="target-modal-desc">Please set your electricity target before using the dashboard.</p>
+     <input
+             type="number"
+             id="monthly-target-input"
+             class="target-modal-input"  placeholder="Enter target in kWh"
+             min="0"
+             step="0.1"
+             required
+     >
+     <button id="submit-target-btn" class="redeem-action-btn can-redeem">
+         Save Target
+     </button>
+     <div id="target-modal-message" class="page-message target-modal-message hidden" role="alert" aria-live="polite"></div>
+ </div>
+ </div>
+ </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='js/logout.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+
+
+</body>
+</html>

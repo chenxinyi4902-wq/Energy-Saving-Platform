@@ -1,0 +1,1350 @@
+/* ============================================================
+   LOGIN  
+   ============================================================ */
+
+body.login {
+    font-family: 'Space Grotesk', sans-serif;
+    background-color: #f0f0f0;
+    background-image: radial-gradient(#ccc 1px, transparent 1px);
+    background-size: 20px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+}
+
+body.login .brutal-card {
+    background: white;
+    border: 3px solid black;
+    padding: 3rem;
+    width: 420px;
+    box-shadow: 12px 12px 0px 0px #000;
+    transition: all 0.2s ease;
+}
+
+body.login .title-container {
+    position: relative;
+    margin-bottom: 2.5rem;
+    text-align: center;
+}
+
+body.login h1 {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: 3rem!important;
+    line-height: 1.5;
+    text-transform: uppercase;
+    color: #ccff00;
+    transform: rotate(-5deg);
+    display: inline-block;
+    padding: 5px 15px;
+    -webkit-text-stroke: 2px black;
+        text-shadow: 4px 4px 0px #000;
+}
+
+body.login h2 {
+    font-weight: 700;
+    color: #555;
+    margin-top: 10px;
+    font-size: 1.2rem;
+}
+
+
+body.login input {
+    width: 100%;
+    padding: 1rem;
+    margin: 10px 0;
+    border: 3px solid black;
+    font-weight: 700;
+    font-size: 1rem;
+    outline: none;
+    transition: transform 0.1s;
+    box-sizing: border-box;
+}
+
+body.login input:focus {
+    transform: translate(-2px, -2px);
+    border-color: 4px 4px 0px 0px #ccff00;
+}
+
+body.login .login-btn {
+    width: 100%;
+    padding: 1.2rem;
+    background-color: #ccff00;
+    color: black;
+    border: 3px solid black;
+    font-size: 1.5rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 6px 6px 0px 0px #000;
+    transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    margin-top: 1rem;
+}
+
+@keyframes boing {
+    0% { transform: scale(1) translateY(0); }
+    30% { transform: scale(1.1) translateY(-10px); }
+    50% { transform: scale(0.9) translateY(0); }
+    100% { transform: scale(1) translateY(0); }
+}
+
+body.login .login-btn:hover {
+    animation: boing 0.5s ease-in-out;
+    background-color: #dfff4d; /* 稍微亮一点的绿色 */
+    box-shadow: 8px 8px 0px 0px #000;
+}
+
+body.login .login-btn:active {
+    transform: translate(4px, 4px);
+    box-shadow: 0px 0px 0px 0px #000;
+}
+
+body.login .energy-bolt {
+    position: absolute;
+    top: -20px;
+    right: -10px;
+    color: #000;
+    fill: #ccff00;
+    transform: rotate(15deg);
+}
+
+/* ============================================================
+   DASHBOARD  
+   ============================================================ */
+
+ 
+body.dashboard {
+    font-family: 'Space Grotesk', sans-serif;
+    background-color: #f0f0f0;
+    background-image: radial-gradient(#ccc 1px, transparent 1px);
+    background-size: 30px 30px;
+    color: #000;
+    width: 1440px;
+    max-width: 100%; 
+    margin: 0 auto;
+    display: flex;
+    min-height: 100vh;
+}
+body.dashboard aside nav a {
+    text-decoration: none;
+    color: inherit;
+}
+
+body.dashboard .brutal-border { border: 4px solid #000; }
+body.dashboard .brutal-shadow { box-shadow: 10px 10px 0px 0px #000; }
+body.dashboard .brutal-shadow-sm { box-shadow: 6px 6px 0px 0px #000; }
+ 
+body.dashboard .title-pop {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    text-transform: uppercase;
+    background: #ccff00;
+    padding: 4px 12px;
+    border: 3px solid #000;
+    display: inline-block;
+    transform: rotate(-1deg);
+    font-size: 1.5rem;
+}
+ 
+body.dashboard .card-title {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    margin-bottom: 0.45rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    letter-spacing: 0.03em;
+}
+ 
+body.dashboard .interactive-element:hover {
+    animation: boing 0.3s ease-in-out forwards;
+    background-color: #ccff00 !important;
+    cursor: pointer;
+}
+ 
+body.dashboard .active-nav {
+    background-color: #ccff00 !important;
+    transform: translate(-4px, -4px);
+    box-shadow: 4px 4px 0px 0px #000;
+}
+ 
+::-webkit-scrollbar { width: 12px; }
+::-webkit-scrollbar-track { background: #f0f0f0; border-left: 3px solid black; }
+::-webkit-scrollbar-thumb { background: #000; border: 2px solid #ccff00; }
+ 
+body.dashboard aside {
+    width: 18rem;
+    border: 4px solid #000;
+    background: #fff;
+    margin: 1.5rem;
+    box-shadow: 10px 10px 0px 0px #000;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    flex-shrink: 0;
+}
+ 
+body.dashboard .sidebar-logo { margin-bottom: 3rem; }
+ 
+body.dashboard nav { flex: 1; display: flex; flex-direction: column; gap: 1rem; }
+ 
+body.dashboard .nav-item {
+    border: 4px solid #000;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: #fff;
+}
+ 
+body.dashboard .nav-item.active-nav {
+    background-color: #ccff00 !important;
+    transform: translate(-4px, -4px);
+    box-shadow: 4px 4px 0 0 #000;
+}
+ 
+body.dashboard .sidebar-footer {
+    margin-top: auto;
+    border: 4px solid #000;
+    background: #000;
+    color: #ccff00;
+    padding: 0.7rem;
+    text-align: center;
+    font-weight: 900;
+}
+ 
+body.dashboard main {
+    flex: 1;
+    padding: 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+ 
+body.dashboard header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    border: 4px solid #000;
+    padding: 0.95rem 1.1rem;
+    min-height: 78px;
+    box-shadow: 6px 6px 0px 0px #000;
+}
+ 
+body.dashboard header h2 {
+    font-size: 1.65rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin: 0 0 0.15rem 0;
+    line-height: 1.1;
+}
+ 
+body.dashboard header p {
+    font-weight: 700;
+    color: #4b5563;
+    font-style: italic;
+    margin: 0;
+    margin-top: 1rem;
+    font-size: 1.1rem;
+}
+ 
+body.dashboard .header-right {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    flex-shrink: 0;
+}
+ 
+body.dashboard .balance-label {
+    font-size: 0.62rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 1;
+    margin-bottom: 0.18rem;
+}
+
+body.dashboard .header-balance-block {
+    height: 3.25rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+
+body.dashboard .balance-value {
+    display: inline-block;
+    font-size: 1.15rem;
+    font-weight: 900;
+    color: #ccff00;
+    background: #000;
+    padding: 0.22rem 0.7rem;
+    font-family: 'Outfit', sans-serif;
+    line-height: 1;
+}
+ 
+body.dashboard .avatar {
+    width: 3.25rem;
+    height: 3.25rem;
+    border: 4px solid #000;
+    background: #ccff00;
+    overflow: hidden;
+}
+ 
+body.dashboard .avatar img { width: 100%; height: 100%; object-fit: cover; }
+ 
+body.dashboard .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 2rem;
+}
+ 
+body.dashboard .points-card {
+    background: #ccff00;
+    border: 4px solid #000;
+    padding: 2rem;
+    box-shadow: 6px 6px 0 0 #000;
+    position: relative;
+    overflow: hidden;
+}
+ 
+body.dashboard .points-card .bg-icon {
+    position: absolute;
+    right: -1rem;
+    top: -1rem;
+    width: 8rem;
+    height: 8rem;
+    opacity: 0.1;
+    transform: rotate(12deg);
+}
+ 
+body.dashboard .points-card .big-number {
+    font-size: 4.5rem;
+    font-weight: 900;
+    margin-bottom: 1rem;
+}
+ 
+body.dashboard .points-badge {
+    border: 2px solid #000;
+    background: #fff;
+    padding: 0.5rem;
+    display: inline-block;
+    font-weight: 700;
+}
+ 
+body.dashboard .quick-stats-card {
+    background: #fff;
+    border: 4px solid #000;
+    padding: 0.9rem 1rem;
+    box-shadow: 6px 6px 0 0 #000;
+    min-height: 210px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+ 
+body.dashboard .quick-stats-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+ 
+body.dashboard .stat-box {
+    background: #f0f0f0;
+    border: 4px solid #000;
+    padding: 0.75rem 0.85rem;
+    min-height: 145px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+ 
+body.dashboard .stat-label {
+    font-size: 0.95rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #6b7280;
+    text-align: center;
+    margin: 0 0 0.45rem 0;
+    line-height: 1;
+}
+ 
+body.dashboard .stat-value {
+     margin: 0;
+    font-weight: 900;
+    line-height: 0.9;
+    text-align: center;
+    white-space: nowrap;
+}
+
+body.dashboard .stat-value span:first-child {
+    font-size: 3rem;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+}
+
+body.dashboard .stat-value span:last-child {
+    font-size: 1.4rem;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+}
+ 
+body.dashboard .mid-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 1.85fr;
+    gap: 0.75rem;
+    align-items: stretch;
+}
+
+body.dashboard .dashboard-left-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    height: 100%;
+}
+
+body.dashboard .dashboard-right-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    height: 100%;
+}
+body.dashboard .chart-card,
+body.dashboard .leaderboard-card {
+    background: #fff;
+    border: 4px solid #000;
+    box-shadow: 6px 6px 0 0 #000;
+}
+ 
+body.dashboard .chart-placeholder {
+    height: 16rem;
+    border: 4px dashed #d1d5db;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f9fafb;
+}
+ 
+body.dashboard .chart-placeholder p {
+    text-transform: uppercase;
+    font-weight: 900;
+    color: #9ca3af;
+    transform: rotate(12deg);
+}
+ 
+body.dashboard .leaderboard-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    width: 100%;
+    max-width: 96%;
+    margin: 0 auto;
+}
+ 
+body.dashboard .lb-row {
+    display: grid;
+    grid-template-columns: 54px 1fr 100px;
+    gap: 0.55rem;
+    align-items: center;
+    min-height: 34px;
+    border: 2px solid #000;
+    padding: 0.45rem 0.7rem;
+    background: #fff;
+}
+
+body.dashboard .lb-row.pending { background: #f3f4f6; opacity: 0.6; font-style: italic; }
+
+body.dashboard .lb-row span {
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    font-size: 0.9rem;
+    }
+
+body.dashboard .lb-row span:nth-child(2) {
+    justify-content: center;
+    text-align: center;
+}
+
+body.dashboard .lb-row span:nth-child(3) {
+    justify-content: flex-end;
+    text-align: right;
+}
+
+body.dashboard .lb-row.rank-1 {
+    background: #ccff00;
+}
+
+body.dashboard .lb-row.rank-2 {
+    background: #ededed;
+}
+
+body.dashboard .lb-row.rank-3 {
+    background: #ededed;
+}
+
+body.dashboard .lb-row.rank-4,
+body.dashboard .lb-row.rank-default {
+    background: #fff;
+}
+
+body.dashboard .action-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+ 
+body.dashboard .input-card {
+    background: #000;
+    color: #ccff00;
+    border: 4px solid #000;
+    padding: 0.08rem 0.75rem;
+    box-shadow: 6px 6px 0 0 #000;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+ 
+body.dashboard .input-card .card-title { color: #ccff00; margin-bottom: 0.25rem;}
+
+body.dashboard .input-card-desc {
+    margin: 0 0 0.45rem 0;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+body.dashboard .input-row {
+    display: flex;
+    gap: 0.45rem;
+    align-items: stretch;
+}
+ 
+body.dashboard .input-row input {
+    flex: 1;
+    background: #fff;
+    color: #000;
+    padding: 0.75rem 0.85rem;
+    border: 4px solid #000;
+    outline: none;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 900;
+    font-size: 1.05rem;
+    transition: background 0.2s;
+    width: auto;
+    margin: 0;
+    box-sizing: border-box;
+}
+ 
+body.dashboard .input-row input:focus {
+    background: #ccff00;
+    transform: none;
+    box-shadow: none;
+}
+ 
+body.dashboard .input-row button {
+    background: #ccff00;
+    color: #000;
+    padding: 0 0.95rem;
+    min-width: 88px;
+    font-weight: 900;
+    text-transform: uppercase;
+    border: 4px solid #000;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.05rem;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+ 
+body.dashboard .input-row button:hover { transform: translate(1px, 1px); }
+ 
+body.dashboard .redemption-card {
+    background: #fff;
+    border: 4px solid #000;
+    padding: 0.5rem 0.75rem;
+    box-shadow: 6px 6px 0 0 #000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.65rem;
+    min-height: 150px;
+}
+ 
+body.dashboard .redemption-card p { font-weight: 700; opacity: 0.6; }
+
+body.dashboard .redemption-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+body.dashboard .redemption-copy .card-title {
+    margin-bottom: 0;
+    font-size: 1.55rem;
+    line-height: 1;
+}
+body.dashboard .redeem-btn {
+    background: #000;
+    color: #fff;
+    width: 52px;
+    height: 52px;
+    border: 4px solid #000;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    padding: 0;
+}
+
+/* ============================================================
+   REDEEM PAGE
+   Append to the end of body.dashboard section in style.css
+   ============================================================ */
+
+/* ── Toolbar：Current Points + View History ── */
+body.dashboard .redeem-toolbar {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+body.dashboard .redeem-toolbar .current-points-label {
+    font-size: 1.05rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #6b7280;
+    margin: 0 0 0.6rem 0;
+    letter-spacing: 0.04em;
+}
+
+body.dashboard .redeem-toolbar .current-points-value {
+    font-size: 2.65rem;
+    font-weight: 900;
+    color: #000;
+    background: #ccff00;
+    padding: 0.15rem 1rem;
+    border: 3px solid #000;
+    display: inline-block;
+     margin: 0;
+    line-height: 1.05;
+}
+
+body.dashboard .view-history-btn {
+    background: #fff;
+    color: #000;
+    border: 4px solid #000;
+    padding: 0.75rem 1.5rem;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: 1rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 4px 4px 0px 0px #000;
+    transition: all 0.15s;
+}
+
+body.dashboard .view-history-btn:hover {
+    background: #ccff00;
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px 0px #000;
+}
+
+/* ── Reward Grid ── */
+body.dashboard .redemption-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 0.7rem;
+}
+
+/* ── Reward Card ── */
+body.dashboard .reward-card {
+    background: #fff;
+    border: 4px solid #000;
+    padding: 1.5rem;
+    box-shadow: 6px 6px 0px 0px #000;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+body.dashboard .reward-card:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 9px 9px 0px 0px #000;
+}
+
+body.dashboard .reward-card .reward-name {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+}
+
+body.dashboard .reward-card .reward-points {
+    font-size: 0.75rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #6b7280;
+}
+
+body.dashboard .reward-card .reward-points span {
+    color: #000;
+    font-size: 1.25rem;
+}
+
+body.dashboard .reward-card .reward-description {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #4b5563;
+    flex: 1;
+}
+
+/* ── Redeem Button States ── */
+body.dashboard .redeem-action-btn {
+    width: 100%;
+    padding: 0.75rem;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: 1rem;
+    text-transform: uppercase;
+    border: 4px solid #000;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-top: auto;
+}
+
+/* can-redeem */
+body.dashboard .redeem-action-btn.can-redeem {
+    background: #ccff00;
+    color: #000;
+    box-shadow: 4px 4px 0px 0px #000;
+}
+
+body.dashboard .redeem-action-btn.can-redeem:hover {
+    animation: boing 0.3s ease-in-out forwards;
+    box-shadow: 6px 6px 0px 0px #000;
+}
+
+/* cannot-redeem  */
+body.dashboard .redeem-action-btn.cannot-redeem {
+    background: #f0f0f0;
+    color: #9ca3af;
+    cursor: not-allowed;
+    box-shadow: none;
+    border-color: #9ca3af;
+}
+
+/* redeeming */
+body.dashboard .redeem-action-btn.redeeming {
+    background: #000;
+    color: #ccff00;
+    cursor: wait;
+    box-shadow: none;
+}
+
+/* ── Redemption Message States ── */
+body.dashboard #redemption-message {
+    text-align: center;
+    font-weight: 700;
+    padding: 0;
+    border: 0;
+    margin-bottom: 0;
+}
+
+body.dashboard #redemption-message:not(:empty) {
+    padding: 0.75rem 1rem;
+    border: 3px solid transparent;
+    margin: 0 0 0.75rem 0;
+}
+
+body.dashboard #redemption-message.success {
+    background: #ccff00;
+    border-color: #000;
+    color: #000;
+}
+
+body.dashboard #redemption-message.error {
+    background: #fee2e2;
+    border-color: #000;
+    color: #000;
+}
+
+body.dashboard #redemption-message.info {
+    background: #f0f0f0;
+    border-color: #000;
+    color: #6b7280;
+}
+
+/* ── Modal Overlay ── */
+body.dashboard .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+body.dashboard .modal-overlay.hidden {
+    display: none;
+}
+
+/* ── Modal Box ── */
+body.dashboard .modal-box {
+    background: #fff;
+    border: 4px solid #000;
+    box-shadow: 10px 10px 0px 0px #000;
+    width: 540px;
+    max-width: 90vw;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+}
+
+body.dashboard .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 4px solid #000;
+    background: #ccff00;
+}
+
+body.dashboard .modal-header h3 {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: 1.25rem;
+    text-transform: uppercase;
+}
+
+body.dashboard .modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    font-weight: 900;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0 0.25rem;
+}
+
+body.dashboard .modal-close:hover {
+    color: #6b7280;
+}
+
+body.dashboard .modal-body {
+    padding: 1.5rem;
+    overflow-y: auto;
+    flex: 1;
+}
+
+/* ── History List Inside Modal ── */
+body.dashboard .history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 0.75rem 0;
+    border-bottom: 2px solid #f0f0f0;
+    gap: 1rem;
+}
+
+body.dashboard .history-item:last-child {
+    border-bottom: none;
+}
+
+body.dashboard .history-item .reward-title {
+    font-weight: 900;
+    font-size: 0.95rem;
+}
+
+body.dashboard .history-item .reward-date {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    margin-top: 0.2rem;
+}
+
+body.dashboard .history-item .points-spent {
+    font-weight: 900;
+    font-size: 1rem;
+    white-space: nowrap;
+    color: #000;
+    background: #f0f0f0;
+    border: 2px solid #000;
+    padding: 0.2rem 0.5rem;
+}
+
+/* ── Empty State ── */
+body.dashboard .empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    border: 4px dashed #d1d5db;
+    background: #f9fafb;
+}
+
+body.dashboard .empty-state p {
+    font-weight: 900;
+    font-size: 1rem;
+    text-transform: uppercase;
+    color: #9ca3af;
+}
+
+/* ── Header Logout Button ── */
+body.dashboard #logout-btn {
+    background: #fff; 
+    color: #000;
+    border: 3px solid #000;
+    padding: 0.5rem 1.2rem;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: 0.9rem;
+    text-transform: uppercase; 
+    cursor: pointer;
+    box-shadow: 4px 4px 0px 0px #000; 
+    transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    margin-left: 10px;
+}
+
+body.dashboard #logout-btn:hover {
+    background: #ccff00; 
+    transform: translate(-2px, -2px); 
+    box-shadow: 6px 6px 0px 0px #000; 
+    animation: boing 0.3s ease-in-out; 
+}
+
+body.dashboard #logout-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0px 0px 0px 0px #000;
+}
+
+/* ============================================================
+   MESSAGES & EMPTY STATES
+   ============================================================ */
+
+/* ── 1. Page Feedback Messages── */
+body.dashboard .page-message {
+    padding: 1rem;
+    border: 3px solid #000;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    box-shadow: 4px 4px 0px 0px #000;
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+    0% { transform: scale(0.95); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+body.dashboard .page-message.hidden {
+    display: none !important;
+}
+
+body.dashboard .page-message.success {
+    background-color: #ccff00;
+    color: #000;
+}
+
+
+body.dashboard .page-message.error {
+    background-color: #ff4d4d;
+    color: #000;
+}
+
+body.dashboard .page-message.info {
+    background-color: #fff;
+    color: #000;
+}
+
+/* ── 2. Chart Empty State ── */
+
+body.dashboard .chart-empty-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 180px;
+    margin: 0;         
+    background-color: #f9fafb;
+    border: 4px dashed #000; 
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: 1.05rem;
+    text-transform: uppercase;
+    color: #6b7280; 
+    text-align: center;
+    padding: 2rem;
+}
+
+
+body.dashboard .chart-empty-message.hidden {
+    display: none !important;
+}
+
+/* ============================================================
+   CURRENT DASHBOARD LAYOUT
+   top-grid / mid-grid / botton-grid
+   ============================================================ */
+
+body.dashboard .top-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    gap: 0.75rem;
+    align-items: stretch;
+}
+
+body.dashboard .chart-card {
+    padding: 0.75rem 0.9rem 0.7rem;
+    min-height: 250px;
+    display: flex;
+    flex-direction: column;
+}
+
+body.dashboard .chart-card .card-title {
+    margin-bottom: 0.35rem;
+}
+
+body.dashboard .chart-container {
+    position: relative;
+    flex: 1;
+    min-height: 125px;
+}
+
+body.dashboard #energyChart {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+body.dashboard .progress-card {
+    background: #fff;
+    border: 4px solid #000;
+    padding: 1rem 1.1rem;
+    box-shadow: 6px 6px 0px 0px #000;
+    min-height: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+body.dashboard .progress-top {
+    display: grid;
+    grid-template-columns: 1fr 185px;
+    align-items: stretch;
+    gap: 0.75rem;
+}
+
+body.dashboard .progress-top .card-title {
+    margin-bottom: 0;
+    align-items: center;
+}
+
+body.dashboard .progress-points-box {
+    width: 185px;
+    min-width: 185px;
+    padding: 0.75rem 0.85rem;
+    border: 4px solid #000;
+    background: #ccff00;
+    box-shadow: 5px 5px 0 0 #000;
+    text-align: center;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+body.dashboard .progress-points-label {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-size: 0.85rem;
+    font-weight: 900;
+    line-height: 1.05;
+    text-transform: uppercase;
+}
+
+body.dashboard .progress-points-value {
+    display: block;
+    font-family: 'Outfit', sans-serif;
+    font-size: 2.65rem;
+    font-weight: 900;
+    line-height: 1;
+}
+
+body.dashboard .progress-metrics {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.45rem;
+}
+
+body.dashboard .progress-metric-item {
+    min-height: 54px;
+    padding: 0.55rem 0.75rem;
+    border: 3px solid #000;
+    background: #f7f7f7;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+body.dashboard .metric-label {
+    display: block;
+    margin-bottom: 0.15rem;
+    font-size: 0.86rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #6b7280;
+    text-align: left;
+}
+
+body.dashboard .metric-value {
+    display: block;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.35rem;
+    font-weight: 900;
+    line-height: 1;
+    text-align: right;
+    align-self: flex-end;
+}
+
+body.dashboard .quick-stats-card .card-title {
+     margin-bottom: 0.7rem;
+    font-size: 1.25rem;
+    line-height: 1;
+}
+
+body.dashboard .botton-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 1.85fr;
+    gap: 0.75rem;
+    align-items: stretch;
+}
+
+body.dashboard .leaderboard-card {
+    padding: 0.75rem 0.9rem;
+    min-height: 150px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+body.dashboard .leaderboard-card .card-title {
+    justify-content: flex-start;
+    text-align: left;
+    margin-bottom: 0.45rem;
+}
+
+body.dashboard .hidden-overlay {
+    display: none;
+}
+
+body.dashboard .target-modal-desc {
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+body.dashboard .target-modal-input {
+    width: 100%;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border: 3px solid #000;
+    outline: none;
+    box-sizing: border-box;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+body.dashboard .target-modal-message {
+    position: static;
+    top: auto;
+    right: auto;
+    min-width: 0;
+    max-width: none;
+    margin-top: 1rem;
+    text-align: center;
+    box-shadow: none;
+}
+
+body.dashboard main #page-message {
+    position: fixed;
+    top: 1.2rem;
+    right: 1.2rem;
+    z-index: 9999;
+    min-width: 260px;
+    max-width: 360px;
+    padding: 0.95rem 1rem;
+    margin: 0;
+    border: 3px solid #000;
+    box-shadow: 6px 6px 0 0 #000;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    text-align: left;
+}
+
+@media (max-width: 1200px) {
+    body.dashboard .top-grid,
+    body.dashboard .mid-grid {
+        grid-template-columns: 1fr;
+    }
+
+    body.dashboard .chart-card,
+    body.dashboard .progress-card,
+    body.dashboard .input-card,
+    body.dashboard .quick-stats-card,
+    body.dashboard .redemption-card,
+    body.dashboard .leaderboard-card {
+        min-height: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    body.dashboard header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    body.dashboard .header-right {
+        width: 100%;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+
+    body.dashboard .progress-top {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    body.dashboard .quick-stats-inner {
+        grid-template-columns: 1fr;
+    }
+
+    body.dashboard .input-row {
+        flex-direction: column;
+    }
+
+    body.dashboard .input-row button {
+        width: 100%;
+        min-height: 54px;
+    }
+
+    body.dashboard .lb-row {
+        grid-template-columns: 1fr;
+        align-items: flex-start;
+    }
+
+    body.dashboard main #page-message {
+        left: 1rem;
+        right: 1rem;
+        min-width: 0;
+        max-width: none;
+    }
+}
+
+/* ============================================================
+   HISTORY PAGE (Electricity Usage History)
+   ============================================================ */
+
+/* ── Header User Info  ── */
+body.dashboard .header-user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+body.dashboard .header-user-info h3 {
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #6b7280;
+}
+
+body.dashboard .header-user-info p {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 900;
+    font-family: 'Outfit', sans-serif;
+    background: #ccff00; 
+    padding: 0.2rem 0.8rem;
+    border: 3px solid #000;
+}
+
+/* ── History Table Card ── */
+body.dashboard .history-table-card {
+    background: #fff;
+    border: 4px solid #000;
+    padding: 1.5rem;
+    box-shadow: 6px 6px 0px 0px #000;
+    overflow-x: auto; 
+}
+
+/* ── History Table ── */
+body.dashboard .history-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-family: 'Space Grotesk', sans-serif;
+    border: 4px solid #000;
+}
+
+/* ── Table Header ── */
+body.dashboard .history-table th {
+    background: #ccff00; 
+    color: #000;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: 1.15rem;
+    text-transform: uppercase;
+    padding: 1.2rem 1rem;
+    border: 3px solid #000; 
+    letter-spacing: 0.05em;
+}
+
+/* ── Table Data ── */
+body.dashboard .history-table td {
+    padding: 1rem;
+    border: 3px solid #000;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #000;
+}
+
+/* ── Table Row Hover Effect  ── */
+body.dashboard .history-table tbody tr {
+    transition: background 0.15s ease-in-out;
+}
+
+body.dashboard .history-table tbody tr:hover:not(.empty-row) {
+    background: #f4ffb3; 
+    cursor: default;
+}
+
+/* ── Empty State ── */
+body.dashboard .history-table .empty-row td {
+    text-align: center;
+    padding: 4rem 1rem;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #9ca3af;
+    background: #f9fafb;
+    border: 4px dashed #000; 
+}

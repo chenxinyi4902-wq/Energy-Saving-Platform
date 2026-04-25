@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electricity Usage History - Ecopulse</title>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;900&family=Space+Grotesk:wght@300;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="dashboard">
+
+    <aside>
+        <div class="sidebar-logo">
+            <h1 class="title-pop">ECOPULSE</h1>
+        </div>
+
+        <nav>
+            <div class="nav-item interactive-element">
+                <i data-lucide="layout-dashboard"></i>
+                <a href="{{ url_for('index') }}">Dashboard</a>
+            </div>
+            <div class="nav-item active-nav">
+                <i data-lucide="activity"></i>
+                <a href="{{ url_for('history') }}">Electricity Usage History</a>
+            </div>
+            <div class="nav-item interactive-element">
+                <i data-lucide="trophy"></i>
+                <a href="{{ url_for('leaderboard') }}">Community Leaderboard</a>
+            </div>
+            <div class="nav-item interactive-element">
+                <i data-lucide="gift"></i>
+                <a href="{{ url_for('redeem') }}">Points Redemption</a>
+            </div>
+        </nav>
+
+        <div class="sidebar-footer">
+            <p>Total Points</p>
+            <h3 id="sidebar-points">--</h3>
+        </div>
+    </aside>
+
+    <main>
+        <header>
+            <div>
+                <h2>Electricity Usage History</h2>
+                <p>Track and review your past electricity usage records.</p>
+            </div>
+
+            <div class="header-user-info">
+                <h3 id="greeting-text">Welcome</h3>
+                <p id="header-username">User</p>
+                <button id="logout-btn" type="button">Logout</button>
+            </div>
+        </header>
+
+        <section class="history-table-card">
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Electricity Usage (kWh)</th>
+                    </tr>
+                </thead>
+                <tbody id="history-table-body">
+                    <tr class="empty-row">
+                        <td colspan="2">Loading history records...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script>
+        lucide.createIcons();
+    </script>
+    <script src="{{ url_for('static', filename='js/history.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/logout.js') }}"></script>
+</body>
+</html>

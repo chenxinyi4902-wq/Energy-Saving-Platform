@@ -172,7 +172,7 @@ def build_demo_data():
     )
 
     # lisa
-    lisa_start = datetime(2026, 3, 28)
+    lisa_start = datetime(2026, 3, 23)
     add_realistic_records(
         "lisa",
         lisa_start,
@@ -326,6 +326,8 @@ def set_target():
         return jsonify({"message": "user not found"}), 404
 
     users[username]["monthly_target"] = target
+    if not users[username].get("cycle_start_date"):
+        users[username]["cycle_start_date"] = datetime.now().strftime("%Y-%m-%d")
     save_data(users)
 
     return jsonify({"message": "target set successfully", "target": target})
@@ -458,38 +460,63 @@ def weekly_summary():
     if not username or username not in users:
         return jsonify({"message": "username required or not found"}), 400
 
-    now = datetime.now()
-    weekday = now.weekday()
-    monday = now - timedelta(days=weekday)
-    sunday = monday + timedelta(days=6)
+    now = datetime.now().date()
+    user = users[username]
+    cycle_start_str = user.get("cycle_start_date")
+    records = user.get("energy_records", [])
 
-    week_start_str = monday.strftime("%Y-%m-%d")
-    week_end_str = sunday.strftime("%Y-%m-%d")
+    if not cycle_start_str:
+        return jsonify({
+            "total_energy_this_week": 0,
+            "progress_percentage": 0.0,
+            "note": "No cycle has started yet."
+        })
 
-    days_passed = weekday + 1
-    progress_percentage = round((days_passed / 7.0) * 100, 1)
+    cycle_start = datetime.strptime(cycle_start_str, "%Y-%m-%d").date()
+    cycle_end = get_cycle_end_date(datetime.strptime(cycle_start_str, "%Y-%m-%d")).date()
 
-    records = users[username]["energy_records"]
+    effective_today = min(now, cycle_end)
+
+    first_week_end = min(
+        cycle_start + timedelta(days=(6 - cycle_start.weekday())),
+        cycle_end
+    )
+
+    if effective_today <= first_week_end:
+        week_start = cycle_start
+        week_end = first_week_end
+
+    else:
+        current_monday = effective_today - timedelta(days=effective_today.weekday())
+        current_sunday = current_monday + timedelta(days=6)
+
+        week_start = current_monday
+        week_end = min(current_sunday, cycle_end)
+
+    week_start_str = week_start.strftime("%Y-%m-%d")
+    week_end_str = week_end.strftime("%Y-%m-%d")
+
     this_week_records = [r for r in records if week_start_str <= r["date"] <= week_end_str]
     this_week_records.sort(key=lambda x: x["date"])
 
     total_energy = sum(r["energy"] for r in this_week_records)
 
-    note = ""
-    if this_week_records:
-        first_recorded = min(r["date"] for r in this_week_records)
-        if first_recorded > week_start_str:
-            note = f"You started recording on {first_recorded}. This week only includes days with data."
-    if days_passed < 7 and not note:
-        note = f"This week is not complete yet ({days_passed} days passed so far)."
+    days_in_week_period = (week_end - week_start).days + 1
+    days_passed = (effective_today - week_start).days + 1
 
-    if not note:
+    progress_percentage = round((days_passed / days_in_week_period) * 100, 1)
+
+    if days_passed < days_in_week_period:
+        note = f"This week is not complete yet ({days_passed} days passed so far)."
+    else:
         note = "Complete week data."
 
     return jsonify({
         "total_energy_this_week": round(total_energy, 2),
         "progress_percentage": progress_percentage,
-        "note": note
+        "note": note,
+        "week_start_date": week_start_str,
+        "week_end_date": week_end_str
     })
 
 @app.route("/user-data", methods=["GET"])
@@ -522,12 +549,19 @@ def leaderboard_data():
     for username, user in users.items():
         total_points = user.get("total_points", 0)
         records = user.get("energy_records", [])
+        cycle_start_str = user.get("cycle_start_date")
+        if cycle_start_str:
+            cycle_start = datetime.strptime(cycle_start_str, "%Y-%m-%d")
+            cycle_end = get_cycle_end_date(cycle_start)
+            cycle_start_str_fmt = cycle_start.strftime("%Y-%m-%d")
+            cycle_end_str_fmt = cycle_end.strftime("%Y-%m-%d")
 
-        current_month = datetime.now().strftime("%Y-%m")
-        monthly_energy = sum(
-            r["energy"] for r in records
-            if r["date"].startswith(current_month)
-        )
+            monthly_energy = sum(
+                r["energy"] for r in records
+                if cycle_start_str_fmt <= r["date"] <= cycle_end_str_fmt
+            )
+        else:
+            monthly_energy = 0
 
         leaderboard.append({
             "username": username,

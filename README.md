@@ -103,3 +103,9 @@
 * Added a lime-green hover effect for better readability.
 * Used dashed borders for .empty-row to match dashboard placeholders.
 * Aligned user info using Flexbox and added a brand-colored badge for the username.
+
+---
+### Iteration 18 - Backend Cycle Logic Refinement
+* Updated leaderboard energy usage to follow each user's billing cycle.
+* Improved cycle-based weekly and monthly usage consistency.
+* Added automatic cycle start setup for new users after setting a target.

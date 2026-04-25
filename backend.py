@@ -287,7 +287,7 @@ def login():
 
     if not username or not password:
         return jsonify({"message": "username and password are required"}), 400
-    users = reset_demo_data()
+    users = load_data()
     users = auto_settle_demo_data(users)
     save_data(users)
     if username not in users:
@@ -299,7 +299,6 @@ def login():
 
 @app.route("/logout", methods=["POST"])
 def logout():
-    reset_demo_data()
     return jsonify({
         "success": True,
         "message": "logout successful"

@@ -3,6 +3,7 @@
 ## Project Status
 
 * The final testing version of the Energy Saving Platform has now been completed.
+* The official release version of the Energy Saving Platform has now been completed.
 
 ## Current Features
 

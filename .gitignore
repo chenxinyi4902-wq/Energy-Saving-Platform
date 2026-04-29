@@ -1,0 +1,38 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+.venv/
+venv/
+env/
+ENV/
+
+# Environment files
+.env
+.envrc
+.flaskenv
+
+# Flask
+instance/
+.webassets-cache
+
+# IDE
+.idea/
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs and generated files
+*.log
+git_log.txt
+git_repo_link.txt
+
+# Test/cache
+.pytest_cache/
+.coverage
+htmlcov/
+.cache
